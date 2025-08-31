@@ -1,0 +1,36 @@
+name = "GBJam13"
+love_version = "11.5"
+default_targets = ["win32", "win64", "macos", "lovejs"]
+build_directory = "../dist"
+love_files = [
+    "+*",
+    "-*/.*",
+]
+icon_file = "assets/icon.png"
+
+[windows.exe_metadata]
+FileDescription = "GBJam13"
+FileVersion = "1.0"
+CompanyName = "Keyslam & LeviR.star & SnugBoat"
+LegalCopyright = "Copyright © 2024 Keyslam & LeviR.star & SnugBoat"
+ProductName = "GBJam13"
+ProductVersion = "1.0"
+OriginalFilename = "GBJam13.exe"
+
+[win32]
+shared_libraries = []
+artifacts = "archive"
+
+[win64]
+shared_libraries = []
+artifacts = "archive"
+
+[macos.app_metadata]
+CFBundleName = "GBJam13"
+CFBundleIdentifier = "com.keyslam.gbjam13"
+NSHumanReadableCopyright = "Copyright © 2024 Keyslam & LeviR.star & SnugBoat"
+CFBundleShortVersionString = "1.0"
+
+[lovejs]
+title = "GBJam13"
+memory = "20000000"

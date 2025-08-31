@@ -1,0 +1,21 @@
+name = "GBJam13"
+love_version = "11.5"
+default_targets = ["appimage"]
+build_directory = "../dist"
+love_files = [
+    "+*",
+    "-*/.*",
+]
+icon_file = "assets/icon.png"
+
+[linux.desktop_file_metadata]
+Name = "GBJam13"
+Comment = "Entry for GBJam13"
+Categories = "Game;"
+Exec = "GBJam13"
+Type = "Application"
+Terminal = false
+
+[appimage]
+shared_libraries = []
+artifacts = "appimage"

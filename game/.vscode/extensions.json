@@ -1,0 +1,17 @@
+{
+	"recommendations": [
+		"codeandstuff.package-json-upgrade",
+		"editorconfig.editorconfig",
+		"usernamehw.errorlens",
+		"dbaeumer.vscode-eslint",
+		"tomblind.local-lua-debugger-vscode",
+		"cardinal90.multi-cursor-case-preserve",
+		"esbenp.prettier-vscode",
+		"mylesmurphy.prettify-ts",
+		"rhalaly.scope-to-this",
+		"wayou.vscode-todo-highlight",
+		"gruntfuggly.todo-tree",
+		"yoavbls.pretty-ts-errors",
+		"sumneko.lua"
+	]
+}

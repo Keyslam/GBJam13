@@ -1,0 +1,9 @@
+{
+	"$schema": "https://json.schemastore.org/prettierrc",
+	"printWidth": 120,
+	"singleQuote": false,
+	"trailingComma": "es5",
+	"useTabs": true,
+	"endOfLine": "lf",
+	"plugins": ["@yikes2000/prettier-plugin-merge-extras"]
+}

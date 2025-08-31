@@ -1,0 +1,34 @@
+{
+	"explorer.fileNesting.enabled": true,
+	"explorer.fileNesting.expand": false,
+	"explorer.fileNesting.patterns": {
+		"*.ts": "${capture}.spec.ts",
+		"*.lua": "${capture}.d.ts"
+	},
+
+	"files.autoSave": "onFocusChange",
+
+	"editor.formatOnSave": true,
+	"editor.codeActionsOnSave": {
+		"source.organizeImports": "always",
+		"source.addMissingImports": "always",
+		"source.fixAll": "always"
+	},
+
+	"files.exclude": {
+		"**/.git": true,
+	},
+
+	"search.exclude": {
+		"**/node_modules": true,
+        "build": true,
+        "dist": true,
+	},
+
+	"Lua.workspace.library": ["${3rd}/love2d/library", "src/lib"],
+	"Lua.runtime.version": "LuaJIT",
+	"Lua.workspace.checkThirdParty": false,
+	"Lua.workspace.ignoreDir": ["dist"],
+
+	"typescript.tsdk": "./node_modules/typescript/lib"
+}

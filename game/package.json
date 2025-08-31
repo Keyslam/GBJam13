@@ -1,0 +1,24 @@
+{
+    "name": "gbjam13",
+    "scripts": {
+        "build": "rimraf build && mkdir build && symlink-dir assets build/assets & tstl",
+        "package:win-mac-web": "pnpm run build && cpy ./makelove.win-mac-web.toml ./build --rename=makelove.toml && cd build && makelove",
+        "package:linux": "pnpm run build && cpy ./makelove.linux.toml ./build --rename=makelove.toml && cd build && makelove"
+    },
+    "packageManager": "pnpm@10.15.0",
+    "devDependencies": {
+        "@eslint/js": "9.34.0",
+        "cpy-cli": "6.0.0",
+        "eslint": "9.34.0",
+        "eslint-plugin-no-null": "1.0.2",
+        "eslint-plugin-prettier": "5.5.4",
+        "love-typescript-definitions": "11.5.1",
+        "lua-types": "2.13.1",
+        "prettier": "3.6.2",
+        "rimraf": "6.0.1",
+        "symlink-dir": "6.0.5",
+        "typescript": "5.8.2",
+        "typescript-eslint": "8.41.0",
+        "typescript-to-lua": "1.32.0"
+    }
+}
