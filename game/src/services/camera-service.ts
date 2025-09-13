@@ -3,6 +3,9 @@ import { Facing } from "../components/facing";
 import { Position } from "../components/position";
 import { UpdateEvent } from "../events/scene/updateEvent";
 
+const viewportW = 320 - 160;
+const viewportH = 224 - 144;
+
 export class CameraService extends Service {
     public x = 0;
     public y = 0;
@@ -13,7 +16,7 @@ export class CameraService extends Service {
     public target?: Entity;
     public offsetToFacing = true;
 
-    private offsetToFacingDistance = 20;
+    private offsetToFacingDistance = 2;
     private lerpSpeed = 50;
 
     protected override initialize(): void {
@@ -45,6 +48,9 @@ export class CameraService extends Service {
             this.x += this.offsetX;
             this.y += this.offsetY;
         }
+
+        this.x = this.clamp(-viewportW / 2, viewportW / 2, this.x);
+        this.y = this.clamp(-viewportH / 2, viewportH / 2, this.y);
     }
 
     private moveTowards(current: number, target: number, maxDelta: number): number {
@@ -58,5 +64,9 @@ export class CameraService extends Service {
         const speedMultiplier = isOpposite ? 2.0 : 1.0;
 
         return current + Math.sign(delta) * maxDelta * speedMultiplier;
+    }
+
+    private clamp(min: number, max: number, value: number): number {
+        return math.min(max, math.max(min, value));
     }
 }

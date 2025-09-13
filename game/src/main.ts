@@ -7,8 +7,10 @@ import { Sprite } from "./components/sprite";
 import { Velocity } from "./components/velocity";
 import { DrawEvent } from "./events/scene/drawEvent";
 import { UpdateEvent } from "./events/scene/updateEvent";
+import { enemyPlaceholder } from "./prefabs/enemy-placeholder";
 import run from "./run";
 import { CameraService } from "./services/camera-service";
+import { PlayerLocatorService } from "./services/player-locator-service";
 import { RenderService } from "./services/renderService";
 
 love.graphics.setDefaultFilter("nearest", "nearest");
@@ -56,10 +58,14 @@ const arenaPrefab = (entity: Entity) => {
 const scene = new Scene(
     RenderService,
     CameraService,
+    PlayerLocatorService
 );
 
 const player = scene.spawnEntity(playerPrefab);
+scene.getService(PlayerLocatorService).player = player;
+
 scene.spawnEntity(arenaPrefab);
+scene.spawnEntity(enemyPlaceholder, 20, 0);
 
 scene.getService(CameraService).target = player;
 
