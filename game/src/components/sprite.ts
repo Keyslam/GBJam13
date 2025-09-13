@@ -31,6 +31,6 @@ export class Sprite extends Component {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     private draw(event: DrawEvent): void {
-        this.renderService.drawImage(this.image, this.quad, this.position.x, this.position.y, 1, this.flipped);
+        this.renderService.drawImage(this.image, this.quad, this.position.x, this.position.y, this.position.z, this.flipped);
     }
 }

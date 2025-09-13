@@ -1,12 +1,14 @@
 import { Entity, Scene } from "@keyslam/simple-node";
 import { AnimatedSprite, Animation, createAnimation } from "./components/animated-sprite";
+import { Facing } from "./components/facing";
 import { PlayerControls } from "./components/player-controls";
-import { Position } from "./components/position";
+import { Position, zLayers } from "./components/position";
 import { Sprite } from "./components/sprite";
 import { Velocity } from "./components/velocity";
 import { DrawEvent } from "./events/scene/drawEvent";
 import { UpdateEvent } from "./events/scene/updateEvent";
 import run from "./run";
+import { CameraService } from "./services/camera-service";
 import { RenderService } from "./services/renderService";
 
 love.graphics.setDefaultFilter("nearest", "nearest");
@@ -35,20 +37,31 @@ const playerAnimations: Record<string, Animation> = {
     run_northWest: createAnimation(playerImage, 24, 24, 4, 4, 0.2, "loop", true),
 }
 
-const testPrefab = (entity: Entity, x: number) => {
+const playerPrefab = (entity: Entity) => {
     entity
-        .addComponent(Position, x, 100)
+        .addComponent(Position, 0, 0, zLayers.foreground)
         .addComponent(Velocity, 0, 0)
+        .addComponent(Facing, 0)
         .addComponent(PlayerControls)
         .addComponent(Sprite, love.graphics.newImage("assets/guy.png"))
         .addComponent(AnimatedSprite, playerAnimations, "idle_south")
 }
 
+const arenaPrefab = (entity: Entity) => {
+    entity
+        .addComponent(Position, 0, 0, zLayers.background)
+        .addComponent(Sprite, love.graphics.newImage("assets/arena.png"))
+}
+
 const scene = new Scene(
     RenderService,
+    CameraService,
 );
 
-scene.spawnEntity(testPrefab, 100);
+const player = scene.spawnEntity(playerPrefab);
+scene.spawnEntity(arenaPrefab);
+
+scene.getService(CameraService).target = player;
 
 love.update = (dt) => {
     scene.emit(new UpdateEvent(dt));

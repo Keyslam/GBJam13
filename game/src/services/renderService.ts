@@ -1,11 +1,14 @@
 import { Service } from "@keyslam/simple-node";
 import { Image, Quad } from "love.graphics";
 import { DrawEvent } from "../events/scene/drawEvent";
+import { CameraService } from "./camera-service";
 
 interface ImageCommand { image: Image, quad: Quad | undefined, flipped: boolean, type: "image" }
 type Command = { x: number, y: number, z: number } & ImageCommand;
 
 export class RenderService extends Service {
+    declare private cameraService: CameraService;
+
     private commands: Command[] = [];
     private canvas = love.graphics.newCanvas(160, 144);
 
@@ -14,10 +17,13 @@ export class RenderService extends Service {
     }
 
     protected override initialize(): void {
+        this.cameraService = this.scene.getService(CameraService);
+
         this.onSceneEvent(DrawEvent, "draw");
     }
 
     private draw(): void {
+        love.graphics.push("all");
         love.graphics.setCanvas(this.canvas);
 
         const [r, g, b] = love.math.colorFromBytes(56, 106, 110);
@@ -35,12 +41,16 @@ export class RenderService extends Service {
             return a.x - b.x;
         });
 
+        love.graphics.translate(
+            -math.floor(this.cameraService.x) + 80,
+            -math.floor(this.cameraService.y) + 72
+        );
+
         for (const command of this.commands) {
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             if (command.type === "image") {
                 const x = math.floor(command.x);
                 const y = math.floor(command.y);
-
 
                 if (command.quad !== undefined) {
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -55,7 +65,7 @@ export class RenderService extends Service {
 
         this.commands = [];
 
-        love.graphics.setCanvas();
+        love.graphics.pop();
 
         const [w, h] = love.graphics.getDimensions();
         const scaleX = Math.floor(w / 160);

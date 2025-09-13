@@ -2,6 +2,7 @@ import { Component } from "@keyslam/simple-node";
 import { UpdateEvent } from "../events/scene/updateEvent";
 import bulletPrefab from "../prefabs/bullet";
 import { AnimatedSprite } from "./animated-sprite";
+import { Facing } from "./facing";
 import { Position } from "./position";
 import { Velocity } from "./velocity";
 
@@ -47,6 +48,7 @@ export class PlayerControls extends Component {
     declare private position: Position;
     declare private velocity: Velocity;
     declare private animatedSprite: AnimatedSprite;
+    declare private facing: Facing;
 
     private acceleration = 10000;
     private maxSpeed = 120;
@@ -58,12 +60,12 @@ export class PlayerControls extends Component {
     private shootVelocityAdditionMultiplier = 0.3
 
     private lockFacing = false;
-    private facing = 0;
 
     protected override initialize(): void {
         this.position = this.entity.getComponent(Position);
         this.velocity = this.entity.getComponent(Velocity);
         this.animatedSprite = this.entity.getComponent(AnimatedSprite);
+        this.facing = this.entity.getComponent(Facing);
 
         this.onSceneEvent(UpdateEvent, "update");
     }
@@ -90,18 +92,17 @@ export class PlayerControls extends Component {
 
         this.lockFacing = love.keyboard.isDown("space");
         if (!this.lockFacing && (mx !== 0 || my !== 0)) {
-            this.facing = this.getDirection(mx, my);
+            this.facing.direction = Facing.getDirectionFromVector(mx, my);
         }
 
-        const animationName = animationMapping[this.facing + ((mx !== 0 || my !== 0) ? 8 : 0)]!;
+        const animationName = animationMapping[this.facing.direction + ((mx !== 0 || my !== 0) ? 8 : 0)]!;
         this.animatedSprite.play(animationName);
-
 
         if (love.keyboard.isDown("space") && this.shootTimer === 0) {
             this.shootTimer = this.shootCooldown;
 
-            const direction = facingMapping[this.facing]!;
-            const offset = shootOffsets[this.facing] ?? { x: 0, y: 0 };
+            const direction = facingMapping[this.facing.direction]!;
+            const offset = shootOffsets[this.facing.direction] ?? { x: 0, y: 0 };
             this.entity.scene.spawnEntity(
                 bulletPrefab,
                 this.position.x + offset.x,
@@ -110,14 +111,5 @@ export class PlayerControls extends Component {
                 direction.y * this.shootSpeed + this.velocity.y * this.shootVelocityAdditionMultiplier
             );
         }
-    }
-
-    private getDirection(mx: number, my: number): number {
-        if (mx === 0 && my === 0) { return 0; }
-
-        const angle = math.atan2(-my, -mx);
-        const adjusted = (angle - math.pi / 2 + 2 * math.pi) % (2 * math.pi);
-
-        return math.floor((adjusted / (math.pi / 4)) + 0.5) % 8;
     }
 }
