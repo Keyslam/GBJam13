@@ -12,6 +12,9 @@ export class RenderService extends Service {
     private commands: Command[] = [];
     private canvas = love.graphics.newCanvas(160, 144);
 
+    private palettes = love.graphics.newImage("assets/gbpals.png");
+    private shader = love.graphics.newShader("assets/shader.glsl");
+
     public drawImage(image: Image, quad: Quad | undefined, x: number, y: number, z: number, flipped: boolean) {
         this.commands.push({ image, quad, x, y, z, flipped, type: "image" });
     }
@@ -74,6 +77,12 @@ export class RenderService extends Service {
         const offsetX = (w - (160 * scale)) / 2;
         const offsetY = (h - (144 * scale)) / 2;
 
+        love.graphics.setShader(this.shader);
+        this.shader.send("palettes", this.palettes);
+        this.shader.send("pal", 0);
+
         love.graphics.draw(this.canvas, offsetX, offsetY, 0, scale, scale);
+
+        love.graphics.setShader();
     }
 }

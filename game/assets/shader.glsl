@@ -1,0 +1,11 @@
+uniform Image palettes;
+uniform int pal;
+
+vec4 effect( vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords ) {
+	float step = 1.f / 8.f;
+
+    float index = Texel(tex, texture_coords).g;
+    vec4 mapped = Texel(palettes, vec2(index, pal * step + step * 0.5));
+
+    return mapped;
+}
