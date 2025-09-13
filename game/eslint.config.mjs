@@ -22,6 +22,8 @@ export default tseslint.config(
             '@typescript-eslint/no-unsafe-member-access': 'off',
             '@typescript-eslint/no-unsafe-call': 'off',
 
+            '@typescript-eslint/no-non-null-assertion': 'off',
+
             eqeqeq: ["error", "always"],
             "no-restricted-syntax": [
                 "error",

@@ -20,5 +20,9 @@
         "typescript": "5.8.2",
         "typescript-eslint": "8.41.0",
         "typescript-to-lua": "1.32.0"
+    },
+    "dependencies": {
+        "@keyslam/scheduling": "file:../../@keyslam-scheduling",
+        "@keyslam/simple-node": "file:../../@keyslam-simple-node"
     }
 }

@@ -7,6 +7,13 @@ settings:
 importers:
 
   .:
+    dependencies:
+      '@keyslam/scheduling':
+        specifier: file:../../@keyslam-scheduling
+        version: file:../../@keyslam-scheduling
+      '@keyslam/simple-node':
+        specifier: file:../../@keyslam-simple-node
+        version: file:../../@keyslam-simple-node
     devDependencies:
       '@eslint/js':
         specifier: 9.34.0
@@ -119,6 +126,12 @@ packages:
   '@isaacs/cliui@8.0.2':
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
     engines: {node: '>=12'}
+
+  '@keyslam/scheduling@file:../../@keyslam-scheduling':
+    resolution: {directory: ../../@keyslam-scheduling, type: directory}
+
+  '@keyslam/simple-node@file:../../@keyslam-simple-node':
+    resolution: {directory: ../../@keyslam-simple-node, type: directory}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -902,6 +915,10 @@ snapshots:
       strip-ansi-cjs: strip-ansi@6.0.1
       wrap-ansi: 8.1.0
       wrap-ansi-cjs: wrap-ansi@7.0.0
+
+  '@keyslam/scheduling@file:../../@keyslam-scheduling': {}
+
+  '@keyslam/simple-node@file:../../@keyslam-simple-node': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
