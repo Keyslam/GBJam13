@@ -6,10 +6,14 @@ import { CameraService } from "./camera-service";
 interface ImageCommand { image: Image, quad: Quad | undefined, flipped: boolean, type: "image" }
 type Command = { x: number, y: number, z: number } & ImageCommand;
 
+type DebugCommand = () => void;
+
 export class RenderService extends Service {
     declare private cameraService: CameraService;
 
     private commands: Command[] = [];
+    private debugCommands: DebugCommand[] = [];
+
     private canvas = love.graphics.newCanvas(160, 144);
 
     private palettes = love.graphics.newImage("assets/gbpals.png");
@@ -17,6 +21,10 @@ export class RenderService extends Service {
 
     public drawImage(image: Image, quad: Quad | undefined, x: number, y: number, z: number, flipped: boolean) {
         this.commands.push({ image, quad, x, y, z, flipped, type: "image" });
+    }
+
+    public drawDebug(fn: () => void): void {
+        this.debugCommands.push(fn);
     }
 
     protected override initialize(): void {
@@ -49,6 +57,10 @@ export class RenderService extends Service {
             -math.floor(this.cameraService.y) + 72
         );
 
+        love.graphics.setShader(this.shader);
+        this.shader.send("palettes", this.palettes);
+        this.shader.send("pal", 0);
+
         for (const command of this.commands) {
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             if (command.type === "image") {
@@ -66,7 +78,14 @@ export class RenderService extends Service {
             }
         }
 
+        for (const debugCommand of this.debugCommands) {
+            love.graphics.push("all");
+            debugCommand();
+            love.graphics.pop();
+        }
+
         this.commands = [];
+        this.debugCommands = [];
 
         love.graphics.pop();
 
@@ -77,12 +96,9 @@ export class RenderService extends Service {
         const offsetX = (w - (160 * scale)) / 2;
         const offsetY = (h - (144 * scale)) / 2;
 
-        love.graphics.setShader(this.shader);
-        this.shader.send("palettes", this.palettes);
-        this.shader.send("pal", 0);
+
 
         love.graphics.draw(this.canvas, offsetX, offsetY, 0, scale, scale);
 
-        love.graphics.setShader();
     }
 }

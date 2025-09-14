@@ -2,9 +2,9 @@ import { Component } from "@keyslam/simple-node";
 import { UpdateEvent } from "../events/scene/updateEvent";
 import bulletPrefab from "../prefabs/bullet";
 import { AnimatedSprite } from "./animated-sprite";
+import { Body } from "./body";
 import { Facing } from "./facing";
 import { Position } from "./position";
-import { Velocity } from "./velocity";
 
 const animationMapping: Record<number, string | undefined> = {
     0: "idle_north",
@@ -44,17 +44,18 @@ const shootOffsets: Record<number, { x: number, y: number }> = {
     6: { x: -8, y: 3 },
 };
 
+const playerShotSfx = love.audio.newSource("assets/player-shot.wav", "static");
+
 export class PlayerControls extends Component {
     declare private position: Position;
-    declare private velocity: Velocity;
+    declare private body: Body;
     declare private animatedSprite: AnimatedSprite;
     declare private facing: Facing;
 
-    private acceleration = 10000;
-    private maxSpeed = 120;
-    private friction = 20;
+    private acceleration = 2000;
+    private maxSpeed = 80;
 
-    private shootCooldown = 0.1
+    private shootCooldown = 0.5
     private shootTimer = 0;
     private shootSpeed = 100;
     private shootVelocityAdditionMultiplier = 0.3
@@ -63,7 +64,7 @@ export class PlayerControls extends Component {
 
     protected override initialize(): void {
         this.position = this.entity.getComponent(Position);
-        this.velocity = this.entity.getComponent(Velocity);
+        this.body = this.entity.getComponent(Body);
         this.animatedSprite = this.entity.getComponent(AnimatedSprite);
         this.facing = this.entity.getComponent(Facing);
 
@@ -76,19 +77,15 @@ export class PlayerControls extends Component {
         const mx = (love.keyboard.isDown("right") ? 1 : 0) + (love.keyboard.isDown("left") ? -1 : 0);
         const my = (love.keyboard.isDown("down") ? 1 : 0) + (love.keyboard.isDown("up") ? -1 : 0);
 
-        this.velocity.x += mx * this.acceleration * event.dt;
-        this.velocity.y += my * this.acceleration * event.dt;
+        this.body.vx += mx * this.acceleration * event.dt;
+        this.body.vy += my * this.acceleration * event.dt;
 
-        const speed = Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y);
+        const speed = Math.sqrt(this.body.vx * this.body.vx + this.body.vy * this.body.vy);
         if (speed > this.maxSpeed) {
             const scale = this.maxSpeed / speed;
-            this.velocity.x *= scale;
-            this.velocity.y *= scale;
+            this.body.vx *= scale;
+            this.body.vy *= scale;
         }
-
-        const ratio = 1 / (1 + (event.dt * this.friction));
-        this.velocity.x *= ratio;
-        this.velocity.y *= ratio;
 
         this.lockFacing = love.keyboard.isDown("space");
         if (!this.lockFacing && (mx !== 0 || my !== 0)) {
@@ -101,14 +98,16 @@ export class PlayerControls extends Component {
         if (love.keyboard.isDown("space") && this.shootTimer === 0) {
             this.shootTimer = this.shootCooldown;
 
+            playerShotSfx.clone().play();
+
             const direction = facingMapping[this.facing.direction]!;
             const offset = shootOffsets[this.facing.direction] ?? { x: 0, y: 0 };
             this.entity.scene.spawnEntity(
                 bulletPrefab,
                 this.position.x + offset.x,
                 this.position.y + offset.y,
-                direction.x * this.shootSpeed + this.velocity.x * this.shootVelocityAdditionMultiplier,
-                direction.y * this.shootSpeed + this.velocity.y * this.shootVelocityAdditionMultiplier
+                direction.x * this.shootSpeed + this.body.vx * this.shootVelocityAdditionMultiplier,
+                direction.y * this.shootSpeed + this.body.vy * this.shootVelocityAdditionMultiplier
             );
         }
     }

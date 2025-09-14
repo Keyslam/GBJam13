@@ -3,8 +3,8 @@ import { Facing } from "../components/facing";
 import { Position } from "../components/position";
 import { UpdateEvent } from "../events/scene/updateEvent";
 
-const viewportW = 320 - 160;
-const viewportH = 224 - 144;
+const viewportW = 400 - 160;
+const viewportH = 352 - 144;
 
 export class CameraService extends Service {
     public x = 0;

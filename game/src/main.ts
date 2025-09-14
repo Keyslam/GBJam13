@@ -1,15 +1,16 @@
 import { Entity, Scene } from "@keyslam/simple-node";
 import { AnimatedSprite, Animation, createAnimation } from "./components/animated-sprite";
+import { Body } from "./components/body";
 import { Facing } from "./components/facing";
 import { PlayerControls } from "./components/player-controls";
 import { Position, zLayers } from "./components/position";
 import { Sprite } from "./components/sprite";
-import { Velocity } from "./components/velocity";
 import { DrawEvent } from "./events/scene/drawEvent";
 import { UpdateEvent } from "./events/scene/updateEvent";
 import { enemyPlaceholder } from "./prefabs/enemy-placeholder";
 import run from "./run";
 import { CameraService } from "./services/camera-service";
+import { CollisionService } from "./services/collision-service";
 import { PlayerLocatorService } from "./services/player-locator-service";
 import { RenderService } from "./services/renderService";
 
@@ -42,9 +43,9 @@ const playerAnimations: Record<string, Animation> = {
 const playerPrefab = (entity: Entity) => {
     entity
         .addComponent(Position, 0, 0, zLayers.foreground)
-        .addComponent(Velocity, 0, 0)
         .addComponent(Facing, 0)
         .addComponent(PlayerControls)
+        .addComponent(Body, 0, 0, 10, 10, 20)
         .addComponent(Sprite, love.graphics.newImage("assets/guy.png"))
         .addComponent(AnimatedSprite, playerAnimations, "idle_south")
 }
@@ -55,21 +56,42 @@ const arenaPrefab = (entity: Entity) => {
         .addComponent(Sprite, love.graphics.newImage("assets/arena.png"))
 }
 
+const arenaFencePrefab = (entity: Entity) => {
+    entity
+        .addComponent(Position, 0, 135, zLayers.fence)
+        .addComponent(Sprite, love.graphics.newImage("assets/arena-fence.png"))
+}
+
+
 const scene = new Scene(
     RenderService,
     CameraService,
-    PlayerLocatorService
+    PlayerLocatorService,
+    CollisionService,
 );
 
 const player = scene.spawnEntity(playerPrefab);
 scene.getService(PlayerLocatorService).player = player;
 
 scene.spawnEntity(arenaPrefab);
-scene.spawnEntity(enemyPlaceholder, 20, 0);
+scene.spawnEntity(arenaFencePrefab);
+
+for (let i = 0; i < 5; i++) {
+    scene.spawnEntity(enemyPlaceholder, i * 80 + 50, i * -20);
+}
 
 scene.getService(CameraService).target = player;
 
+let started = false;
+
 love.update = (dt) => {
+    if (!started) {
+        if (love.keyboard.isDown("space")) {
+            started = true;
+        }
+        return;
+    }
+
     scene.emit(new UpdateEvent(dt));
 }
 

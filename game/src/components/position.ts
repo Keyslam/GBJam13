@@ -3,6 +3,7 @@ import { Component, Entity } from "@keyslam/simple-node";
 export const zLayers = {
     background: 0,
     foreground: 1,
+    fence: 1,
 }
 
 export class Position extends Component {

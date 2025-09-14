@@ -40,11 +40,15 @@ export class AnimatedSprite extends Component {
     private frame = 0;
     private frameTime = 0;
 
-    constructor(entity: Entity, animations: Record<string, Animation>, activeAnimationName: string) {
+    private destroyOnEnd: boolean;
+
+    constructor(entity: Entity, animations: Record<string, Animation>, activeAnimationName: string, destroyOnEnd = false) {
         super(entity);
 
         this.animations = animations;
         this.activeAnimationName = activeAnimationName;
+
+        this.destroyOnEnd = destroyOnEnd;
     }
 
     protected override initialize(): void {
@@ -83,9 +87,13 @@ export class AnimatedSprite extends Component {
                 if (this.frame >= activeAnimation.frames.length) {
                     if (activeAnimation.mode === "once") {
                         this.frame = activeAnimation.frames.length - 1;
+
+                        if (this.destroyOnEnd) {
+                            this.entity.scene.destroyEntity(this.entity);
+                        }
+
                         break;
                     }
-
                     this.frame = 0;
                 }
             } else {
