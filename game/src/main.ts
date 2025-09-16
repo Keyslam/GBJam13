@@ -4,15 +4,19 @@ import { Body } from "./components/body";
 import { Facing } from "./components/facing";
 import { PlayerControls } from "./components/player-controls";
 import { Position, zLayers } from "./components/position";
+import { RouletteWheelController } from "./components/roulette-wheel-controller";
 import { Sprite } from "./components/sprite";
 import { DrawEvent } from "./events/scene/drawEvent";
 import { UpdateEvent } from "./events/scene/updateEvent";
 import { enemyPlaceholder } from "./prefabs/enemy-placeholder";
+import { rouletteWheel } from "./prefabs/roulette-wheel";
 import run from "./run";
 import { CameraService } from "./services/camera-service";
 import { CollisionService } from "./services/collision-service";
 import { PlayerLocatorService } from "./services/player-locator-service";
 import { RenderService } from "./services/renderService";
+import { ScheduleService } from "./services/schedule-service";
+import { SlotMachineService } from "./services/slot-machine-service";
 
 love.graphics.setDefaultFilter("nearest", "nearest");
 love.graphics.setLineStyle("rough");
@@ -62,12 +66,13 @@ const arenaFencePrefab = (entity: Entity) => {
         .addComponent(Sprite, love.graphics.newImage("assets/arena-fence.png"))
 }
 
-
 const scene = new Scene(
     RenderService,
     CameraService,
     PlayerLocatorService,
     CollisionService,
+    ScheduleService,
+    SlotMachineService,
 );
 
 const player = scene.spawnEntity(playerPrefab);
@@ -75,6 +80,17 @@ scene.getService(PlayerLocatorService).player = player;
 
 scene.spawnEntity(arenaPrefab);
 scene.spawnEntity(arenaFencePrefab);
+
+const wheel1 = scene.spawnEntity(rouletteWheel, -80, 0, 1);
+const wheel2 = scene.spawnEntity(rouletteWheel, 0, 0, 2);
+const wheel3 = scene.spawnEntity(rouletteWheel, 80, 0, 3);
+
+scene.getService(SlotMachineService).setup(
+    wheel1.getComponent(RouletteWheelController),
+    wheel2.getComponent(RouletteWheelController),
+    wheel3.getComponent(RouletteWheelController),
+);
+
 
 for (let i = 0; i < 5; i++) {
     scene.spawnEntity(enemyPlaceholder, i * 80 + 50, i * -20);
@@ -88,6 +104,11 @@ love.update = (dt) => {
     if (!started) {
         if (love.keyboard.isDown("space")) {
             started = true;
+
+            void scene.getService(ScheduleService).seconds(1).then(() => {
+                void scene.getService(SlotMachineService).roll();
+
+            });
         }
         return;
     }

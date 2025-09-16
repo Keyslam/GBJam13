@@ -2,6 +2,7 @@ import { Component, Entity } from "@keyslam/simple-node";
 
 export const zLayers = {
     background: 0,
+    roulettePanels: 0.5,
     foreground: 1,
     fence: 1,
 }

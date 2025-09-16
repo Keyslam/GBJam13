@@ -19,6 +19,10 @@ export class CameraService extends Service {
     private offsetToFacingDistance = 2;
     private lerpSpeed = 50;
 
+    private trauma = 0;
+    private maxShake = 10;
+    private frequency = 10;
+
     protected override initialize(): void {
         this.onSceneEvent(UpdateEvent, "update");
     }
@@ -49,8 +53,22 @@ export class CameraService extends Service {
             this.y += this.offsetY;
         }
 
+        const intensity = this.trauma * this.trauma;
+
+        const shakeX = ((love.math.noise(love.timer.getTime() * this.frequency + 0)) - 0.5) * this.maxShake * 2 * intensity;
+        const shakeY = ((love.math.noise(love.timer.getTime() * this.frequency + 1000)) - 0.5) * this.maxShake * 2 * intensity;
+
+        this.x += shakeX;
+        this.y += shakeY;
+
         this.x = this.clamp(-viewportW / 2, viewportW / 2, this.x);
         this.y = this.clamp(-viewportH / 2, viewportH / 2, this.y);
+
+        this.trauma = math.max(0, this.trauma - 2 * event.dt)
+    }
+
+    public shake(intensity: number): void {
+        this.trauma = math.min(1, this.trauma + intensity);
     }
 
     private moveTowards(current: number, target: number, maxDelta: number): number {
