@@ -10,6 +10,7 @@ import { rouletteWheel } from "./prefabs/roulette-wheel";
 import run from "./run";
 import { CameraService } from "./services/camera-service";
 import { CollisionService } from "./services/collision-service";
+import { HudService } from "./services/hud-service";
 import { PlayerLocatorService } from "./services/player-locator-service";
 import { RenderService } from "./services/renderService";
 import { ScheduleService } from "./services/schedule-service";
@@ -26,6 +27,7 @@ const scene = new Scene(
     CollisionService,
     ScheduleService,
     SlotMachineService,
+    HudService,
 );
 
 const player = scene.spawnEntity(playerPrefab);

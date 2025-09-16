@@ -3,7 +3,7 @@
 [x] Enemies drop coins
 [x] Pick up coins (Magnet effect + Tracking amount)
 [ ] Display HUD
-    [ ] Health
+    [x] Health
     [ ] Coins
     [ ] Rolling
 [ ] Effects

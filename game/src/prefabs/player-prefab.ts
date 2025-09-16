@@ -4,6 +4,7 @@ import { PlayerControls } from "../components/controllers/player-controls"
 import { Facing } from "../components/facing"
 import { AnimatedSprite, createAnimation } from "../components/graphics/animated-sprite"
 import { Sprite } from "../components/graphics/sprite"
+import { Health } from "../components/health"
 import { Position } from "../components/position"
 import { Layers } from "../data/layer"
 
@@ -37,4 +38,5 @@ export const playerPrefab = (entity: Entity) => {
         .addComponent(Body, 0, 0, 10, 10, 20)
         .addComponent(Sprite, image)
         .addComponent(AnimatedSprite, animations, "idle_south")
+        .addComponent(Health, 4, 8)
 }

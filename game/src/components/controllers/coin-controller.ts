@@ -2,6 +2,7 @@ import { Component } from "@keyslam/simple-node";
 import { UpdateEvent } from "../../events/scene/updateEvent";
 import { PlayerLocatorService } from "../../services/player-locator-service";
 import { Body } from "../collision/body";
+import { Health } from "../health";
 import { Position } from "../position";
 
 const sfx = love.audio.newSource("assets/sfx/splash/pling.wav", "static");
@@ -41,6 +42,8 @@ export class CoinController extends Component {
         }
 
         if (distance < this.consumeRange) {
+            this.playerLocatorService.player.getComponent(Health).value++;
+
             this.entity.scene.destroyEntity(this.entity);
             sfx.clone().play();
         }

@@ -19,6 +19,8 @@ export class RenderService extends Service {
     private palettes = love.graphics.newImage("assets/misc/gbpals.png");
     private shader = love.graphics.newShader("assets/misc/shader.glsl");
 
+    declare public drawHud: () => void;
+
     public drawImage(image: Image, quad: Quad | undefined, x: number, y: number, z: number, flipped: boolean, flash: boolean) {
         this.commands.push({ image, quad, x, y, z, flipped, flash, type: "image" });
     }
@@ -37,8 +39,7 @@ export class RenderService extends Service {
         love.graphics.push("all");
         love.graphics.setCanvas(this.canvas);
 
-        const [r, g, b] = love.math.colorFromBytes(56, 106, 110);
-        love.graphics.clear(r, g, b, 1);
+        love.graphics.clear(0, 0, 0, 1);
 
         this.commands.sort((a, b) => {
             if (a.z !== b.z) {
@@ -52,14 +53,17 @@ export class RenderService extends Service {
             return a.x - b.x;
         });
 
+
+        love.graphics.setShader(this.shader);
+        this.shader.send("palettes", this.palettes);
+        this.shader.send("pal", 0);
+
+        love.graphics.push("all");
         love.graphics.translate(
             -math.floor(this.cameraService.x) + 80,
             -math.floor(this.cameraService.y) + 72
         );
 
-        love.graphics.setShader(this.shader);
-        this.shader.send("palettes", this.palettes);
-        this.shader.send("pal", 0);
 
         for (const command of this.commands) {
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -87,9 +91,13 @@ export class RenderService extends Service {
             love.graphics.pop();
         }
 
+        love.graphics.pop();
+        this.drawHud();
+
         this.commands = [];
         this.debugCommands = [];
 
+        love.graphics.setColor(1, 1, 1, 1);
         love.graphics.pop();
 
         const [w, h] = love.graphics.getDimensions();
