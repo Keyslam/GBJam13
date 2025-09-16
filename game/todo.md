@@ -1,7 +1,7 @@
 [x] Enemy flash
 [x] Knockback
-[ ] Enemies drop coins
-[ ] Pick up coins (Magnet effect + Tracking amount)
+[x] Enemies drop coins
+[x] Pick up coins (Magnet effect + Tracking amount)
 [ ] Display HUD
     [ ] Health
     [ ] Coins

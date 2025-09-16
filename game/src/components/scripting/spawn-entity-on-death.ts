@@ -2,12 +2,12 @@ import { Component, Entity } from "@keyslam/simple-node";
 import { DiedEvent } from "../../events/entity/diedEvent";
 
 export class SpawnEntityOnDeath extends Component {
-    private prefab: (entity: Entity, source: Entity) => void;
+    private prefabs: ((entity: Entity, source: Entity) => void)[];
 
-    constructor(entity: Entity, prefab: (entity: Entity, source: Entity) => void) {
+    constructor(entity: Entity, prefabs: ((entity: Entity, source: Entity) => void)[]) {
         super(entity);
 
-        this.prefab = prefab;
+        this.prefabs = prefabs;
     }
 
     protected override initialize(): void {
@@ -15,6 +15,8 @@ export class SpawnEntityOnDeath extends Component {
     }
 
     private onDied(): void {
-        this.scene.spawnEntity(this.prefab, this.entity);
+        for (const prefab of this.prefabs) {
+            this.scene.spawnEntity(prefab, this.entity);
+        }
     }
 }

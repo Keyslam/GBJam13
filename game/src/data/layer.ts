@@ -4,5 +4,6 @@ export const Layers = {
     background: 0,
     rouletteWheel: 1,
     foreground: 2,
-    fence: 3
+    foreground_sfx: 3,
+    fence: 4
 } satisfies Record<string, Layer>

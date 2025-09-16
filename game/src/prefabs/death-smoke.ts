@@ -18,7 +18,7 @@ export const deathSmoke = (entity: Entity, source: Entity) => {
     const position = source.getComponent(Position);
 
     entity
-        .addComponent(Position, position.x, position.y, Layers.foreground)
+        .addComponent(Position, position.x, position.y, Layers.foreground_sfx)
         .addComponent(Sprite, image)
         .addComponent(AnimatedSprite, animations, "default", true);
 }
