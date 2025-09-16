@@ -1,7 +1,7 @@
 import { Service } from "@keyslam/simple-node";
-import { Body } from "../components/body";
-import { Hitbox } from "../components/hitbox";
-import { Hurtbox } from "../components/hurtbox";
+import { Body } from "../components/collision/body";
+import { Hitbox } from "../components/collision/hitbox";
+import { Hurtbox } from "../components/collision/hurtbox";
 import { Team } from "../data/team";
 import { RenderService } from "./renderService";
 

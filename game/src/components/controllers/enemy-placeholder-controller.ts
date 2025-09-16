@@ -1,9 +1,9 @@
 import { Component } from "@keyslam/simple-node";
-import { UpdateEvent } from "../events/scene/updateEvent";
-import { PlayerLocatorService } from "../services/player-locator-service";
-import { AnimatedSprite } from "./animated-sprite";
-import { Body } from "./body";
-import { Position } from "./position";
+import { UpdateEvent } from "../../events/scene/updateEvent";
+import { PlayerLocatorService } from "../../services/player-locator-service";
+import { Body } from "../collision/body";
+import { AnimatedSprite } from "../graphics/animated-sprite";
+import { Position } from "../position";
 
 export class EnemyPlaceholderController extends Component {
     declare private position: Position;

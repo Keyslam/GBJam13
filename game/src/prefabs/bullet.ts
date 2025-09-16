@@ -1,17 +1,18 @@
 import { Entity } from "@keyslam/simple-node";
-import { AnimatedSprite, createAnimation } from "../components/animated-sprite";
-import { Body } from "../components/body";
-import { DestroyOnDealDamage } from "../components/destroyOnDealDamage";
-import { Hitbox } from "../components/hitbox";
-import { Position, zLayers } from "../components/position";
-import { Sprite } from "../components/sprite";
+import { Body } from "../components/collision/body";
+import { Hitbox } from "../components/collision/hitbox";
+import { AnimatedSprite, createAnimation } from "../components/graphics/animated-sprite";
+import { Sprite } from "../components/graphics/sprite";
+import { Position } from "../components/position";
+import { DestroyOnDealDamage } from "../components/scripting/destroyOnDealDamage";
+import { Layers } from "../data/layer";
 
-const image = love.graphics.newImage("assets/bullet.png");
+const image = love.graphics.newImage("assets/sprites/player/bullet.png");
 const animation = createAnimation(image, 4, 4, 2, 0, 0.1);
 
 const bulletPrefab = (entity: Entity, x: number, y: number, vx: number, vy: number) => {
     entity
-        .addComponent(Position, x, y, zLayers.foreground)
+        .addComponent(Position, x, y, Layers.foreground)
         .addComponent(Sprite, image)
         .addComponent(AnimatedSprite, { default: animation }, "default")
         .addComponent(Body, vx, vy, 4, 4, 0)

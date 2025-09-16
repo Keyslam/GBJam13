@@ -1,10 +1,10 @@
 import { Component } from "@keyslam/simple-node";
-import { UpdateEvent } from "../events/scene/updateEvent";
-import bulletPrefab from "../prefabs/bullet";
-import { AnimatedSprite } from "./animated-sprite";
-import { Body } from "./body";
-import { Facing } from "./facing";
-import { Position } from "./position";
+import { UpdateEvent } from "../../events/scene/updateEvent";
+import bulletPrefab from "../../prefabs/bullet";
+import { Body } from "../collision/body";
+import { Facing } from "../facing";
+import { AnimatedSprite } from "../graphics/animated-sprite";
+import { Position } from "../position";
 
 const animationMapping: Record<number, string | undefined> = {
     0: "idle_north",
@@ -44,7 +44,7 @@ const shootOffsets: Record<number, { x: number, y: number }> = {
     6: { x: -8, y: 3 },
 };
 
-const playerShotSfx = love.audio.newSource("assets/player-shot.wav", "static");
+const playerShotSfx = love.audio.newSource("assets/sfx/player/shoot.wav", "static");
 
 export class PlayerControls extends Component {
     declare private position: Position;

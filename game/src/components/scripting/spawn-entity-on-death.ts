@@ -1,5 +1,5 @@
 import { Component, Entity } from "@keyslam/simple-node";
-import { DiedEvent } from "../events/entity/diedEvent";
+import { DiedEvent } from "../../events/entity/diedEvent";
 
 export class SpawnEntityOnDeath extends Component {
     private prefab: (entity: Entity, source: Entity) => void;

@@ -1,9 +1,9 @@
 import { Component, Entity } from "@keyslam/simple-node";
-import { CameraService } from "../services/camera-service";
-import { ScheduleService } from "../services/schedule-service";
-import { AnimatedSprite } from "./animated-sprite";
+import { CameraService } from "../../services/camera-service";
+import { ScheduleService } from "../../services/schedule-service";
+import { AnimatedSprite } from "../graphics/animated-sprite";
 
-const rouletteStopSfx = love.audio.newSource("assets/roulette-stop.wav", "static");
+const rouletteStopSfx = love.audio.newSource("assets/sfx/slot-machine/stop.wav", "static");
 
 export class RouletteWheelController extends Component {
     declare private schedulerService: ScheduleService;

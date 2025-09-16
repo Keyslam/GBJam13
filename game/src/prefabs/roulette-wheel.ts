@@ -1,5 +1,5 @@
 import { Entity } from "@keyslam/simple-node";
-import { RouletteWheelController } from "../components/roulette-wheel-controller";
+import { RouletteWheelController } from "../components/controllers/roulette-wheel-controller";
 import { roulettePanelPrefab } from "./roulette-panel";
 
 export const rouletteWheel = (entity: Entity, x: number, y: number, index: number) => {

@@ -1,8 +1,8 @@
 import { Component, Entity } from "@keyslam/simple-node";
 import { Image, Quad } from "love.graphics";
-import { DrawEvent } from "../events/scene/drawEvent";
-import { RenderService } from "../services/renderService";
-import { Position } from "./position";
+import { DrawEvent } from "../../events/scene/drawEvent";
+import { RenderService } from "../../services/renderService";
+import { Position } from "../position";
 
 export class Sprite extends Component {
     declare private renderService: RenderService;

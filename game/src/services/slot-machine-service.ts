@@ -1,10 +1,10 @@
 import { Service } from "@keyslam/simple-node";
-import { RouletteWheelController } from "../components/roulette-wheel-controller";
+import { RouletteWheelController } from "../components/controllers/roulette-wheel-controller";
 
-const rouletteSpin1Sfx = love.audio.newSource("assets/sfx/roulette-spin-1.wav", "static");
-const rouletteSpin2Sfx = love.audio.newSource("assets/sfx/roulette-spin-2.wav", "static");
-const rouletteSpin3Sfx = love.audio.newSource("assets/sfx/roulette-spin-3.wav", "static");
-const rouletteChimeSfx = love.audio.newSource("assets/roulette-chime.wav", "static");
+const rouletteSpin1Sfx = love.audio.newSource("assets/sfx/slot-machine/spin-1.wav", "static");
+const rouletteSpin2Sfx = love.audio.newSource("assets/sfx/slot-machine/spin-2.wav", "static");
+const rouletteSpin3Sfx = love.audio.newSource("assets/sfx/slot-machine/spin-3.wav", "static");
+const rouletteChimeSfx = love.audio.newSource("assets/sfx/slot-machine/chime.wav", "static");
 
 export class SlotMachineService extends Service {
     declare private wheel1: RouletteWheelController;

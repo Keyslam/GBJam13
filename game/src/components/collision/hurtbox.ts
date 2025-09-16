@@ -1,9 +1,9 @@
 import { Component, Entity } from "@keyslam/simple-node";
-import { Team } from "../data/team";
-import { TakeDamageEvent } from "../events/entity/takeDamageEvent";
-import { UpdateEvent } from "../events/scene/updateEvent";
-import { CollisionService } from "../services/collision-service";
-import { Position } from "./position";
+import { Team } from "../../data/team";
+import { TakeDamageEvent } from "../../events/entity/takeDamageEvent";
+import { UpdateEvent } from "../../events/scene/updateEvent";
+import { CollisionService } from "../../services/collision-service";
+import { Position } from "../position";
 
 export class Hurtbox extends Component {
     declare private collisionService: CollisionService;

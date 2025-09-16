@@ -1,16 +1,17 @@
 import { Entity } from "@keyslam/simple-node";
-import { AnimatedSprite, createAnimation } from "../components/animated-sprite";
-import { Body } from "../components/body";
-import { EnemyPlaceholderController } from "../components/enemy-placeholder-controller";
+import { Body } from "../components/collision/body";
+import { Hurtbox } from "../components/collision/hurtbox";
+import { EnemyPlaceholderController } from "../components/controllers/enemy-placeholder-controller";
 import { Facing } from "../components/facing";
+import { AnimatedSprite, createAnimation } from "../components/graphics/animated-sprite";
+import { Sprite } from "../components/graphics/sprite";
 import { Health } from "../components/health";
-import { Hurtbox } from "../components/hurtbox";
-import { Position, zLayers } from "../components/position";
-import { SpawnEntityOnDeath } from "../components/spawn-entity-on-death";
-import { Sprite } from "../components/sprite";
+import { Position } from "../components/position";
+import { SpawnEntityOnDeath } from "../components/scripting/spawn-entity-on-death";
+import { Layers } from "../data/layer";
 import { deathSmoke } from "./death-smoke";
 
-const image = love.graphics.newImage("assets/enemy-placeholder.png");
+const image = love.graphics.newImage("assets/sprites/enemy/placeholder.png");
 const animations = {
     run_left: createAnimation(image, 16, 16, 4, 0, 0.2),
     run_up: createAnimation(image, 16, 16, 4, 4, 0.2),
@@ -20,7 +21,7 @@ const animations = {
 
 export const enemyPlaceholder = (entity: Entity, x: number, y: number) => {
     entity
-        .addComponent(Position, x, y, zLayers.foreground)
+        .addComponent(Position, x, y, Layers.foreground)
         .addComponent(Facing, 4)
         .addComponent(Sprite, image)
         .addComponent(AnimatedSprite, animations, "run_down")

@@ -1,5 +1,5 @@
 import { Component } from "@keyslam/simple-node";
-import { DealtDamageEvent } from "../events/entity/dealthDamageEvent";
+import { DealtDamageEvent } from "../../events/entity/dealthDamageEvent";
 
 export class DestroyOnDealDamage extends Component {
     protected override initialize(): void {

@@ -1,6 +1,6 @@
 import { Component, Entity } from "@keyslam/simple-node";
 import { Image, Quad } from "love.graphics";
-import { UpdateEvent } from "../events/scene/updateEvent";
+import { UpdateEvent } from "../../events/scene/updateEvent";
 import { Sprite } from "./sprite";
 
 export function createAnimation(image: Image, width: number, height: number, frames: number, offset: number, frameDuration: number, mode: "loop" | "once" = "loop", flipped = false): Animation {

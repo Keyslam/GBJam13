@@ -16,8 +16,8 @@ export class RenderService extends Service {
 
     private canvas = love.graphics.newCanvas(160, 144);
 
-    private palettes = love.graphics.newImage("assets/gbpals.png");
-    private shader = love.graphics.newShader("assets/shader.glsl");
+    private palettes = love.graphics.newImage("assets/misc/gbpals.png");
+    private shader = love.graphics.newShader("assets/misc/shader.glsl");
 
     public drawImage(image: Image, quad: Quad | undefined, x: number, y: number, z: number, flipped: boolean) {
         this.commands.push({ image, quad, x, y, z, flipped, type: "image" });

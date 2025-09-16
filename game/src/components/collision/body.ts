@@ -1,7 +1,7 @@
 import { Component, Entity } from "@keyslam/simple-node";
-import { UpdateEvent } from "../events/scene/updateEvent";
-import { CollisionService } from "../services/collision-service";
-import { Position } from "./position";
+import { UpdateEvent } from "../../events/scene/updateEvent";
+import { CollisionService } from "../../services/collision-service";
+import { Position } from "../position";
 
 export interface Shape { w: number; h: number }
 
