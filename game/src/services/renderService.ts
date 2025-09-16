@@ -3,7 +3,7 @@ import { Image, Quad } from "love.graphics";
 import { DrawEvent } from "../events/scene/drawEvent";
 import { CameraService } from "./camera-service";
 
-interface ImageCommand { image: Image, quad: Quad | undefined, flipped: boolean, type: "image" }
+interface ImageCommand { image: Image, quad: Quad | undefined, flipped: boolean, flash: boolean, type: "image" }
 type Command = { x: number, y: number, z: number } & ImageCommand;
 
 type DebugCommand = () => void;
@@ -19,8 +19,8 @@ export class RenderService extends Service {
     private palettes = love.graphics.newImage("assets/misc/gbpals.png");
     private shader = love.graphics.newShader("assets/misc/shader.glsl");
 
-    public drawImage(image: Image, quad: Quad | undefined, x: number, y: number, z: number, flipped: boolean) {
-        this.commands.push({ image, quad, x, y, z, flipped, type: "image" });
+    public drawImage(image: Image, quad: Quad | undefined, x: number, y: number, z: number, flipped: boolean, flash: boolean) {
+        this.commands.push({ image, quad, x, y, z, flipped, flash, type: "image" });
     }
 
     public drawDebug(fn: () => void): void {
@@ -70,14 +70,17 @@ export class RenderService extends Service {
                 if (command.quad !== undefined) {
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     const [_x, _y, w, h] = command.quad.getViewport();
+                    this.shader.send("flash", command.flash);
                     love.graphics.draw(command.image, command.quad, x, y, 0, command.flipped ? -1 : 1, 1, w / 2, h / 2);
                 } else {
+                    this.shader.send("flash", false);
                     const [w, h] = command.image.getDimensions();
                     love.graphics.draw(command.image, x, y, 0, command.flipped ? -1 : 1, 1, w / 2, h / 2);
                 }
             }
         }
 
+        this.shader.send("flash", false);
         for (const debugCommand of this.debugCommands) {
             love.graphics.push("all");
             debugCommand();

@@ -4,6 +4,7 @@ import { TakeDamageEvent } from "../../events/entity/takeDamageEvent";
 import { UpdateEvent } from "../../events/scene/updateEvent";
 import { CollisionService } from "../../services/collision-service";
 import { Position } from "../position";
+import { Body } from "./body";
 
 export class Hurtbox extends Component {
     declare private collisionService: CollisionService;
@@ -39,7 +40,9 @@ export class Hurtbox extends Component {
     }
 
     public applyDamage(damage: number, source: Entity) {
-        this.entity.emit(new TakeDamageEvent(damage, source));
+        const body = source.tryGetComponent(Body);
+
+        this.entity.emit(new TakeDamageEvent(damage, source, body?.vx ?? 0, body?.vy ?? 0));
     }
 
     public get x(): number {

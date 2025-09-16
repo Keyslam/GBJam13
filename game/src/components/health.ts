@@ -1,8 +1,13 @@
 import { Component, Entity } from "@keyslam/simple-node";
 import { DiedEvent } from "../events/entity/diedEvent";
 import { TakeDamageEvent } from "../events/entity/takeDamageEvent";
+import { ScheduleService } from "../services/schedule-service";
+import { Sprite } from "./graphics/sprite";
 
 export class Health extends Component {
+    declare private scheduleService: ScheduleService;
+    declare private sprite: Sprite;
+
     public value: number;
     public max: number;
 
@@ -14,6 +19,9 @@ export class Health extends Component {
     }
 
     protected override initialize(): void {
+        this.scheduleService = this.entity.scene.getService(ScheduleService);
+        this.sprite = this.entity.getComponent(Sprite);
+
         this.onEntityEvent(TakeDamageEvent, "onTakeDamage");
     }
 
@@ -23,6 +31,16 @@ export class Health extends Component {
         if (this.value === 0) {
             this.entity.emit(new DiedEvent());
             this.entity.scene.destroyEntity(this.entity);
+        } else {
+            void this.flash();
         }
+    }
+
+    private async flash(): Promise<void> {
+        this.sprite.flash = true;
+
+        await this.scheduleService.frames(8);
+
+        this.sprite.flash = false;
     }
 }

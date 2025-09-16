@@ -7,6 +7,7 @@ import { AnimatedSprite, createAnimation } from "../components/graphics/animated
 import { Sprite } from "../components/graphics/sprite";
 import { Health } from "../components/health";
 import { Position } from "../components/position";
+import { ApplyKnockbackOnTakeDamage } from "../components/scripting/apply-knockback-on-take-damage";
 import { SpawnEntityOnDeath } from "../components/scripting/spawn-entity-on-death";
 import { Layers } from "../data/layer";
 import { deathSmoke } from "./death-smoke";
@@ -26,8 +27,9 @@ export const enemyPlaceholder = (entity: Entity, x: number, y: number) => {
         .addComponent(Sprite, image)
         .addComponent(AnimatedSprite, animations, "run_down")
         .addComponent(EnemyPlaceholderController)
-        .addComponent(Body, 0, 0, 10, 10, 0)
+        .addComponent(Body, 0, 0, 10, 10, 20)
         .addComponent(Hurtbox, 10, 10, 'casino')
         .addComponent(Health, 3, 3)
-        .addComponent(SpawnEntityOnDeath, deathSmoke);
+        .addComponent(SpawnEntityOnDeath, deathSmoke)
+        .addComponent(ApplyKnockbackOnTakeDamage);
 };

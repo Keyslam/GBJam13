@@ -4,5 +4,7 @@ export class TakeDamageEvent implements EntityEvent {
     constructor(
         public readonly damage: number,
         public readonly source: Entity,
+        public readonly knockbackX: number,
+        public readonly knockbackY: number,
     ) { }
 }

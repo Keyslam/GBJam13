@@ -1,5 +1,4 @@
 import { Component } from "@keyslam/simple-node";
-import { UpdateEvent } from "../../events/scene/updateEvent";
 import { PlayerLocatorService } from "../../services/player-locator-service";
 import { Body } from "../collision/body";
 import { AnimatedSprite } from "../graphics/animated-sprite";
@@ -17,7 +16,7 @@ export class EnemyPlaceholderController extends Component {
         this.body = this.entity.getComponent(Body);
         this.animatedSprite = this.entity.getComponent(AnimatedSprite);
 
-        this.onSceneEvent(UpdateEvent, "update");
+        // this.onSceneEvent(UpdateEvent, "update");
     }
 
     private update(): void {

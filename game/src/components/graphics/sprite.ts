@@ -12,6 +12,7 @@ export class Sprite extends Component {
     public image: Image;
     public flipped: boolean;
     public quad: Quad | undefined;
+    public flash: boolean;
 
     constructor(entity: Entity, image: Image, flipped = false, quad: Quad | undefined = undefined) {
         super(entity);
@@ -19,6 +20,7 @@ export class Sprite extends Component {
         this.image = image;
         this.flipped = flipped;
         this.quad = quad;
+        this.flash = false;
     }
 
     protected override initialize(): void {
@@ -31,6 +33,6 @@ export class Sprite extends Component {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     private draw(event: DrawEvent): void {
-        this.renderService.drawImage(this.image, this.quad, this.position.x, this.position.y, this.position.z, this.flipped);
+        this.renderService.drawImage(this.image, this.quad, this.position.x, this.position.y, this.position.z, this.flipped, this.flash);
     }
 }
