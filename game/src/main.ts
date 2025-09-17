@@ -9,6 +9,7 @@ import { playerPrefab } from "./prefabs/player-prefab";
 import { slotMachineReelPrefab } from "./prefabs/slot-machine-reel-prefab";
 import run from "./run";
 import { CameraService } from "./services/camera-service";
+import { CoinService } from "./services/coin-service";
 import { CollisionService } from "./services/collision-service";
 import { HudService } from "./services/hud-service";
 import { PlayerLocatorService } from "./services/player-locator-service";
@@ -28,6 +29,7 @@ const scene = new Scene(
     ScheduleService,
     SlotMachineService,
     HudService,
+    CoinService,
 );
 
 const player = scene.spawnEntity(playerPrefab);

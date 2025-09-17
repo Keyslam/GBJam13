@@ -28,7 +28,7 @@ export class SlotMachineService extends Service {
     }
 
     public async start(): Promise<void> {
-        await this.scheduleService.seconds(2);
+        await this.scheduleService.seconds(10);
 
         await this.roll();
         await this.scheduleService.seconds(2);

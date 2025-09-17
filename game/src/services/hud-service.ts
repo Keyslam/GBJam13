@@ -2,6 +2,7 @@ import { Service } from "@keyslam/simple-node";
 import { Image } from "love.graphics";
 import { Health } from "../components/health";
 import { SlotSymbol } from "../data/slot-symbols";
+import { CoinService } from "./coin-service";
 import { PlayerLocatorService } from "./player-locator-service";
 import { RenderService } from "./renderService";
 import { SlotMachineService } from "./slot-machine-service";
@@ -35,10 +36,13 @@ const effectIcons = {
 } satisfies Record<SlotSymbol, Image>;
 
 
+const font = love.graphics.newFont("assets/fonts/match-7.ttf", 16)
+
 export class HudService extends Service {
     declare private playerLocatorService: PlayerLocatorService;
     declare private renderService: RenderService;
     declare private slotMachineService: SlotMachineService;
+    declare private coinService: CoinService;
 
     private previousHealths: number[] = [];
 
@@ -46,6 +50,7 @@ export class HudService extends Service {
         this.playerLocatorService = this.scene.getService(PlayerLocatorService);
         this.renderService = this.scene.getService(RenderService);
         this.slotMachineService = this.scene.getService(SlotMachineService);
+        this.coinService = this.scene.getService(CoinService);
 
         this.renderService.drawHud = () => { this.draw(); };
     }
@@ -88,7 +93,12 @@ export class HudService extends Service {
             love.graphics.draw(effectIcon, 57 + (i * 16) - 1, 2)
         }
 
-        print(slotSymbols[0], slotSymbols[1], slotSymbols[2])
+        love.graphics.setFont(font);
+        love.graphics.print("$", 114, 2)
+
+        love.graphics.setColor(love.math.colorToBytes(56, 106, 110))
+        love.graphics.print(this.coinService.amount.toString().padStart(6, "0"), 121, 2)
+
 
         love.graphics.pop();
     }

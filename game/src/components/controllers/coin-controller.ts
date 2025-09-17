@@ -1,13 +1,14 @@
 import { Component } from "@keyslam/simple-node";
 import { UpdateEvent } from "../../events/scene/updateEvent";
+import { CoinService } from "../../services/coin-service";
 import { PlayerLocatorService } from "../../services/player-locator-service";
 import { Body } from "../collision/body";
-import { Health } from "../health";
 import { Position } from "../position";
 
 const sfx = love.audio.newSource("assets/sfx/splash/pling.wav", "static");
 
 export class CoinController extends Component {
+    declare private coinService: CoinService;
     declare private playerLocatorService: PlayerLocatorService;
 
     declare private position: Position;
@@ -18,6 +19,7 @@ export class CoinController extends Component {
     private magnetStrength = 2000;
 
     protected override initialize(): void {
+        this.coinService = this.scene.getService(CoinService);
         this.playerLocatorService = this.scene.getService(PlayerLocatorService);
 
         this.position = this.entity.getComponent(Position);
@@ -42,7 +44,7 @@ export class CoinController extends Component {
         }
 
         if (distance < this.consumeRange) {
-            this.playerLocatorService.player.getComponent(Health).value++;
+            this.coinService.amount++;
 
             this.entity.scene.destroyEntity(this.entity);
             sfx.clone().play();
