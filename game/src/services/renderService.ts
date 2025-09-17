@@ -61,7 +61,7 @@ export class RenderService extends Service {
         love.graphics.push("all");
         love.graphics.translate(
             -math.floor(this.cameraService.x) + 80,
-            -math.floor(this.cameraService.y) + 72
+            -math.floor(this.cameraService.y) + 72 - 8
         );
 
 
