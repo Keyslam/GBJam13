@@ -15,6 +15,13 @@ export class SlotMachineService extends Service {
     declare private reel2: SlotMachineReelController;
     declare private reel3: SlotMachineReelController;
 
+    public rolls = 3;
+
+    public framesUntilNextRoll = 600
+    public currentFrames = 0;
+
+    public isRolling = false;
+
     public setup(reel1: SlotMachineReelController, reel2: SlotMachineReelController, reel3: SlotMachineReelController): void {
         this.reel1 = reel1;
         this.reel2 = reel2;
@@ -24,23 +31,30 @@ export class SlotMachineService extends Service {
     protected override initialize(): void {
         this.scheduleService = this.scene.getService(ScheduleService);
 
-        void this.start();
+        void (async () => {
+            await this.scheduleService.seconds(10);
+            void this.go();
+        })();
     }
 
-    public async start(): Promise<void> {
-        await this.scheduleService.seconds(10);
+    public async go(): Promise<void> {
+        while (this.rolls > 0) {
+            await this.scheduleService.frames(1);
 
-        await this.roll();
-        await this.scheduleService.seconds(2);
+            this.currentFrames++;
 
-        await this.roll();
-        await this.scheduleService.seconds(2);
+            if (this.currentFrames === this.framesUntilNextRoll) {
+                this.rolls--;
+                await this.roll();
 
-        await this.roll();
-        await this.scheduleService.seconds(2);
+                this.currentFrames = 0;
+            }
+        }
     }
 
     public async roll(): Promise<SlotSymbol[]> {
+        this.isRolling = true;
+
         const sfx1 = rouletteSpin1Sfx.clone();
         sfx1.play();
 
@@ -69,6 +83,8 @@ export class SlotMachineService extends Service {
         sfx3.stop();
 
         rouletteChimeSfx.clone().play();
+
+        this.isRolling = false;
 
         return [symbol1, symbol2, symbol3];
     }

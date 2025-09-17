@@ -6,6 +6,7 @@
     [x] Health
     [x] Coins
     [x] Rolling
+    [x] Progress bar
 [ ] Effects
 [ ] Enemy AI
 [ ] Bounds collision

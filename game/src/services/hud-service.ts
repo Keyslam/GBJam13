@@ -38,6 +38,17 @@ const effectIcons = {
 
 const font = love.graphics.newFont("assets/fonts/match-7.ttf", 16)
 
+const progressBar = love.graphics.newImage("assets/sprites/hud/progress-bar.png");
+const progressBarIdle = love.graphics.newQuad(0, 0, 160, 2, 800, 2);
+const progressBarFlash = [
+    love.graphics.newQuad(160, 0, 160, 2, 800, 2),
+    love.graphics.newQuad(320, 0, 160, 2, 800, 2),
+    love.graphics.newQuad(480, 0, 160, 2, 800, 2),
+    love.graphics.newQuad(640, 0, 160, 2, 800, 2),
+]
+const progressBarLead = love.graphics.newImage("assets/sprites/hud/progress-bar-lead.png");
+
+
 export class HudService extends Service {
     declare private playerLocatorService: PlayerLocatorService;
     declare private renderService: RenderService;
@@ -95,9 +106,20 @@ export class HudService extends Service {
 
         love.graphics.setFont(font);
         love.graphics.print("$", 114, 2)
-
-        love.graphics.setColor(love.math.colorToBytes(56, 106, 110))
         love.graphics.print(this.coinService.amount.toString().padStart(6, "0"), 121, 2)
+
+        const progress = this.slotMachineService.currentFrames / this.slotMachineService.framesUntilNextRoll
+        love.graphics.setScissor(0, 126, 160 * progress, 2)
+        love.graphics.draw(progressBar, progressBarIdle, 0, 0)
+        love.graphics.draw(progressBarLead, 160 * progress - 1.5, 0)
+
+        if (this.slotMachineService.isRolling) {
+            const i = math.floor(love.timer.getTime() * 5) % 4
+            const flash = progressBarFlash[i]!
+            love.graphics.draw(progressBar, flash, 0, 0)
+        }
+
+        love.graphics.setScissor()
 
 
         love.graphics.pop();
