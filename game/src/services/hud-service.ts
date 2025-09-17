@@ -1,7 +1,10 @@
 import { Service } from "@keyslam/simple-node";
+import { Image } from "love.graphics";
 import { Health } from "../components/health";
+import { SlotSymbol } from "../data/slot-symbols";
 import { PlayerLocatorService } from "./player-locator-service";
 import { RenderService } from "./renderService";
+import { SlotMachineService } from "./slot-machine-service";
 
 const bg = love.graphics.newImage("assets/sprites/hud/background.png")
 
@@ -14,15 +17,35 @@ const healthPointEmpty = love.graphics.newQuad(0, 0, 4, 16, 12, 16);
 const healthPointRise = love.graphics.newQuad(4, 0, 4, 16, 12, 16);
 const healthPointFull = love.graphics.newQuad(8, 0, 4, 16, 12, 16);
 
+const slot = love.graphics.newImage("assets/sprites/hud/slot.png");
+const effectIcons = {
+    apple: love.graphics.newImage("assets/sprites/hud/effect-apple.png"),
+    bar: love.graphics.newImage("assets/sprites/hud/effect-bar.png"),
+    bomb: love.graphics.newImage("assets/sprites/hud/effect-bomb.png"),
+    cherry: love.graphics.newImage("assets/sprites/hud/effect-cherry.png"),
+    dice: love.graphics.newImage("assets/sprites/hud/effect-dice.png"),
+    doubleshot: love.graphics.newImage("assets/sprites/hud/effect-doubleshot.png"),
+    fire: love.graphics.newImage("assets/sprites/hud/effect-fire.png"),
+    gun: love.graphics.newImage("assets/sprites/hud/effect-gun.png"),
+    heal: love.graphics.newImage("assets/sprites/hud/effect-heart.png"),
+    lemon: love.graphics.newImage("assets/sprites/hud/effect-lemon.png"),
+    lightning: love.graphics.newImage("assets/sprites/hud/effect-lightning.png"),
+    speedup: love.graphics.newImage("assets/sprites/hud/effect-speedup.png"),
+    tripplebar: love.graphics.newImage("assets/sprites/hud/effect-tripplebar.png"),
+} satisfies Record<SlotSymbol, Image>;
+
+
 export class HudService extends Service {
     declare private playerLocatorService: PlayerLocatorService;
     declare private renderService: RenderService;
+    declare private slotMachineService: SlotMachineService;
 
     private previousHealths: number[] = [];
 
     protected override initialize(): void {
         this.playerLocatorService = this.scene.getService(PlayerLocatorService);
         this.renderService = this.scene.getService(RenderService);
+        this.slotMachineService = this.scene.getService(SlotMachineService);
 
         this.renderService.drawHud = () => { this.draw(); };
     }
@@ -56,6 +79,16 @@ export class HudService extends Service {
 
             love.graphics.draw(healthPoint, healthPointQuad, 17 + (i * 4), 2)
         }
+
+        const slotSymbols = this.slotMachineService.getCurrentSymbols();
+
+        for (let i = 0; i < 3; i++) {
+            const effectIcon = effectIcons[slotSymbols[i]!];
+            love.graphics.draw(slot, 57 + (i * 16), 3)
+            love.graphics.draw(effectIcon, 57 + (i * 16) - 1, 2)
+        }
+
+        print(slotSymbols[0], slotSymbols[1], slotSymbols[2])
 
         love.graphics.pop();
     }

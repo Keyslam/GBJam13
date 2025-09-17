@@ -1,7 +1,7 @@
 export type Layer = number;
 
 export const Layers = {
-    rouletteWheel: 0,
+    slot_machine: 0,
     background: 1,
     foreground: 2,
     foreground_sfx: 3,

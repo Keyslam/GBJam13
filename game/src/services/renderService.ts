@@ -56,7 +56,7 @@ export class RenderService extends Service {
 
         love.graphics.setShader(this.shader);
         this.shader.send("palettes", this.palettes);
-        this.shader.send("pal", 0);
+        this.shader.send("pal", 1);
 
         love.graphics.push("all");
         love.graphics.translate(

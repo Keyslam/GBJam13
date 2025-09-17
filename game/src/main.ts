@@ -1,12 +1,12 @@
 import { Scene } from "@keyslam/simple-node";
-import { RouletteWheelController } from "./components/controllers/roulette-wheel-controller";
+import { SlotMachineReelController } from "./components/controllers/slot-machine-reel-controller";
 import { DrawEvent } from "./events/scene/drawEvent";
 import { UpdateEvent } from "./events/scene/updateEvent";
 import { arenaFencePrefab } from "./prefabs/arena/arena-fence-prefab";
 import { arenaFloorPrefab } from "./prefabs/arena/arena-floor-prefab";
 import { enemyPlaceholder } from "./prefabs/enemy-placeholder";
 import { playerPrefab } from "./prefabs/player-prefab";
-import { rouletteWheel } from "./prefabs/roulette-wheel";
+import { slotMachineReelPrefab } from "./prefabs/slot-machine-reel-prefab";
 import run from "./run";
 import { CameraService } from "./services/camera-service";
 import { CollisionService } from "./services/collision-service";
@@ -36,14 +36,14 @@ scene.getService(PlayerLocatorService).player = player;
 scene.spawnEntity(arenaFloorPrefab);
 scene.spawnEntity(arenaFencePrefab);
 
-const wheel1 = scene.spawnEntity(rouletteWheel, -80, 0, 1);
-const wheel2 = scene.spawnEntity(rouletteWheel, 0, 0, 2);
-const wheel3 = scene.spawnEntity(rouletteWheel, 80, 0, 3);
+const reel1 = scene.spawnEntity(slotMachineReelPrefab, -80, 0);
+const reel2 = scene.spawnEntity(slotMachineReelPrefab, 0, 0);
+const reel3 = scene.spawnEntity(slotMachineReelPrefab, 80, 0);
 
 scene.getService(SlotMachineService).setup(
-    wheel1.getComponent(RouletteWheelController),
-    wheel2.getComponent(RouletteWheelController),
-    wheel3.getComponent(RouletteWheelController),
+    reel1.getComponent(SlotMachineReelController),
+    reel2.getComponent(SlotMachineReelController),
+    reel3.getComponent(SlotMachineReelController),
 );
 
 
