@@ -15,6 +15,8 @@ export class SlotMachineService extends Service {
     declare private reel2: SlotMachineReelController;
     declare private reel3: SlotMachineReelController;
 
+    private reels: SlotMachineReelController[] = [];
+
     public rolls = 3;
 
     public framesUntilNextRoll = 600
@@ -26,15 +28,17 @@ export class SlotMachineService extends Service {
         this.reel1 = reel1;
         this.reel2 = reel2;
         this.reel3 = reel3;
+
+        this.reels = [reel1, reel2, reel3]
     }
 
     protected override initialize(): void {
         this.scheduleService = this.scene.getService(ScheduleService);
 
-        void (async () => {
-            await this.scheduleService.seconds(10);
-            void this.go();
-        })();
+        // void (async () => {
+        //     await this.scheduleService.seconds(10);
+        //     void this.go();
+        // })();
     }
 
     public async go(): Promise<void> {
@@ -50,6 +54,11 @@ export class SlotMachineService extends Service {
                 this.currentFrames = 0;
             }
         }
+    }
+
+    public setSymbol(index: number, symbol: SlotSymbol) {
+        const reelindex = math.floor(index / 3)
+        this.reels[reelindex]!.panelSymbols[index % 3] = symbol;
     }
 
     public async roll(): Promise<SlotSymbol[]> {
@@ -87,6 +96,14 @@ export class SlotMachineService extends Service {
         this.isRolling = false;
 
         return [symbol1, symbol2, symbol3];
+    }
+
+    public getAllSymbols(): SlotSymbol[] {
+        return [
+            ...this.reel1.panelSymbols,
+            ...this.reel2.panelSymbols,
+            ...this.reel3.panelSymbols,
+        ]
     }
 
     public getCurrentSymbols(): SlotSymbol[] {

@@ -47,7 +47,7 @@ export class SlotMachineReelController extends Component {
 
     private readonly panels: SlotMachinePanelController[] = [];
 
-    private panelSymbols: SlotSymbol[] = getRandomElements(SlotSymbols, 3);
+    public panelSymbols: SlotSymbol[] = getRandomElements(SlotSymbols, 3);
 
     constructor(entity: Entity, panel1: Entity, panel2: Entity, panel3: Entity) {
         super(entity);

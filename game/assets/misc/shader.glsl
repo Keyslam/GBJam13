@@ -4,6 +4,10 @@ uniform int pal;
 uniform bool flash;
 
 vec4 effect( vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords ) {
+    if (color.a == 0.f) {
+        discard;
+    }
+
 	float step = 1.f / 9.f;
 
     vec4 pixel = Texel(tex, texture_coords);

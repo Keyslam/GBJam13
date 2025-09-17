@@ -1,6 +1,8 @@
 import { Scene } from "@keyslam/simple-node";
+import { KeyConstant } from "love.keyboard";
 import { SlotMachineReelController } from "./components/controllers/slot-machine-reel-controller";
 import { DrawEvent } from "./events/scene/drawEvent";
+import { KeypressedEvent } from "./events/scene/keypressedEvent";
 import { UpdateEvent } from "./events/scene/updateEvent";
 import { arenaFencePrefab } from "./prefabs/arena/arena-fence-prefab";
 import { arenaFloorPrefab } from "./prefabs/arena/arena-floor-prefab";
@@ -15,6 +17,7 @@ import { HudService } from "./services/hud-service";
 import { PlayerLocatorService } from "./services/player-locator-service";
 import { RenderService } from "./services/renderService";
 import { ScheduleService } from "./services/schedule-service";
+import { ShopService } from "./services/shop-service";
 import { SlotMachineService } from "./services/slot-machine-service";
 
 love.graphics.setDefaultFilter("nearest", "nearest");
@@ -30,6 +33,7 @@ const scene = new Scene(
     SlotMachineService,
     HudService,
     CoinService,
+    ShopService
 );
 
 const player = scene.spawnEntity(playerPrefab);
@@ -63,6 +67,10 @@ love.draw = () => {
     scene.emit(new DrawEvent())
 
     love.window.setTitle(`GBJam13 - FPS: ${math.floor(love.timer.getFPS()).toString()}`);
+}
+
+love.keypressed = (_, key) => {
+    scene.emit(new KeypressedEvent(key as unknown as KeyConstant))
 }
 
 love.run = run;

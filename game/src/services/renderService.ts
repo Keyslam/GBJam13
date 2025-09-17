@@ -20,6 +20,7 @@ export class RenderService extends Service {
     private shader = love.graphics.newShader("assets/misc/shader.glsl");
 
     declare public drawHud: () => void;
+    declare public drawShop: () => void;
 
     public drawImage(image: Image, quad: Quad | undefined, x: number, y: number, z: number, flipped: boolean, flash: boolean) {
         this.commands.push({ image, quad, x, y, z, flipped, flash, type: "image" });
@@ -93,6 +94,7 @@ export class RenderService extends Service {
 
         love.graphics.pop();
         this.drawHud();
+        this.drawShop();
 
         this.commands = [];
         this.debugCommands = [];
