@@ -1,10 +1,12 @@
 import { Service } from "@keyslam/simple-node";
+import { Source } from "love.audio";
 import { ColouredText, Image } from "love.graphics";
 import { SlotSymbol } from "../data/slot-symbols";
 import { KeypressedEvent } from "../events/scene/keypressedEvent";
 import { UpdateEvent } from "../events/scene/updateEvent";
 import { CoinService } from "./coin-service";
 import { RenderService } from "./renderService";
+import { SceneService } from "./scene-service";
 import { ScheduleService } from "./schedule-service";
 import { SlotMachineService } from "./slot-machine-service";
 
@@ -60,7 +62,7 @@ interface ShopOffer {
     purchased: boolean,
 }
 
-const music = love.audio.newSource("assets/music/shop-concept.wav", "stream")
+const music = love.audio.newSource("assets/music/shop.mp3", "stream")
 music.setLooping(true)
 music.setVolume(0.9)
 const bpm = 130
@@ -206,6 +208,7 @@ export class ShopService extends Service {
     declare private renderService: RenderService;
     declare private slotMachineService: SlotMachineService;
     declare private coinService: CoinService;
+    declare private sceneService: SceneService;
 
     private state: 'shop' | 'equip' | 'transition' = 'shop';
 
@@ -262,23 +265,29 @@ export class ShopService extends Service {
     };
     private equipReplacing = false;
 
+    private displayCoinsAmount = 0;
+
     protected override initialize(): void {
         this.renderService = this.scene.getService(RenderService);
         this.schedulerService = this.scene.getService(ScheduleService);
         this.slotMachineService = this.scene.getService(SlotMachineService);
         this.coinService = this.scene.getService(CoinService);
+        this.sceneService = this.scene.getService(SceneService);
 
         this.renderService.drawShop = () => { this.draw() }
 
         this.onSceneEvent(UpdateEvent, "update")
         this.onSceneEvent(KeypressedEvent, "onKeyPressed")
-
-        music.play();
-
-        this.enter();
     }
 
+    private musicTrack: Source | undefined;
+
     public enter(): void {
+        this.musicTrack = music.clone();
+        this.musicTrack.play();
+
+        this.displayCoinsAmount = this.coinService.amount;
+
         const selectedOffer = this.offers[this.selectedSlotIndex]!;
 
         this.shopTitle.text = selectedOffer.effect.title;
@@ -288,7 +297,15 @@ export class ShopService extends Service {
         this.flavourText.shownFor = 0;
     }
 
+    public exit(): void {
+        this.musicTrack?.stop();
+    }
+
     private onKeyPressed(event: KeypressedEvent): void {
+        if (this.sceneService.activeScene !== 'shop') {
+            return;
+        }
+
         if (this.state === 'shop') {
             let row = Math.floor(this.selectedSlotIndex / 3);
             let col = this.selectedSlotIndex % 3;
@@ -335,7 +352,9 @@ export class ShopService extends Service {
             if (event.key === 'z') {
                 const selectedOffer = this.offers[this.selectedSlotIndex]!;
 
-                if (selectedOffer.purchased) {
+                if (this.selectedSlotIndex === 5) {
+                    void this.scene.getService(SceneService).toArena();
+                } else if (selectedOffer.purchased) {
                     soldOutSfx.clone().play();
 
                     const text = soldOutQuips[math.floor(love.math.random() * soldOutQuips.length)]!;
@@ -345,7 +364,6 @@ export class ShopService extends Service {
                     const canAfford = this.coinService.amount >= selectedOffer.price
 
                     if (canAfford) {
-
                         confirmSfx.clone().play();
 
                         void this.toEquip();
@@ -483,14 +501,39 @@ export class ShopService extends Service {
         }
     }
 
+    private wasInShop = false;
 
     private update(): void {
+        if (this.sceneService.activeScene !== 'shop') {
+            if (this.wasInShop) {
+                this.wasInShop = false;
+                this.exit();
+            }
+
+            return;
+        } else {
+            if (!this.wasInShop) {
+                this.enter();
+            }
+            this.wasInShop = true;
+        }
+
         this.shopTitle.shownFor++;
         this.flavourText.shownFor++;
         this.equipTitle.shownFor++;
+
+        if (this.displayCoinsAmount < this.coinService.amount) {
+            this.displayCoinsAmount = math.min(this.coinService.amount, this.displayCoinsAmount + 0.4)
+        } else if (this.displayCoinsAmount > this.coinService.amount) {
+            this.displayCoinsAmount = math.max(this.coinService.amount, this.displayCoinsAmount - 0.4);
+        }
     }
 
     private draw(): void {
+        if (this.sceneService.activeScene !== 'shop') {
+            return;
+        }
+
         love.graphics.translate(-this.offset, 0);
 
         {
@@ -543,7 +586,7 @@ export class ShopService extends Service {
 
             love.graphics.draw(hover, 75 + hoverX * 28, 18 + hoverY * 40)
 
-            love.graphics.print(this.coinService.amount.toString().padStart(6, "0"), 122, 104)
+            love.graphics.print(math.floor(this.displayCoinsAmount).toString().padStart(6, "0"), 122, 104)
         }
 
         {

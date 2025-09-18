@@ -14,8 +14,10 @@ import { CameraService } from "./services/camera-service";
 import { CoinService } from "./services/coin-service";
 import { CollisionService } from "./services/collision-service";
 import { HudService } from "./services/hud-service";
+import { IntroService } from "./services/intro-service";
 import { PlayerLocatorService } from "./services/player-locator-service";
 import { RenderService } from "./services/renderService";
+import { SceneService } from "./services/scene-service";
 import { ScheduleService } from "./services/schedule-service";
 import { ShopService } from "./services/shop-service";
 import { SlotMachineService } from "./services/slot-machine-service";
@@ -33,7 +35,9 @@ const scene = new Scene(
     SlotMachineService,
     HudService,
     CoinService,
-    ShopService
+    ShopService,
+    SceneService,
+    IntroService,
 );
 
 const player = scene.spawnEntity(playerPrefab);

@@ -2,25 +2,34 @@ import { Service } from "@keyslam/simple-node";
 import { Image, Quad } from "love.graphics";
 import { DrawEvent } from "../events/scene/drawEvent";
 import { CameraService } from "./camera-service";
+import { SceneService } from "./scene-service";
 
 interface ImageCommand { image: Image, quad: Quad | undefined, flipped: boolean, flash: boolean, type: "image" }
 type Command = { x: number, y: number, z: number } & ImageCommand;
 
 type DebugCommand = () => void;
 
+const paletteImages = [
+    love.graphics.newImage("assets/misc/gbpals.png"),
+    love.graphics.newImage("assets/misc/gbpals-1.png"),
+    love.graphics.newImage("assets/misc/gbpals-2.png"),
+    love.graphics.newImage("assets/misc/gbpals-3.png"),
+]
+
 export class RenderService extends Service {
     declare private cameraService: CameraService;
+    declare private sceneService: SceneService;
 
     private commands: Command[] = [];
     private debugCommands: DebugCommand[] = [];
 
     private canvas = love.graphics.newCanvas(160, 144);
 
-    private palettes = love.graphics.newImage("assets/misc/gbpals.png");
     private shader = love.graphics.newShader("assets/misc/shader.glsl");
 
     declare public drawHud: () => void;
     declare public drawShop: () => void;
+    declare public drawIntro: () => void;
 
     public drawImage(image: Image, quad: Quad | undefined, x: number, y: number, z: number, flipped: boolean, flash: boolean) {
         this.commands.push({ image, quad, x, y, z, flipped, flash, type: "image" });
@@ -32,6 +41,7 @@ export class RenderService extends Service {
 
     protected override initialize(): void {
         this.cameraService = this.scene.getService(CameraService);
+        this.sceneService = this.scene.getService(SceneService);
 
         this.onSceneEvent(DrawEvent, "draw");
     }
@@ -56,7 +66,8 @@ export class RenderService extends Service {
 
 
         love.graphics.setShader(this.shader);
-        this.shader.send("palettes", this.palettes);
+        const palette = paletteImages[math.floor(this.sceneService.fadeAmount * 3)]!;
+        this.shader.send("palettes", palette);
         this.shader.send("pal", 0);
 
         love.graphics.push("all");
@@ -93,8 +104,10 @@ export class RenderService extends Service {
         }
 
         love.graphics.pop();
+
         this.drawHud();
         this.drawShop();
+        this.drawIntro();
 
         this.commands = [];
         this.debugCommands = [];

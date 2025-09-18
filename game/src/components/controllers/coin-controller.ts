@@ -2,6 +2,7 @@ import { Component } from "@keyslam/simple-node";
 import { UpdateEvent } from "../../events/scene/updateEvent";
 import { CoinService } from "../../services/coin-service";
 import { PlayerLocatorService } from "../../services/player-locator-service";
+import { SceneService } from "../../services/scene-service";
 import { Body } from "../collision/body";
 import { Position } from "../position";
 
@@ -48,6 +49,8 @@ export class CoinController extends Component {
 
             this.entity.scene.destroyEntity(this.entity);
             sfx.clone().play();
+
+            void this.scene.getService(SceneService).toShop();
         }
     }
 }
