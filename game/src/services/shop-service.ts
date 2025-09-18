@@ -65,7 +65,7 @@ interface ShopOffer {
 const music = love.audio.newSource("assets/music/shop.mp3", "stream")
 music.setLooping(true)
 music.setVolume(0.9)
-const bpm = 130
+const bpm = 133
 
 const bg = love.graphics.newImage("assets/sprites/shop/background.png")
 const sign = love.graphics.newImage("assets/sprites/shop/sign.png")
@@ -73,6 +73,12 @@ const signFrames = [
     love.graphics.newQuad(0, 0, 80, 40, 240, 40),
     love.graphics.newQuad(80, 0, 80, 40, 240, 40),
     love.graphics.newQuad(160, 0, 80, 40, 240, 40),
+]
+
+const bigRed = love.graphics.newImage("assets/sprites/shop/big-red.png")
+const bigRedFrames = [
+    love.graphics.newQuad(0, 0, 114, 72, 228, 72),
+    love.graphics.newQuad(114, 0, 114, 72, 228, 72),
 ]
 
 const purchaseSfx = love.audio.newSource("assets/sfx/shop/purchase.wav", "static");
@@ -539,12 +545,16 @@ export class ShopService extends Service {
         {
             love.graphics.draw(bg)
 
-            const songTime = music.tell();
+            const songTime = this.musicTrack!.tell();
             const secondsPerBeat = 60 / bpm;
             const beatIndex = math.floor(songTime / secondsPerBeat);
 
             const signFrame = signFrames[(beatIndex % signFrames.length - 1) + 1]!;
             love.graphics.draw(sign, signFrame)
+
+            const bigRedFrameIndex = math.floor(beatIndex / 2);
+            const bigRedFrame = bigRedFrames[bigRedFrameIndex % bigRedFrames.length]!;
+            love.graphics.draw(bigRed, bigRedFrame, 0, 41)
 
             love.graphics.setFont(font);
 
