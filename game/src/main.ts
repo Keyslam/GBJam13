@@ -13,6 +13,7 @@ import run from "./run";
 import { CameraService } from "./services/camera-service";
 import { CoinService } from "./services/coin-service";
 import { CollisionService } from "./services/collision-service";
+import { EffectService } from "./services/effect-service";
 import { HudService } from "./services/hud-service";
 import { IntroService } from "./services/intro-service";
 import { PlayerLocatorService } from "./services/player-locator-service";
@@ -38,6 +39,7 @@ const scene = new Scene(
     ShopService,
     SceneService,
     IntroService,
+    EffectService
 );
 
 const player = scene.spawnEntity(playerPrefab);
@@ -57,8 +59,8 @@ scene.getService(SlotMachineService).setup(
 );
 
 
-for (let i = 0; i < 5; i++) {
-    scene.spawnEntity(enemyPlaceholder, i * 80 + 50, i * -20);
+for (let i = 0; i < 10; i++) {
+    scene.spawnEntity(enemyPlaceholder, i * 20 + 30, 0);
 }
 
 scene.getService(CameraService).target = player;

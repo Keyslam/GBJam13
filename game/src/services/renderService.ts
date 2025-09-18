@@ -87,11 +87,11 @@ export class RenderService extends Service {
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     const [_x, _y, w, h] = command.quad.getViewport();
                     this.shader.send("flash", command.flash);
-                    love.graphics.draw(command.image, command.quad, x, y, 0, command.flipped ? -1 : 1, 1, w / 2, h / 2);
+                    love.graphics.draw(command.image, command.quad, x + (w % 2 === 0 ? 0 : 0.5), y + (h % 2 === 0 ? 0 : 0.5), 0, command.flipped ? -1 : 1, 1, w / 2, h / 2);
                 } else {
                     this.shader.send("flash", false);
                     const [w, h] = command.image.getDimensions();
-                    love.graphics.draw(command.image, x, y, 0, command.flipped ? -1 : 1, 1, w / 2, h / 2);
+                    love.graphics.draw(command.image, x + (w % 2 === 0 ? 0 : 0.5), y + (h % 2 === 0 ? 0 : 0.5), 0, command.flipped ? -1 : 1, 1, w / 2, h / 2);
                 }
             }
         }

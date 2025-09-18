@@ -34,7 +34,7 @@ export interface Animation {
 export class AnimatedSprite extends Component {
     declare private sprite: Sprite;
 
-    private animations: Record<string, Animation>;
+    public animations: Record<string, Animation>;
     private activeAnimationName: string;
 
     private frame = 0;

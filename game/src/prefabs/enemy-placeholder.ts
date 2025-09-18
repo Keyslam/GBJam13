@@ -30,7 +30,7 @@ export const enemyPlaceholder = (entity: Entity, x: number, y: number) => {
         .addComponent(EnemyPlaceholderController)
         .addComponent(Body, 0, 0, 10, 10, 20)
         .addComponent(Hurtbox, 10, 10, 'casino')
-        .addComponent(Health, 3, 3)
+        .addComponent(Health, 1, 3)
         .addComponent(SpawnEntityOnDeath, [deathSmoke, coinFromEnemyPrefab])
         .addComponent(ApplyKnockbackOnTakeDamage);
 };
