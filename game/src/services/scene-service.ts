@@ -4,7 +4,7 @@ import { ScheduleService } from "./schedule-service";
 export class SceneService extends Service {
     declare private schedulerService: ScheduleService;
 
-    public activeScene: 'intro' | 'title' | 'arena' | 'shop' = 'shop';
+    public activeScene: 'intro' | 'title' | 'arena' | 'shop' = 'arena';
 
     public fadeAmount = 0;
 

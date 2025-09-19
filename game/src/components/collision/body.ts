@@ -16,9 +16,11 @@ export class Body extends Component {
     public w: number;
     public h: number;
 
+    private dieOnCollision = false
+
     public friction = 20;
 
-    constructor(entity: Entity, vx: number, vy: number, w: number, h: number, friction: number) {
+    constructor(entity: Entity, vx: number, vy: number, w: number, h: number, friction: number, dieOnCollision = false) {
         super(entity);
 
         this.vx = vx;
@@ -28,6 +30,8 @@ export class Body extends Component {
         this.h = h;
 
         this.friction = friction;
+
+        this.dieOnCollision = dieOnCollision;
     }
 
     protected override initialize(): void {
@@ -52,28 +56,38 @@ export class Body extends Component {
         let targetX = this.position.x + this.vx * event.dt
         let targetY = this.position.y + this.vy * event.dt
 
+        let collided = false;
+
         if (targetX < -224) {
             targetX = -224;
             this.vx = 0;
+            collided = true;
         }
 
         if (targetX > 224) {
             targetX = 224;
             this.vx = 0;
+            collided = true;
         }
 
         if (targetY < -140) {
             targetY = -140;
             this.vy = 0;
+            collided = true;
         }
 
         if (targetY > 132) {
             targetY = 132;
             this.vy = 0;
+            collided = true;
         }
 
         this.position.x = targetX;
         this.position.y = targetY;
+
+        if (collided && this.dieOnCollision) {
+            this.entity.scene.destroyEntity(this.entity);
+        }
     }
 
     public get x(): number {
