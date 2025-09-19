@@ -16,6 +16,8 @@ const paletteImages = [
     love.graphics.newImage("assets/misc/gbpals-3.png"),
 ]
 
+const dither = love.graphics.newImage("assets/sprites/transition-dither.png")
+
 export class RenderService extends Service {
     declare private cameraService: CameraService;
     declare private sceneService: SceneService;
@@ -108,6 +110,8 @@ export class RenderService extends Service {
         this.drawHud();
         this.drawShop();
         this.drawIntro();
+
+        love.graphics.draw(dither, (1 - this.sceneService.ditherAmount) * -320, 0)
 
         this.commands = [];
         this.debugCommands = [];
