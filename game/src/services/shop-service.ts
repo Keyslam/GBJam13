@@ -205,6 +205,8 @@ const slotSymbolMap = {
     lightning: { image: love.graphics.newImage("assets/sprites/shop/icon-lightning.png"), title: "LIGHTNING" },
     speedup: { image: love.graphics.newImage("assets/sprites/shop/icon-speedup.png"), title: "SPEED UP" },
     tripplebar: { image: love.graphics.newImage("assets/sprites/shop/icon-tripplebar.png"), title: "TRPLBAR" },
+
+    death: { image: love.graphics.newImage("assets/sprites/shop/icon-tripplebar.png"), title: "DEATH" },
 } satisfies Record<SlotSymbol, { image: Image, title: string }>
 
 const hover = love.graphics.newImage("assets/sprites/shop/hover.png")

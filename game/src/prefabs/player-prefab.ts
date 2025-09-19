@@ -40,5 +40,5 @@ export const playerPrefab = (entity: Entity) => {
         .addComponent(Sprite, image)
         .addComponent(AnimatedSprite, animations, "idle_south")
         .addComponent(Health, 4, 8)
-        .addComponent(Hurtbox, 8, 8, 'player', 1)
+        .addComponent(Hurtbox, 4, 4, 'player', 1)
 }

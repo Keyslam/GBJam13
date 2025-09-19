@@ -21,10 +21,11 @@ export const SlotSymbols: SlotSymbol[] = [
     'lightning',
     'speedup',
     'tripplebar',
+    'death'
 ]
 
 function shuffleArray<T>(arr: T[]): T[] {
-    const result = [...arr]; // copy
+    const result = [...arr];
     for (let i = result.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [result[i], result[j]] = [result[j]!, result[i]!];
@@ -32,6 +33,7 @@ function shuffleArray<T>(arr: T[]): T[] {
     return result;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getRandomElements<T>(arr: T[], count: number): T[] {
     if (count > arr.length) throw new Error("Count cannot be greater than array length");
     return shuffleArray(arr).slice(0, count);
@@ -47,7 +49,8 @@ export class SlotMachineReelController extends Component {
 
     private readonly panels: SlotMachinePanelController[] = [];
 
-    public panelSymbols: SlotSymbol[] = getRandomElements(SlotSymbols, 3);
+    public panelSymbolsBackup: SlotSymbol[] = [];
+    public panelSymbols: SlotSymbol[] = ['bar', 'lightning', 'bar'];
 
     constructor(entity: Entity, panel1: Entity, panel2: Entity, panel3: Entity) {
         super(entity);
@@ -74,9 +77,23 @@ export class SlotMachineReelController extends Component {
         this.setSymbols();
     }
 
-    public async roll(amount: number): Promise<SlotSymbol> {
+    public reset() {
+        this.panelSymbols[0] = this.panelSymbolsBackup[0]!;
+        this.panelSymbols[1] = this.panelSymbolsBackup[1]!;
+        this.panelSymbols[2] = this.panelSymbolsBackup[2]!;
+
+        this.setSymbols();
+    }
+
+    public async roll(amount: number, death: boolean): Promise<SlotSymbol> {
+        if (death) {
+            for (let i = 0; i < 3; i++) {
+                this.panelSymbolsBackup[i] = this.panelSymbols[i]!;
+            }
+        }
+
         for (let i = 0; i < amount; i++) {
-            await this.doOneRoll();
+            await this.doOneRoll(death);
         }
 
         this.cameraService.shake(0.3);
@@ -89,7 +106,7 @@ export class SlotMachineReelController extends Component {
         return this.panelSymbols[1]!;
     }
 
-    private async doOneRoll(): Promise<void> {
+    private async doOneRoll(death: boolean): Promise<void> {
         const t = 0.01
 
         this.panel1.getComponent(AnimatedSprite).play("topToMiddle");
@@ -98,6 +115,10 @@ export class SlotMachineReelController extends Component {
 
         await this.schedulerService.seconds(10 * t);
         this.panel3.getComponent(AnimatedSprite).play("toTop");
+        if (death) {
+            this.panelSymbols[2] = 'death';
+        }
+
         await this.schedulerService.seconds(4 * t);
 
         this.panel1.getComponent(AnimatedSprite).play("stopTop");

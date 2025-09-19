@@ -19,8 +19,9 @@ export class SceneService extends Service {
         await this.fadeIn();
     }
 
-    public async toShop(): Promise<void> {
+    public async toShop(fn?: () => void): Promise<void> {
         await this.fadeOut();
+        fn?.();
         await this.schedulerService.seconds(0.5);
         this.activeScene = 'shop'
         await this.fadeIn();

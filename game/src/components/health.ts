@@ -25,6 +25,13 @@ export class Health extends Component {
         this.onEntityEvent(TakeDamageEvent, "onTakeDamage");
     }
 
+    public kill(): void {
+        this.value = 0;
+
+        this.entity.emit(new DiedEvent());
+        this.entity.scene.destroyEntity(this.entity);
+    }
+
     private onTakeDamage(event: TakeDamageEvent): void {
         this.value = math.max(0, this.value - event.damage);
 

@@ -12,3 +12,4 @@ export type SlotSymbol =
     | 'lightning'
     | 'speedup'
     | 'tripplebar'
+    | 'death'

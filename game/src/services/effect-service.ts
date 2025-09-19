@@ -1,50 +1,40 @@
 import { Service } from "@keyslam/simple-node";
+import { SlotSymbol } from "../data/slot-symbols";
 import { barEffect } from "../effects/bar-effect";
+import { Effect } from "../effects/effect";
 import { lightningEffect } from "../effects/lightning-effect";
 import { tripplebarEffect } from "../effects/tripplebar-effect";
-import { UpdateEvent } from "../events/scene/updateEvent";
 import { ScheduleService } from "./schedule-service";
+
+const effectMap: Partial<Record<SlotSymbol, Effect>> = {
+    bar: barEffect,
+    lightning: lightningEffect,
+    tripplebar: tripplebarEffect,
+};
 
 export class EffectService extends Service {
     declare private scheduleService: ScheduleService;
 
     protected override initialize(): void {
         this.scheduleService = this.scene.getService(ScheduleService);
-
-        this.onSceneEvent(UpdateEvent, "update")
     }
 
-    private did = false;
-    public update(): void {
-        const will = love.keyboard.isDown("t", "y", "u");
+    public async runWith(effects: SlotSymbol[]): Promise<void> {
+        const uniqueOrder: SlotSymbol[] = [];
 
-        if (will && !this.did) {
-
-            if (love.keyboard.isDown("t")) {
-                void this.runLightningEffect(0);
-            }
-
-            if (love.keyboard.isDown("y")) {
-                void this.runLightningEffect(1);
-            }
-
-            if (love.keyboard.isDown("u")) {
-                void this.runLightningEffect(2);
+        // preserve the first appearance order
+        for (const symbol of effects) {
+            if (!uniqueOrder.includes(symbol)) {
+                uniqueOrder.push(symbol);
             }
         }
-        this.did = will;
-    }
 
-
-    public async runBarEffect(intensity: number): Promise<void> {
-        await barEffect(this.scene, this.scheduleService, intensity);
-    }
-
-    public async runTrippleBarEffect(intensity: number): Promise<void> {
-        await tripplebarEffect(this.scene, this.scheduleService, intensity);
-    }
-
-    public async runLightningEffect(intensity: number): Promise<void> {
-        await lightningEffect(this.scene, this.scheduleService, intensity);
+        for (const symbol of uniqueOrder) {
+            const count = effects.filter(x => x === symbol).length;
+            if (count > 0) {
+                await effectMap[symbol]?.(this.scene, this.scheduleService, count - 1);
+                await this.scheduleService.seconds(1.5);
+            }
+        }
     }
 }

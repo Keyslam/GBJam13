@@ -13,7 +13,7 @@ const animations = {
 const enemyDefeatSfx = love.audio.newSource("assets/sfx/enemy/defeat.wav", "static");
 
 export const deathSmoke = (entity: Entity, source: Entity) => {
-    enemyDefeatSfx.clone().play();
+    enemyDefeatSfx.play();
 
     const position = source.getComponent(Position);
 

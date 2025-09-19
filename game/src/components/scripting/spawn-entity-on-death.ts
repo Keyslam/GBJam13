@@ -2,7 +2,7 @@ import { Component, Entity } from "@keyslam/simple-node";
 import { DiedEvent } from "../../events/entity/diedEvent";
 
 export class SpawnEntityOnDeath extends Component {
-    private prefabs: ((entity: Entity, source: Entity) => void)[];
+    public prefabs: ((entity: Entity, source: Entity) => void)[];
 
     constructor(entity: Entity, prefabs: ((entity: Entity, source: Entity) => void)[]) {
         super(entity);

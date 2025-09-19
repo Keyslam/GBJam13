@@ -1,7 +1,9 @@
 import { Service } from "@keyslam/simple-node";
 import { SlotMachineReelController } from "../components/controllers/slot-machine-reel-controller";
 import { SlotSymbol } from "../data/slot-symbols";
+import { EffectService } from "./effect-service";
 import { ScheduleService } from "./schedule-service";
+import { SpinCounterService } from "./spin-counter-service";
 
 const rouletteSpin1Sfx = love.audio.newSource("assets/sfx/slot-machine/spin-1.wav", "static");
 const rouletteSpin2Sfx = love.audio.newSource("assets/sfx/slot-machine/spin-2.wav", "static");
@@ -10,6 +12,8 @@ const rouletteChimeSfx = love.audio.newSource("assets/sfx/slot-machine/chime.wav
 
 export class SlotMachineService extends Service {
     declare private scheduleService: ScheduleService;
+    declare private spinCounterService: SpinCounterService;
+    declare private effectService: EffectService;
 
     declare private reel1: SlotMachineReelController;
     declare private reel2: SlotMachineReelController;
@@ -17,12 +21,13 @@ export class SlotMachineService extends Service {
 
     private reels: SlotMachineReelController[] = [];
 
-    public rolls = 3;
-
-    public framesUntilNextRoll = 600
+    public framesUntilNextRoll = 100
     public currentFrames = 0;
 
+    public rollsLeft = 0;
+
     public isRolling = false;
+    public done = false;
 
     public setup(reel1: SlotMachineReelController, reel2: SlotMachineReelController, reel3: SlotMachineReelController): void {
         this.reel1 = reel1;
@@ -34,25 +39,23 @@ export class SlotMachineService extends Service {
 
     protected override initialize(): void {
         this.scheduleService = this.scene.getService(ScheduleService);
-
-        // void (async () => {
-        //     await this.scheduleService.seconds(10);
-        //     void this.go();
-        // })();
+        this.spinCounterService = this.scene.getService(SpinCounterService);
+        this.effectService = this.scene.getService(EffectService);
     }
 
-    public async go(): Promise<void> {
-        while (this.rolls > 0) {
-            await this.scheduleService.frames(1);
+    public async goGambling(amount: number): Promise<void> {
+        this.spinCounterService.setValue(amount);
 
-            this.currentFrames++;
-
-            if (this.currentFrames === this.framesUntilNextRoll) {
-                this.rolls--;
-                await this.roll();
-
-                this.currentFrames = 0;
+        for (let i = 0; i < amount; i++) {
+            while (this.currentFrames !== this.framesUntilNextRoll) {
+                this.currentFrames++;
+                await this.scheduleService.nextFrame();
             }
+
+            this.currentFrames = 0;
+            this.spinCounterService.setValue(amount - i - 1);
+
+            await this.roll();
         }
     }
 
@@ -61,7 +64,13 @@ export class SlotMachineService extends Service {
         this.reels[reelindex]!.panelSymbols[index % 3] = symbol;
     }
 
-    public async roll(): Promise<SlotSymbol[]> {
+    public reset() {
+        this.reel1.reset();
+        this.reel2.reset();
+        this.reel3.reset();
+    }
+
+    public async roll(death = false): Promise<SlotSymbol[]> {
         this.isRolling = true;
 
         const sfx1 = rouletteSpin1Sfx.clone();
@@ -71,9 +80,9 @@ export class SlotMachineService extends Service {
         const wheel2rolls = wheel1rolls + 3 + math.floor(love.math.random() * 4)
         const wheel3rolls = wheel2rolls + 3 + math.floor(love.math.random() * 4)
 
-        const wheel1Promise = this.reel1.roll(wheel1rolls);
-        const wheel2Promise = this.reel2.roll(wheel2rolls);
-        const wheel3Promise = this.reel3.roll(wheel3rolls);
+        const wheel1Promise = this.reel1.roll(wheel1rolls, death);
+        const wheel2Promise = this.reel2.roll(wheel2rolls, death);
+        const wheel3Promise = this.reel3.roll(wheel3rolls, death);
 
         const symbol1 = await wheel1Promise;
 
@@ -94,6 +103,8 @@ export class SlotMachineService extends Service {
         rouletteChimeSfx.clone().play();
 
         this.isRolling = false;
+
+        await this.effectService.runWith([symbol1, symbol2, symbol3])
 
         return [symbol1, symbol2, symbol3];
     }

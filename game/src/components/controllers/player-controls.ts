@@ -55,6 +55,8 @@ export class PlayerControls extends Component {
     declare private animatedSprite: AnimatedSprite;
     declare private facing: Facing;
 
+    public locked = false;
+
     private acceleration = 2000;
     private maxSpeed = 80;
 
@@ -77,6 +79,16 @@ export class PlayerControls extends Component {
     }
 
     private update(event: UpdateEvent): void {
+        if (this.locked) {
+            this.body.vx = 0;
+            this.body.vy = 0;
+
+            const animationName = animationMapping[this.facing.direction]!;
+            this.animatedSprite.play(animationName);
+
+            return;
+        }
+
         this.shootTimer = Math.max(0, this.shootTimer - event.dt);
 
         const mx = (this.controlService.rightButton.isDown ? 1 : 0) + (this.controlService.leftButton.isDown ? -1 : 0);

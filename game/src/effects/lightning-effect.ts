@@ -6,6 +6,7 @@ import { warningPrefab } from "../prefabs/warning-prefab";
 import { CameraService } from "../services/camera-service";
 import { PlayerLocatorService } from "../services/player-locator-service";
 import { ScheduleService } from "../services/schedule-service";
+import { Effect } from "./effect";
 
 const MIN_X = -14;
 const MAX_X = 14;
@@ -63,7 +64,7 @@ const spawnSomeLightning = async (scene: Scene, scheduler: ScheduleService, spaw
 
     sfx.clone().play();
 
-    await scheduler.seconds(0.7);
+    await scheduler.seconds(0.9);
 
     const bolts = [];
     const strikes = [];
@@ -96,9 +97,10 @@ const spawnSomeLightning = async (scene: Scene, scheduler: ScheduleService, spaw
     }
 }
 
-export const lightningEffect = async (
+export const lightningEffect: Effect = async (
     scene: Scene,
     scheduler: ScheduleService,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     intensity: number
 ): Promise<void> => {
     for (let i = 0; i < 5; i++) {

@@ -3,11 +3,12 @@ import { Position } from "../components/position";
 import { coinPrefab } from "../prefabs/coin-prefab";
 import { PlayerLocatorService } from "../services/player-locator-service";
 import { ScheduleService } from "../services/schedule-service";
+import { Effect } from "./effect";
 
 const amounts = [15, 25, 35];
 const radius = 60;
 
-export const tripplebarEffect = async (scene: Scene, scheduler: ScheduleService, intensity: number): Promise<void> => {
+export const tripplebarEffect: Effect = async (scene: Scene, scheduler: ScheduleService, intensity: number): Promise<void> => {
     const playerLocatorService = scene.getService(PlayerLocatorService);
     const playerPosition = playerLocatorService.player.getComponent(Position);
 
