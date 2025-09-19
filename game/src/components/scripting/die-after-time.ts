@@ -1,4 +1,5 @@
 import { Component, Entity } from "@keyslam/simple-node";
+import { DiedEvent } from "../../events/entity/diedEvent";
 import { UpdateEvent } from "../../events/scene/updateEvent";
 
 export class DieAfterTime extends Component {
@@ -18,6 +19,7 @@ export class DieAfterTime extends Component {
         this.timeLeft -= event.dt;
 
         if (this.timeLeft <= 0) {
+            this.entity.emit(new DiedEvent())
             this.entity.scene.destroyEntity(this.entity);
         }
     }

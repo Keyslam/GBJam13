@@ -11,6 +11,9 @@ export class Health extends Component {
     public value: number;
     public max: number;
 
+    public deathDelay = 0;
+    private dead = false;
+
     constructor(entity: Entity, value: number, max: number) {
         super(entity);
 
@@ -26,18 +29,40 @@ export class Health extends Component {
     }
 
     public kill(): void {
-        this.value = 0;
+        if (this.dead) { return; }
 
-        this.entity.emit(new DiedEvent());
-        this.entity.scene.destroyEntity(this.entity);
+        this.value = 0;
+        this.dead = true;
+
+        if (this.deathDelay === 0) {
+
+            this.entity.emit(new DiedEvent());
+            this.entity.scene.destroyEntity(this.entity);
+        } else {
+            void this.scheduleService.frames(this.deathDelay).then(() => {
+                this.entity.emit(new DiedEvent());
+                this.entity.scene.destroyEntity(this.entity);
+            })
+        }
     }
 
     private onTakeDamage(event: TakeDamageEvent): void {
+        if (this.dead) { return; }
+
         this.value = math.max(0, this.value - event.damage);
 
         if (this.value === 0) {
-            this.entity.emit(new DiedEvent());
-            this.entity.scene.destroyEntity(this.entity);
+            this.dead = true;
+
+            if (this.deathDelay === 0) {
+                this.entity.emit(new DiedEvent());
+                this.entity.scene.destroyEntity(this.entity);
+            } else {
+                void this.scheduleService.frames(this.deathDelay).then(() => {
+                    this.entity.emit(new DiedEvent());
+                    this.entity.scene.destroyEntity(this.entity);
+                })
+            }
         } else {
             void this.flash(event.invulnerableTime);
         }

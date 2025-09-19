@@ -16,7 +16,7 @@ export class EnemyBellController extends Component {
     declare private animatedSprite: AnimatedSprite;
 
     private acceleration = 2000;
-    private maxSpeed = 40
+    private maxSpeed = 30
 
     protected override initialize(): void {
         this.enemyLocatorService = this.entity.scene.getService(EnemyLocatorService)

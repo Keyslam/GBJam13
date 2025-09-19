@@ -60,9 +60,13 @@ export class ArenaService extends Service {
     public async doRound(): Promise<void> {
         this.round++;
 
-        // await this.slotMachineService.goGambling(1);
 
-        await this.scheduler.seconds(1);
+        await this.scheduler.seconds(2);
+
+        await this.slotMachineService.goGambling(3);
+
+        await this.scheduler.seconds(2);
+
         await this.slotMachineService.roll(true);
 
         for (const enemy of [...this.enemyLocatorService.enemies]) {
