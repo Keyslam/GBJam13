@@ -55,11 +55,30 @@ export class CollisionService extends Service {
         );
     }
 
-    public queryHurtboxes(x: number, y: number, w: number, h: number, team: Team): Hurtbox[] {
-        return this.hurtboxes.filter(hurtbox =>
-            hurtbox.team === team &&
-            this.aabbIntersect(x, y, w, h, hurtbox.x, hurtbox.y, hurtbox.w, hurtbox.h)
-        );
+    public queryHurtboxes(x: number, y: number, w: number, h: number, forTeam: Team): Hurtbox[] {
+        if (forTeam === 'player') {
+            return this.hurtboxes.filter(hurtbox =>
+                (hurtbox.team === 'arena' || hurtbox.team === 'casino') &&
+                this.aabbIntersect(x, y, w, h, hurtbox.x, hurtbox.y, hurtbox.w, hurtbox.h)
+            );
+        }
+
+        if (forTeam === 'casino') {
+            return this.hurtboxes.filter(hurtbox =>
+                (hurtbox.team === 'arena' || hurtbox.team === 'player') &&
+                this.aabbIntersect(x, y, w, h, hurtbox.x, hurtbox.y, hurtbox.w, hurtbox.h)
+            );
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        if (forTeam === 'arena') {
+            return this.hurtboxes.filter(hurtbox =>
+                (hurtbox.team === 'player' || hurtbox.team === 'casino') &&
+                this.aabbIntersect(x, y, w, h, hurtbox.x, hurtbox.y, hurtbox.w, hurtbox.h)
+            );
+        }
+
+        return [];
     }
 
     private draw(): void {

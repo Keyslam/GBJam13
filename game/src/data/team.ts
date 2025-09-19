@@ -1,1 +1,1 @@
-export type Team = 'player' | 'casino'
+export type Team = 'player' | 'casino' | 'arena'

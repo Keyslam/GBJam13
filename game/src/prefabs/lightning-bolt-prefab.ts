@@ -1,4 +1,5 @@
 import { Entity } from "@keyslam/simple-node";
+import { Hitbox } from "../components/collision/hitbox";
 import { AnimatedSprite, createAnimation } from "../components/graphics/animated-sprite";
 import { Sprite } from "../components/graphics/sprite";
 import { Position } from "../components/position";
@@ -14,4 +15,5 @@ export const lightningBoltPrefab = (entity: Entity, x: number, y: number) => {
         .addComponent(Position, x, y, Layers.foreground)
         .addComponent(Sprite, image)
         .addComponent(AnimatedSprite, animations, "default")
+        .addComponent(Hitbox, 16, 16, 'arena', 3)
 }

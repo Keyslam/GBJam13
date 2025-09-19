@@ -6,7 +6,7 @@ import { KeypressedEvent } from "./events/scene/keypressedEvent";
 import { UpdateEvent } from "./events/scene/updateEvent";
 import { arenaFencePrefab } from "./prefabs/arena/arena-fence-prefab";
 import { arenaFloorPrefab } from "./prefabs/arena/arena-floor-prefab";
-import { enemyPlaceholder } from "./prefabs/enemy-placeholder";
+import { enemyChipPrefab } from "./prefabs/enemy-chip-prefab";
 import { playerPrefab } from "./prefabs/player-prefab";
 import { slotMachineReelPrefab } from "./prefabs/slot-machine-reel-prefab";
 import run from "./run";
@@ -14,6 +14,7 @@ import { CameraService } from "./services/camera-service";
 import { CoinService } from "./services/coin-service";
 import { CollisionService } from "./services/collision-service";
 import { EffectService } from "./services/effect-service";
+import { EnemyLocatorService } from "./services/enemy-locator-service";
 import { HudService } from "./services/hud-service";
 import { IntroService } from "./services/intro-service";
 import { PlayerLocatorService } from "./services/player-locator-service";
@@ -39,7 +40,8 @@ const scene = new Scene(
     ShopService,
     SceneService,
     IntroService,
-    EffectService
+    EffectService,
+    EnemyLocatorService,
 );
 
 const player = scene.spawnEntity(playerPrefab);
@@ -59,8 +61,8 @@ scene.getService(SlotMachineService).setup(
 );
 
 
-for (let i = 0; i < 10; i++) {
-    scene.spawnEntity(enemyPlaceholder, i * 20 + 30, 0);
+for (let i = 0; i < 15; i++) {
+    scene.spawnEntity(enemyChipPrefab, i * 20 + 30, 0);
 }
 
 scene.getService(CameraService).target = player;

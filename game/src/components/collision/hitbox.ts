@@ -43,7 +43,12 @@ export class Hitbox extends Component {
     }
 
     private update(): void {
-        const hurtboxes = this.collisionService.queryHurtboxes(this.position.x, this.position.y, this.w, this.h, this.team === 'player' ? 'casino' : 'player');
+        const hurtboxes = this.collisionService.queryHurtboxes(
+            this.position.x,
+            this.position.y,
+            this.w,
+            this.h,
+            this.team);
 
         for (const hurtbox of hurtboxes) {
             hurtbox.applyDamage(this.damage, this.entity);
