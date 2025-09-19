@@ -7,24 +7,25 @@ export class SceneService extends Service {
     public activeScene: 'intro' | 'title' | 'arena' | 'shop' = 'arena';
 
     public fadeAmount = 0;
+    public ditherAmount = 1;
 
     protected override initialize(): void {
         this.schedulerService = this.scene.getService(ScheduleService);
     }
 
     public async toArena(): Promise<void> {
-        await this.fadeOut();
+        await this.ditherIn();
         await this.schedulerService.seconds(0.5);
         this.activeScene = 'arena'
-        await this.fadeIn();
+        await this.ditherOut();
     }
 
     public async toShop(fn?: () => void): Promise<void> {
-        await this.fadeOut();
+        await this.ditherIn();
         fn?.();
         await this.schedulerService.seconds(0.5);
         this.activeScene = 'shop'
-        await this.fadeIn();
+        await this.ditherOut();
     }
 
     public async fadeOut(): Promise<void> {
@@ -37,6 +38,20 @@ export class SceneService extends Service {
     public async fadeIn(): Promise<void> {
         while (this.fadeAmount > 0) {
             this.fadeAmount = math.max(0, this.fadeAmount - 0.05);
+            await this.schedulerService.frames(1);
+        }
+    }
+
+    public async ditherOut(): Promise<void> {
+        while (this.ditherAmount < 1) {
+            this.ditherAmount = math.min(1, this.ditherAmount + 0.05);
+            await this.schedulerService.frames(1);
+        }
+    }
+
+    public async ditherIn(): Promise<void> {
+        while (this.ditherAmount > 0) {
+            this.ditherAmount = math.max(0, this.ditherAmount - 0.05);
             await this.schedulerService.frames(1);
         }
     }

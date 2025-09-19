@@ -26,7 +26,6 @@ export const barEffect: Effect = async (scene: Scene, scheduler: ScheduleService
             if (x > -220 && x < 220 && y > -130 && y < 130) {
                 const sizeRoll = love.math.random();
 
-                print("spawning")
                 if (sizeRoll < 0.6) {
                     scene.spawnEntity(coinPrefab, x, y, 0, 0, 100, 0, 'small');
                 } else if (sizeRoll < 0.9) {
