@@ -49,8 +49,31 @@ export class Body extends Component {
         this.vx *= ratio;
         this.vy *= ratio;
 
-        this.position.x += this.vx * event.dt;
-        this.position.y += this.vy * event.dt;
+        let targetX = this.position.x + this.vx * event.dt
+        let targetY = this.position.y + this.vy * event.dt
+
+        if (targetX < -224) {
+            targetX = -224;
+            this.vx = 0;
+        }
+
+        if (targetX > 224) {
+            targetX = 224;
+            this.vx = 0;
+        }
+
+        if (targetY < -140) {
+            targetY = -140;
+            this.vy = 0;
+        }
+
+        if (targetY > 132) {
+            targetY = 132;
+            this.vy = 0;
+        }
+
+        this.position.x = targetX;
+        this.position.y = targetY;
     }
 
     public get x(): number {
