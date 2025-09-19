@@ -1,5 +1,6 @@
 import { Entity } from "@keyslam/simple-node"
 import { Body } from "../components/collision/body"
+import { Hurtbox } from "../components/collision/hurtbox"
 import { PlayerControls } from "../components/controllers/player-controls"
 import { Facing } from "../components/facing"
 import { AnimatedSprite, createAnimation } from "../components/graphics/animated-sprite"
@@ -39,4 +40,5 @@ export const playerPrefab = (entity: Entity) => {
         .addComponent(Sprite, image)
         .addComponent(AnimatedSprite, animations, "idle_south")
         .addComponent(Health, 4, 8)
+        .addComponent(Hurtbox, 8, 8, 'player', 1)
 }

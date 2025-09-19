@@ -1,5 +1,6 @@
 import { Entity } from "@keyslam/simple-node";
 import { Body } from "../components/collision/body";
+import { Hitbox } from "../components/collision/hitbox";
 import { Hurtbox } from "../components/collision/hurtbox";
 import { EnemyChipController } from "../components/controllers/enemy-chip-controller";
 import { Facing } from "../components/facing";
@@ -27,7 +28,8 @@ export const enemyChipPrefab = (entity: Entity, x: number, y: number) => {
         .addComponent(AnimatedSprite, animations, "front")
         .addComponent(EnemyChipController)
         .addComponent(Body, 0, 0, 10, 10, 20)
-        .addComponent(Hurtbox, 10, 10, 'casino')
+        .addComponent(Hurtbox, 10, 10, 'casino', 0.1)
+        .addComponent(Hitbox, 6, 6, 'casino', 1)
         .addComponent(Health, 3, 3)
         .addComponent(SpawnEntityOnDeath, [deathSmoke, coinFromEnemyPrefab])
         .addComponent(ApplyKnockbackOnTakeDamage);

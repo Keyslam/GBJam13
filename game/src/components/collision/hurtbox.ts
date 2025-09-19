@@ -16,13 +16,17 @@ export class Hurtbox extends Component {
 
     public team: Team;
 
-    constructor(entity: Entity, w: number, h: number, team: Team) {
+    private maxInvulnerableTime = 1;
+    private invulnerableTime = 0;
+
+    constructor(entity: Entity, w: number, h: number, team: Team, invulnerableTime: number) {
         super(entity);
 
         this.w = w;
         this.h = h;
 
         this.team = team;
+        this.maxInvulnerableTime = invulnerableTime;
     }
 
     protected override initialize(): void {
@@ -39,10 +43,21 @@ export class Hurtbox extends Component {
         this.collisionService.unregisterHurtbox(this);
     }
 
-    public applyDamage(damage: number, source: Entity) {
-        const body = source.tryGetComponent(Body);
+    private update(event: UpdateEvent): void {
+        this.invulnerableTime = math.max(0, this.invulnerableTime -= event.dt);
+    }
 
-        this.entity.emit(new TakeDamageEvent(damage, source, body?.vx ?? 0, body?.vy ?? 0));
+    public applyDamage(damage: number, source: Entity): boolean {
+        if (this.invulnerableTime === 0) {
+            const body = source.tryGetComponent(Body);
+
+            this.entity.emit(new TakeDamageEvent(damage, source, body?.vx ?? 0, body?.vy ?? 0, this.maxInvulnerableTime));
+            this.invulnerableTime = this.maxInvulnerableTime;
+
+            return true;
+        }
+
+        return false;
     }
 
     public get x(): number {

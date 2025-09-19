@@ -32,15 +32,19 @@ export class Health extends Component {
             this.entity.emit(new DiedEvent());
             this.entity.scene.destroyEntity(this.entity);
         } else {
-            void this.flash();
+            void this.flash(event.invulnerableTime);
         }
     }
 
-    private async flash(): Promise<void> {
-        this.sprite.flash = true;
+    private async flash(time: number): Promise<void> {
+        const flashes = math.ceil(time / ((1 / 60) * 16));
 
-        await this.scheduleService.frames(8);
+        for (let i = 0; i < flashes; i++) {
+            this.sprite.flash = true;
+            await this.scheduleService.frames(8);
 
-        this.sprite.flash = false;
+            this.sprite.flash = false;
+            await this.scheduleService.frames(8);
+        }
     }
 }

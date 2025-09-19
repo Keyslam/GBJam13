@@ -29,7 +29,7 @@ export const enemyPlaceholder = (entity: Entity, x: number, y: number) => {
         .addComponent(AnimatedSprite, animations, "run_down")
         .addComponent(EnemyPlaceholderController)
         .addComponent(Body, 0, 0, 10, 10, 20)
-        .addComponent(Hurtbox, 10, 10, 'casino')
+        .addComponent(Hurtbox, 10, 10, 'casino', 1)
         .addComponent(Health, 1, 3)
         .addComponent(SpawnEntityOnDeath, [deathSmoke, coinFromEnemyPrefab])
         .addComponent(ApplyKnockbackOnTakeDamage);

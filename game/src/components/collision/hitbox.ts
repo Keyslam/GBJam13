@@ -51,9 +51,10 @@ export class Hitbox extends Component {
             this.team);
 
         for (const hurtbox of hurtboxes) {
-            hurtbox.applyDamage(this.damage, this.entity);
-            this.entity.emit(new DealtDamageEvent());
-            break;
+            if (hurtbox.applyDamage(this.damage, this.entity)) {
+                this.entity.emit(new DealtDamageEvent());
+                break;
+            }
         }
 
     }

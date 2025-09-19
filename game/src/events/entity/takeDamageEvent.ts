@@ -6,5 +6,6 @@ export class TakeDamageEvent implements EntityEvent {
         public readonly source: Entity,
         public readonly knockbackX: number,
         public readonly knockbackY: number,
+        public readonly invulnerableTime: number,
     ) { }
 }
