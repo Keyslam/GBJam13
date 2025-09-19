@@ -13,6 +13,7 @@ import run from "./run";
 import { CameraService } from "./services/camera-service";
 import { CoinService } from "./services/coin-service";
 import { CollisionService } from "./services/collision-service";
+import { ControlService } from "./services/control-service";
 import { EffectService } from "./services/effect-service";
 import { EnemyLocatorService } from "./services/enemy-locator-service";
 import { HudService } from "./services/hud-service";
@@ -29,6 +30,7 @@ love.graphics.setLineStyle("rough");
 io.stdout.setvbuf("no");
 
 const scene = new Scene(
+    ControlService,
     RenderService,
     CameraService,
     PlayerLocatorService,

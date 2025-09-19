@@ -5,6 +5,7 @@ import { SlotSymbol } from "../data/slot-symbols";
 import { KeypressedEvent } from "../events/scene/keypressedEvent";
 import { UpdateEvent } from "../events/scene/updateEvent";
 import { CoinService } from "./coin-service";
+import { ControlService } from "./control-service";
 import { RenderService } from "./renderService";
 import { SceneService } from "./scene-service";
 import { ScheduleService } from "./schedule-service";
@@ -215,6 +216,7 @@ export class ShopService extends Service {
     declare private slotMachineService: SlotMachineService;
     declare private coinService: CoinService;
     declare private sceneService: SceneService;
+    declare private controlService: ControlService;
 
     private state: 'shop' | 'equip' | 'transition' = 'shop';
 
@@ -279,6 +281,7 @@ export class ShopService extends Service {
         this.slotMachineService = this.scene.getService(SlotMachineService);
         this.coinService = this.scene.getService(CoinService);
         this.sceneService = this.scene.getService(SceneService);
+        this.controlService = this.scene.getService(ControlService);
 
         this.renderService.drawShop = () => { this.draw() }
 
@@ -305,159 +308,6 @@ export class ShopService extends Service {
 
     public exit(): void {
         this.musicTrack?.stop();
-    }
-
-    private onKeyPressed(event: KeypressedEvent): void {
-        if (this.sceneService.activeScene !== 'shop') {
-            return;
-        }
-
-        if (this.state === 'shop') {
-            let row = Math.floor(this.selectedSlotIndex / 3);
-            let col = this.selectedSlotIndex % 3;
-
-            switch (event.key) {
-                case "right":
-                    if (col < 2) col += 1;
-                    break;
-                case "left":
-                    if (col > 0) col -= 1;
-                    break;
-                case "up":
-                    if (row > 0) row -= 1;
-                    break;
-                case "down":
-                    if (row < 1) row += 1;
-                    break;
-            }
-
-            const newSelectedIndex = row * 3 + col;
-
-            if (newSelectedIndex !== this.selectedSlotIndex) {
-                changeSlotSfx.clone().play();
-
-                this.selectedSlotIndex = newSelectedIndex
-
-                const selectedOffer = this.offers[this.selectedSlotIndex]!;
-
-                if (!selectedOffer.purchased) {
-                    this.shopTitle.text = selectedOffer.effect.title;
-                    this.shopTitle.shownFor = 0;
-
-                    this.flavourText.text = selectedOffer.effect.flavorText;
-                    this.flavourText.shownFor = 0;
-                } else {
-                    this.shopTitle.text = "SOLD OUT";
-                    this.shopTitle.shownFor = 0;
-
-                    this.flavourText.text = "";
-                    this.flavourText.shownFor = 0;
-                }
-            }
-
-            if (event.key === 'z') {
-                const selectedOffer = this.offers[this.selectedSlotIndex]!;
-
-                if (this.selectedSlotIndex === 5) {
-                    void this.scene.getService(SceneService).toArena();
-                } else if (selectedOffer.purchased) {
-                    soldOutSfx.clone().play();
-
-                    const text = soldOutQuips[math.floor(love.math.random() * soldOutQuips.length)]!;
-                    this.flavourText.text = text
-                    this.flavourText.shownFor = 0;
-                } else {
-                    const canAfford = this.coinService.amount >= selectedOffer.price
-
-                    if (canAfford) {
-                        confirmSfx.clone().play();
-
-                        void this.toEquip();
-                    } else {
-                        cancelSfx.clone().play();
-
-                        const text = cantAffordQuips[math.floor(love.math.random() * cantAffordQuips.length)]!;
-                        this.flavourText.text = text
-                        this.flavourText.shownFor = 0;
-                    }
-                }
-            }
-        }
-
-        if (this.state === "equip") {
-            if (!this.equipReplacing) {
-                let row = Math.floor(this.equipSlotIndex / 3);
-                let col = this.equipSlotIndex % 3;
-
-                switch (event.key) {
-                    case "right":
-                        if (row < 2) row += 1;
-                        break;
-                    case "left":
-                        if (row > 0) row -= 1;
-                        break;
-                    case "up":
-                        if (col > 0) col -= 1;
-                        break;
-                    case "down":
-                        if (col < 2) col += 1;
-                        break;
-                }
-
-                const newSelectedIndex = row * 3 + col;
-
-                if (newSelectedIndex !== this.equipSlotIndex) {
-                    changeSlotSfx.clone().play();
-
-                    this.equipSlotIndex = newSelectedIndex
-
-                    const symbols = this.slotMachineService.getAllSymbols();
-
-                    const symbol = symbols[this.equipSlotIndex]!
-                    const title = slotSymbolMap[symbol].title;
-
-                    this.equipTitle.text = title
-                    this.equipTitle.shownFor = 0
-                }
-
-                if (event.key === 'x') {
-                    transitionFromSfx.clone().play();
-                    cancelSfx.clone().play();
-                    void this.toShop(false);
-                }
-
-                if (event.key === "z") {
-                    confirmSfx.clone().play();
-                    this.equipReplacing = true;
-
-                    this.equipTitle.text = "REPLACE?"
-                    this.equipTitle.shownFor = 0
-                }
-            } else {
-                if (event.key === 'x') {
-                    const symbols = this.slotMachineService.getAllSymbols();
-
-                    const symbol = symbols[this.equipSlotIndex]!
-                    const title = slotSymbolMap[symbol].title;
-
-                    this.equipTitle.text = title
-                    this.equipTitle.shownFor = 0
-
-                    this.equipReplacing = false;
-                }
-
-                if (event.key === 'z') {
-                    purchaseSfx.clone().play();
-                    const selectedOffer = this.offers[this.selectedSlotIndex]!;
-                    selectedOffer.purchased = true;
-                    this.slotMachineService.setSymbol(this.equipSlotIndex, selectedOffer.effect.symbol)
-
-                    this.coinService.amount -= selectedOffer.price;
-
-                    void this.toShop(true);
-                }
-            }
-        }
     }
 
     private async toEquip(): Promise<void> {
@@ -532,6 +382,155 @@ export class ShopService extends Service {
             this.displayCoinsAmount = math.min(this.coinService.amount, this.displayCoinsAmount + 0.4)
         } else if (this.displayCoinsAmount > this.coinService.amount) {
             this.displayCoinsAmount = math.max(this.coinService.amount, this.displayCoinsAmount - 0.4);
+        }
+
+        if (this.state === 'shop') {
+            let row = Math.floor(this.selectedSlotIndex / 3);
+            let col = this.selectedSlotIndex % 3;
+
+            if (this.controlService.rightButton.wasPressed) {
+                if (col < 2) col += 1;
+            }
+
+            if (this.controlService.leftButton.wasPressed) {
+                if (col > 0) col -= 1;
+            }
+
+            if (this.controlService.upButton.wasPressed) {
+                if (row > 0) row -= 1;
+            }
+
+            if (this.controlService.downButton.wasPressed) {
+                if (row < 1) row += 1;
+            }
+
+            const newSelectedIndex = row * 3 + col;
+
+            if (newSelectedIndex !== this.selectedSlotIndex) {
+                changeSlotSfx.clone().play();
+
+                this.selectedSlotIndex = newSelectedIndex
+
+                const selectedOffer = this.offers[this.selectedSlotIndex]!;
+
+                if (!selectedOffer.purchased) {
+                    this.shopTitle.text = selectedOffer.effect.title;
+                    this.shopTitle.shownFor = 0;
+
+                    this.flavourText.text = selectedOffer.effect.flavorText;
+                    this.flavourText.shownFor = 0;
+                } else {
+                    this.shopTitle.text = "SOLD OUT";
+                    this.shopTitle.shownFor = 0;
+
+                    this.flavourText.text = "";
+                    this.flavourText.shownFor = 0;
+                }
+            }
+
+            if (this.controlService.primaryButton.wasPressed) {
+                const selectedOffer = this.offers[this.selectedSlotIndex]!;
+
+                if (this.selectedSlotIndex === 5) {
+                    void this.scene.getService(SceneService).toArena();
+                } else if (selectedOffer.purchased) {
+                    soldOutSfx.clone().play();
+
+                    const text = soldOutQuips[math.floor(love.math.random() * soldOutQuips.length)]!;
+                    this.flavourText.text = text
+                    this.flavourText.shownFor = 0;
+                } else {
+                    const canAfford = this.coinService.amount >= selectedOffer.price
+
+                    if (canAfford) {
+                        confirmSfx.clone().play();
+
+                        void this.toEquip();
+                    } else {
+                        cancelSfx.clone().play();
+
+                        const text = cantAffordQuips[math.floor(love.math.random() * cantAffordQuips.length)]!;
+                        this.flavourText.text = text
+                        this.flavourText.shownFor = 0;
+                    }
+                }
+            }
+        }
+
+        if (this.state === "equip") {
+            if (!this.equipReplacing) {
+                let row = Math.floor(this.equipSlotIndex / 3);
+                let col = this.equipSlotIndex % 3;
+
+                if (this.controlService.rightButton.wasPressed) {
+                    if (row < 2) row += 1;
+                }
+
+                if (this.controlService.leftButton.wasPressed) {
+                    if (row > 0) row -= 1;
+                }
+
+                if (this.controlService.upButton.wasPressed) {
+                    if (col > 0) col -= 1;
+                }
+
+                if (this.controlService.downButton.wasPressed) {
+                    if (col < 2) col += 1;
+                }
+
+                const newSelectedIndex = row * 3 + col;
+
+                if (newSelectedIndex !== this.equipSlotIndex) {
+                    changeSlotSfx.clone().play();
+
+                    this.equipSlotIndex = newSelectedIndex
+
+                    const symbols = this.slotMachineService.getAllSymbols();
+
+                    const symbol = symbols[this.equipSlotIndex]!
+                    const title = slotSymbolMap[symbol].title;
+
+                    this.equipTitle.text = title
+                    this.equipTitle.shownFor = 0
+                }
+
+                if (this.controlService.secondaryButton.wasPressed) {
+                    transitionFromSfx.clone().play();
+                    cancelSfx.clone().play();
+                    void this.toShop(false);
+                }
+
+                if (this.controlService.primaryButton.wasPressed) {
+                    confirmSfx.clone().play();
+                    this.equipReplacing = true;
+
+                    this.equipTitle.text = "REPLACE?"
+                    this.equipTitle.shownFor = 0
+                }
+            } else {
+                if (this.controlService.secondaryButton.wasPressed) {
+                    const symbols = this.slotMachineService.getAllSymbols();
+
+                    const symbol = symbols[this.equipSlotIndex]!
+                    const title = slotSymbolMap[symbol].title;
+
+                    this.equipTitle.text = title
+                    this.equipTitle.shownFor = 0
+
+                    this.equipReplacing = false;
+                }
+
+                if (this.controlService.primaryButton.wasPressed) {
+                    purchaseSfx.clone().play();
+                    const selectedOffer = this.offers[this.selectedSlotIndex]!;
+                    selectedOffer.purchased = true;
+                    this.slotMachineService.setSymbol(this.equipSlotIndex, selectedOffer.effect.symbol)
+
+                    this.coinService.amount -= selectedOffer.price;
+
+                    void this.toShop(true);
+                }
+            }
         }
     }
 

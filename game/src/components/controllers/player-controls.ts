@@ -1,6 +1,7 @@
 import { Component } from "@keyslam/simple-node";
 import { UpdateEvent } from "../../events/scene/updateEvent";
 import bulletPrefab from "../../prefabs/bullet";
+import { ControlService } from "../../services/control-service";
 import { Body } from "../collision/body";
 import { Facing } from "../facing";
 import { AnimatedSprite } from "../graphics/animated-sprite";
@@ -47,6 +48,8 @@ const shootOffsets: Record<number, { x: number, y: number }> = {
 const playerShotSfx = love.audio.newSource("assets/sfx/player/shoot.wav", "static");
 
 export class PlayerControls extends Component {
+    declare private controlService: ControlService;
+
     declare private position: Position;
     declare private body: Body;
     declare private animatedSprite: AnimatedSprite;
@@ -63,6 +66,8 @@ export class PlayerControls extends Component {
     private lockFacing = false;
 
     protected override initialize(): void {
+        this.controlService = this.scene.getService(ControlService);
+
         this.position = this.entity.getComponent(Position);
         this.body = this.entity.getComponent(Body);
         this.animatedSprite = this.entity.getComponent(AnimatedSprite);
@@ -74,8 +79,8 @@ export class PlayerControls extends Component {
     private update(event: UpdateEvent): void {
         this.shootTimer = Math.max(0, this.shootTimer - event.dt);
 
-        const mx = (love.keyboard.isDown("right") ? 1 : 0) + (love.keyboard.isDown("left") ? -1 : 0);
-        const my = (love.keyboard.isDown("down") ? 1 : 0) + (love.keyboard.isDown("up") ? -1 : 0);
+        const mx = (this.controlService.rightButton.isDown ? 1 : 0) + (this.controlService.leftButton.isDown ? -1 : 0);
+        const my = (this.controlService.downButton.isDown ? 1 : 0) + (this.controlService.upButton.isDown ? -1 : 0);
 
         this.body.vx += mx * this.acceleration * event.dt;
         this.body.vy += my * this.acceleration * event.dt;
@@ -87,7 +92,7 @@ export class PlayerControls extends Component {
             this.body.vy *= scale;
         }
 
-        this.lockFacing = love.keyboard.isDown("space");
+        this.lockFacing = this.controlService.primaryButton.isDown;
         if (!this.lockFacing && (mx !== 0 || my !== 0)) {
             this.facing.direction = Facing.getDirectionFromVector(mx, my);
         }
@@ -95,7 +100,7 @@ export class PlayerControls extends Component {
         const animationName = animationMapping[this.facing.direction + ((mx !== 0 || my !== 0) ? 8 : 0)]!;
         this.animatedSprite.play(animationName);
 
-        if (love.keyboard.isDown("space") && this.shootTimer === 0) {
+        if (this.controlService.primaryButton.isDown && this.shootTimer === 0) {
             this.shootTimer = this.shootCooldown;
 
             playerShotSfx.clone().play();
