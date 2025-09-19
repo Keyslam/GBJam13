@@ -1,11 +1,13 @@
 import { Scene } from "@keyslam/simple-node";
 import { KeyConstant } from "love.keyboard";
 import { SlotMachineReelController } from "./components/controllers/slot-machine-reel-controller";
+import { SpinCounterController } from "./components/controllers/spin-counter-controller";
 import { DrawEvent } from "./events/scene/drawEvent";
 import { KeypressedEvent } from "./events/scene/keypressedEvent";
 import { UpdateEvent } from "./events/scene/updateEvent";
 import { arenaFencePrefab } from "./prefabs/arena/arena-fence-prefab";
 import { arenaFloorPrefab } from "./prefabs/arena/arena-floor-prefab";
+import { SpinCounterPrefab } from "./prefabs/arena/spin-counter-prefab";
 import { enemyBellPrefab } from "./prefabs/enemy-bell-prefab";
 import { playerPrefab } from "./prefabs/player-prefab";
 import { slotMachineReelPrefab } from "./prefabs/slot-machine-reel-prefab";
@@ -24,6 +26,7 @@ import { SceneService } from "./services/scene-service";
 import { ScheduleService } from "./services/schedule-service";
 import { ShopService } from "./services/shop-service";
 import { SlotMachineService } from "./services/slot-machine-service";
+import { SpinCounterService } from "./services/spin-counter-service";
 
 love.graphics.setDefaultFilter("nearest", "nearest");
 love.graphics.setLineStyle("rough");
@@ -44,6 +47,7 @@ const scene = new Scene(
     IntroService,
     EffectService,
     EnemyLocatorService,
+    SpinCounterService
 );
 
 const player = scene.spawnEntity(playerPrefab);
@@ -51,6 +55,18 @@ scene.getService(PlayerLocatorService).player = player;
 
 scene.spawnEntity(arenaFloorPrefab);
 scene.spawnEntity(arenaFencePrefab);
+
+const spinCounter1 = scene.spawnEntity(SpinCounterPrefab, -200, -16);
+const spinCounter2 = scene.spawnEntity(SpinCounterPrefab, -200 + 32, -16);
+
+const spinCounter3 = scene.spawnEntity(SpinCounterPrefab, 200 - 32, -16);
+const spinCounter4 = scene.spawnEntity(SpinCounterPrefab, 200, -16);
+
+const spinCounterService = scene.getService(SpinCounterService);
+spinCounterService.spinCounter1 = spinCounter1.getComponent(SpinCounterController);
+spinCounterService.spinCounter2 = spinCounter2.getComponent(SpinCounterController);
+spinCounterService.spinCounter3 = spinCounter3.getComponent(SpinCounterController);
+spinCounterService.spinCounter4 = spinCounter4.getComponent(SpinCounterController);
 
 const reel1 = scene.spawnEntity(slotMachineReelPrefab, -80, 0);
 const reel2 = scene.spawnEntity(slotMachineReelPrefab, 0, 0);
