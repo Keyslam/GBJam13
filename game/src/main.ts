@@ -8,11 +8,8 @@ import { UpdateEvent } from "./events/scene/updateEvent";
 import { arenaFencePrefab } from "./prefabs/arena/arena-fence-prefab";
 import { arenaFloorPrefab } from "./prefabs/arena/arena-floor-prefab";
 import { SpinCounterPrefab } from "./prefabs/arena/spin-counter-prefab";
-import { enemyBellPrefab } from "./prefabs/enemy-bell-prefab";
-import { enemyCherryPrefab } from "./prefabs/enemy-cherry-prefab";
-import { enemyChipPrefab } from "./prefabs/enemy-chip-prefab";
+import crosshairPrefab from "./prefabs/crosshair-prefab";
 import { enemyChipstackPrefab } from "./prefabs/enemy-chipstack-prefab";
-import { enemyDiamondPrefab } from "./prefabs/enemy-diamond-prefab";
 import { playerPrefab } from "./prefabs/player-prefab";
 import { slotMachineReelPrefab } from "./prefabs/slot-machine-reel-prefab";
 import run from "./run";
@@ -84,24 +81,12 @@ scene.getService(SlotMachineService).setup(
     reel3.getComponent(SlotMachineReelController),
 );
 
-
-// for (let i = 0; i < 7; i++) {
-//     scene.spawnEntity(enemyBellPrefab, i * 30 + 30, 0);
-//     scene.spawnEntity(enemyCherryPrefab, i * 50 + 100, 0)
-// }
-
-// for (let i = 7; i < 15; i++) {
-//     scene.spawnEntity(enemyChipstackPrefab, i * 30 + 30, 0);
-// }
-
-for (let i = 0; i < 3; i++) {
-
-    scene.spawnEntity(enemyChipPrefab, 120, 0);
-    scene.spawnEntity(enemyBellPrefab, 120, 0);
-    scene.spawnEntity(enemyDiamondPrefab, 120, 0);
-    scene.spawnEntity(enemyCherryPrefab, 120, 0);
-    scene.spawnEntity(enemyChipstackPrefab, 120, 0);
+for (let i = 0; i < 10; i++) {
+    scene.spawnEntity(enemyChipstackPrefab, i * -10 + -30, 0)
 }
+
+
+scene.spawnEntity(crosshairPrefab, 100, 0)
 
 scene.getService(CameraService).target = player;
 

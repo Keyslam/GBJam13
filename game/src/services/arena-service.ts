@@ -60,8 +60,7 @@ export class ArenaService extends Service {
     public async doRound(): Promise<void> {
         this.round++;
 
-
-        await this.scheduler.seconds(2);
+        await this.scheduler.seconds(60);
 
         await this.slotMachineService.goGambling(3);
 
