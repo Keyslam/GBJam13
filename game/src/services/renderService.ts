@@ -111,7 +111,11 @@ export class RenderService extends Service {
         this.drawShop();
         this.drawIntro();
 
-        love.graphics.draw(dither, (1 - this.sceneService.ditherAmount) * -320, 0)
+        if (this.sceneService.ditherFlipped) {
+            love.graphics.draw(dither, 480 - this.sceneService.ditherAmount * 320, 0, 0, -1, 1)
+        } else {
+            love.graphics.draw(dither, (1 - this.sceneService.ditherAmount) * -320, 0)
+        }
 
         this.commands = [];
         this.debugCommands = [];

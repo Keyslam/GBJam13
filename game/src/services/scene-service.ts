@@ -8,6 +8,7 @@ export class SceneService extends Service {
 
     public fadeAmount = 0;
     public ditherAmount = 1;
+    public ditherFlipped = false;
 
     protected override initialize(): void {
         this.schedulerService = this.scene.getService(ScheduleService);
@@ -43,6 +44,7 @@ export class SceneService extends Service {
     }
 
     public async ditherOut(): Promise<void> {
+        this.ditherFlipped = true;
         while (this.ditherAmount < 1) {
             this.ditherAmount = math.min(1, this.ditherAmount + 0.05);
             await this.schedulerService.frames(1);
@@ -50,6 +52,7 @@ export class SceneService extends Service {
     }
 
     public async ditherIn(): Promise<void> {
+        this.ditherFlipped = false;
         while (this.ditherAmount > 0) {
             this.ditherAmount = math.max(0, this.ditherAmount - 0.05);
             await this.schedulerService.frames(1);

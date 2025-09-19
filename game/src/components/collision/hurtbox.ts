@@ -17,7 +17,7 @@ export class Hurtbox extends Component {
     public team: Team;
 
     private maxInvulnerableTime = 1;
-    private invulnerableTime = 0;
+    public invulnerableTime = 0;
 
     constructor(entity: Entity, w: number, h: number, team: Team, invulnerableTime: number) {
         super(entity);

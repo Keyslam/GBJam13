@@ -8,8 +8,7 @@ import { UpdateEvent } from "./events/scene/updateEvent";
 import { arenaFencePrefab } from "./prefabs/arena/arena-fence-prefab";
 import { arenaFloorPrefab } from "./prefabs/arena/arena-floor-prefab";
 import { SpinCounterPrefab } from "./prefabs/arena/spin-counter-prefab";
-import { enemyBellPrefab } from "./prefabs/enemy-bell-prefab";
-import { enemyChipPrefab } from "./prefabs/enemy-chip-prefab";
+import { enemyChipstackPrefab } from "./prefabs/enemy-chipstack-prefab";
 import { playerPrefab } from "./prefabs/player-prefab";
 import { slotMachineReelPrefab } from "./prefabs/slot-machine-reel-prefab";
 import run from "./run";
@@ -83,12 +82,14 @@ scene.getService(SlotMachineService).setup(
 
 
 for (let i = 0; i < 7; i++) {
-    scene.spawnEntity(enemyBellPrefab, i * 30 + 30, 0);
+    // scene.spawnEntity(enemyBellPrefab, i * 30 + 30, 0);
+    scene.spawnEntity(enemyChipstackPrefab, 30, 0)
 }
 
-for (let i = 7; i < 15; i++) {
-    scene.spawnEntity(enemyChipPrefab, i * 30 + 30, 0);
-}
+// for (let i = 7; i < 15; i++) {
+//     scene.spawnEntity(enemyChipPrefab, i * 30 + 30, 0);
+// }
+
 
 
 scene.getService(CameraService).target = player;

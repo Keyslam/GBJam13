@@ -14,9 +14,9 @@ export class Height extends Component {
 
     public value = 0;
     public velocity = 0;
-    private sprite: Image;
+    private sprite: Image | undefined;
 
-    constructor(entity: Entity, value: number, velocity: number, sprite: Image) {
+    constructor(entity: Entity, value: number, velocity: number, sprite: Image | undefined) {
         super(entity);
 
         this.value = value;
@@ -40,6 +40,8 @@ export class Height extends Component {
 
     public draw(sprite: Image): void {
         const height = sprite.getHeight();
-        this.renderService.drawImage(this.sprite, undefined, this.position.x, this.position.y + height / 2, Layers.shadows, false, false);
+        if (this.sprite !== undefined) {
+            this.renderService.drawImage(this.sprite, undefined, this.position.x, this.position.y + height / 2, Layers.shadows, false, false);
+        }
     }
 }

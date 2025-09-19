@@ -4,6 +4,7 @@ import { Health } from "../components/health";
 import { SpawnEntityOnDeath } from "../components/scripting/spawn-entity-on-death";
 import { UpdateEvent } from "../events/scene/updateEvent";
 import { coinFromEnemyPrefab } from "../prefabs/coin-prefab";
+import { enemyChipFromChipstackPrefab } from "../prefabs/enemy-chip-prefab";
 import { EnemyLocatorService } from "./enemy-locator-service";
 import { PlayerLocatorService } from "./player-locator-service";
 import { SceneService } from "./scene-service";
@@ -59,14 +60,15 @@ export class ArenaService extends Service {
     public async doRound(): Promise<void> {
         this.round++;
 
-        await this.slotMachineService.goGambling(1);
+        // await this.slotMachineService.goGambling(1);
 
-        await this.scheduler.seconds(2);
+        await this.scheduler.seconds(1);
         await this.slotMachineService.roll(true);
 
         for (const enemy of [...this.enemyLocatorService.enemies]) {
             const spawnEntityOnDeath = enemy.getComponent(SpawnEntityOnDeath)
             spawnEntityOnDeath.prefabs = spawnEntityOnDeath.prefabs.filter(x => x !== coinFromEnemyPrefab);
+            spawnEntityOnDeath.prefabs = spawnEntityOnDeath.prefabs.filter(x => x !== enemyChipFromChipstackPrefab);
 
             enemy.getComponent(Health).kill();
         }
