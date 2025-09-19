@@ -1,5 +1,6 @@
 import { Service } from "@keyslam/simple-node";
 import { barEffect } from "../effects/bar-effect";
+import { lightningEffect } from "../effects/lightning-effect";
 import { tripplebarEffect } from "../effects/tripplebar-effect";
 import { UpdateEvent } from "../events/scene/updateEvent";
 import { ScheduleService } from "./schedule-service";
@@ -20,19 +21,20 @@ export class EffectService extends Service {
         if (will && !this.did) {
 
             if (love.keyboard.isDown("t")) {
-                void this.runTrippleBarEffect(0);
+                void this.runLightningEffect(0);
             }
 
             if (love.keyboard.isDown("y")) {
-                void this.runTrippleBarEffect(1);
+                void this.runLightningEffect(1);
             }
 
             if (love.keyboard.isDown("u")) {
-                void this.runTrippleBarEffect(2);
+                void this.runLightningEffect(2);
             }
         }
         this.did = will;
     }
+
 
     public async runBarEffect(intensity: number): Promise<void> {
         await barEffect(this.scene, this.scheduleService, intensity);
@@ -40,5 +42,9 @@ export class EffectService extends Service {
 
     public async runTrippleBarEffect(intensity: number): Promise<void> {
         await tripplebarEffect(this.scene, this.scheduleService, intensity);
+    }
+
+    public async runLightningEffect(intensity: number): Promise<void> {
+        await lightningEffect(this.scene, this.scheduleService, intensity);
     }
 }

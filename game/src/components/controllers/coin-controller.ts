@@ -74,7 +74,7 @@ export class CoinController extends Component {
 
             if (this.amount === 1) {
                 sfxSmall.clone().play();
-            } else if (this.amount < 3) {
+            } else if (this.amount <= 3) {
                 sfxMedium.clone().play();
             } else {
                 sfxBig.clone().play();
