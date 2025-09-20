@@ -14,11 +14,15 @@ export class Health extends Component {
     public deathDelay = 0;
     private dead = false;
 
-    constructor(entity: Entity, value: number, max: number) {
+    public limitDamage = false;
+
+    constructor(entity: Entity, value: number, max: number, limitDamage = false) {
         super(entity);
 
         this.value = value;
         this.max = max;
+
+        this.limitDamage = limitDamage;
     }
 
     protected override initialize(): void {
@@ -49,7 +53,11 @@ export class Health extends Component {
     private onTakeDamage(event: TakeDamageEvent): void {
         if (this.dead) { return; }
 
-        this.value = math.max(0, this.value - event.damage);
+        if (this.limitDamage) {
+            this.value = math.max(0, this.value - 1);
+        } else {
+            this.value = math.max(0, this.value - event.damage);
+        }
 
         if (this.value === 0) {
             this.dead = true;

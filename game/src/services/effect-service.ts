@@ -1,6 +1,7 @@
 import { Service } from "@keyslam/simple-node";
 import { SlotSymbol } from "../data/slot-symbols";
 import { appleCarEffect } from "../effects/apple-car-effect";
+import { barEffect } from "../effects/bar-effect";
 import { bombEffect } from "../effects/bomb-effect";
 import { cherryEffect } from "../effects/cherry-effect";
 import { diceEffect } from "../effects/dice-effect";
@@ -8,12 +9,13 @@ import { Effect } from "../effects/effect";
 import { fireEffect } from "../effects/fire-effect";
 import { gunEffect } from "../effects/gun-effect";
 import { lemonEffect } from "../effects/lemon-effect";
+import { lightningEffect } from "../effects/lightning-effect";
 import { tripplebarEffect } from "../effects/tripplebar-effect";
 import { ScheduleService } from "./schedule-service";
 
 const effectMap: Partial<Record<SlotSymbol, Effect>> = {
-    bar: fireEffect,
-    lightning: fireEffect,
+    bar: barEffect,
+    lightning: lightningEffect,
     tripplebar: tripplebarEffect,
     dice: diceEffect,
     apple: appleCarEffect,
@@ -22,7 +24,6 @@ const effectMap: Partial<Record<SlotSymbol, Effect>> = {
     cherry: cherryEffect,
     lemon: lemonEffect,
     gun: gunEffect,
-
 };
 
 export class EffectService extends Service {
