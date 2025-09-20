@@ -5,6 +5,7 @@ import { EnemyLocatorService } from "../../services/enemy-locator-service";
 import { PlayerLocatorService } from "../../services/player-locator-service";
 import { Body } from "../collision/body";
 import { AnimatedSprite } from "../graphics/animated-sprite";
+import { Height } from "../graphics/height";
 import { Sprite } from "../graphics/sprite";
 import { Health } from "../health";
 import { Position } from "../position";
@@ -43,6 +44,11 @@ export class EnemyCherryController extends Component {
     }
 
     private update(): void {
+
+        if (this.entity.getComponent(Height).value > 0) {
+            return;
+        }
+
         if (this.health.value !== 0) {
 
             const player = this.entity.scene.getService(PlayerLocatorService).player;

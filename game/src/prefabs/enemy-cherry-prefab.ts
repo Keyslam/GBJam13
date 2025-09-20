@@ -39,3 +39,20 @@ export const enemyCherryPrefab = (entity: Entity, x: number, y: number) => {
         .addComponent(Height, 0, 0, imageMedium)
 };
 
+export const enemyCherryFallPrefab = (entity: Entity, x: number, y: number) => {
+    entity
+        .addComponent(Position, x, y, Layers.foreground)
+        .addComponent(Facing, 4)
+        .addComponent(Sprite, image)
+        .addComponent(AnimatedSprite, animations, "front")
+        .addComponent(EnemyCherryController)
+        .addComponent(Body, 0, 0, 10, 10, 20)
+        .addComponent(Hurtbox, 12, 12, 'casino', 0.1)
+        .addComponent(Hitbox, 6, 6, 'casino', 1)
+        .addComponent(Health, 3, 3)
+        .addComponent(SpawnEntityOnDeath, [deathSmoke, coinFromEnemyPrefab, explosionFromCherryPrefab])
+        .addComponent(ApplyKnockbackOnTakeDamage)
+        .addComponent(Height, 100, 0, imageMedium)
+};
+
+

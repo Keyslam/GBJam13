@@ -1,13 +1,13 @@
 import { Service } from "@keyslam/simple-node";
 import { SlotSymbol } from "../data/slot-symbols";
-import { barEffect } from "../effects/bar-effect";
+import { cherryEffect } from "../effects/cherry-effect";
 import { Effect } from "../effects/effect";
 import { lightningEffect } from "../effects/lightning-effect";
 import { tripplebarEffect } from "../effects/tripplebar-effect";
 import { ScheduleService } from "./schedule-service";
 
 const effectMap: Partial<Record<SlotSymbol, Effect>> = {
-    bar: barEffect,
+    bar: cherryEffect,
     lightning: lightningEffect,
     tripplebar: tripplebarEffect,
 };
