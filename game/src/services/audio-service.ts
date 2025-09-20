@@ -79,6 +79,8 @@ const sfxes: Record<string, Source> = {
 
     effect_big_explosion: newSfx("effects/effect-big-explosion.wav"),
     effect_bomb_toss: newSfx("effects/effect-bomb-toss.wav"),
+
+    effect_bounce: newSfx("effects/effect-bounce.wav"),
 }
 
 export class AudioService extends Service {

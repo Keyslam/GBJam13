@@ -80,7 +80,6 @@ export class PlayerControls extends Component {
     }
 
     private onTakeDamage(): void {
-        print("heyo");
         this.scene.getService(AudioService).playSfx("player_hurt")
     }
 
