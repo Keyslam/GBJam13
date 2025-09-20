@@ -14,8 +14,8 @@ export const EFfectApplecar = (entity: Entity, x: number) => {
     entity
         .addComponent(Position, x, -300, Layers.foreground)
         .addComponent(Sprite, image)
-        .addComponent(Body, 0, 150, 1, 1, 0, false, true)
+        .addComponent(Body, 0, 80, 1, 1, 0, false, true)
         .addComponent(AnimatedSprite, { default: animation }, "default")
-        .addComponent(Hitbox, 40, 56, 'arena', 1)
+        .addComponent(Hitbox, 36, 52, 'arena', 99)
         .addComponent(ApplecarController)
 }

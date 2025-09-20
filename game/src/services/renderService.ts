@@ -60,7 +60,7 @@ export class RenderService extends Service {
             }
 
             if (a.y !== b.y) {
-                return a.y - b.y;
+                return (a.y + a.image.getHeight() / 2) - (b.y + b.image.getHeight() / 2);
             }
 
             return a.x - b.x;

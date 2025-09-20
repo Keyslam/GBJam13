@@ -42,6 +42,8 @@ export class AnimatedSprite extends Component {
 
     private destroyOnEnd: boolean;
 
+    public isDone = false;
+
     constructor(entity: Entity, animations: Record<string, Animation>, activeAnimationName: string, destroyOnEnd = false) {
         super(entity);
 
@@ -69,6 +71,7 @@ export class AnimatedSprite extends Component {
         this.activeAnimationName = animationName;
         this.frame = 0;
         this.frameTime = 0;
+        this.isDone = false;
     }
 
     private update(event: UpdateEvent): void {
@@ -88,6 +91,7 @@ export class AnimatedSprite extends Component {
                     if (activeAnimation.mode === "once") {
                         this.frame = activeAnimation.frames.length - 1;
 
+                        this.isDone = true
                         if (this.destroyOnEnd) {
                             this.entity.scene.destroyEntity(this.entity);
                         }
