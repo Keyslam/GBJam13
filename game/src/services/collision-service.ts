@@ -88,6 +88,13 @@ export class CollisionService extends Service {
                 love.graphics.rectangle("line", body.x - body.w / 2, body.y - body.h / 2, body.w, body.h);
             })
         }
+
+        for (const hitbox of this.hitboxes) {
+            this.renderService.drawDebug(() => {
+                love.graphics.setColor(0, 1, 0, 1);
+                love.graphics.rectangle("line", hitbox.x - hitbox.w / 2, hitbox.y - hitbox.h / 2, hitbox.w, hitbox.h);
+            })
+        }
     }
 
     private aabbIntersect(

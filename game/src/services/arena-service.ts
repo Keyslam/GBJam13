@@ -4,6 +4,7 @@ import { Health } from "../components/health";
 import { SpawnEntityOnDeath } from "../components/scripting/spawn-entity-on-death";
 import { UpdateEvent } from "../events/scene/updateEvent";
 import { coinFromEnemyPrefab } from "../prefabs/coin-prefab";
+import { effectDicePrefab } from "../prefabs/effect-dice-prefab";
 import { enemyChipFromChipstackPrefab } from "../prefabs/enemy-chip-prefab";
 import { EnemyLocatorService } from "./enemy-locator-service";
 import { PlayerLocatorService } from "./player-locator-service";
@@ -65,12 +66,21 @@ export class ArenaService extends Service {
 
         const gamblingPromise = this.slotMachineService.goGambling(3);
 
-        // await this.spawningService.doWave({
-        //     diamond: 5,
-        //     stackchip: 3,
+        await this.spawningService.doWave({
+            diamond: 5,
+            chip: 5,
+            stackchip: 3,
 
-        //     delay: 20,
-        // })
+            delay: 20,
+        })
+
+        await this.scheduler.until(() => love.keyboard.isDown("p"))
+
+        this.scene.spawnEntity(effectDicePrefab, 0, 0);
+
+        await this.scheduler.seconds(100);
+
+
 
         await gamblingPromise;
 

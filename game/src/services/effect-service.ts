@@ -1,15 +1,17 @@
 import { Service } from "@keyslam/simple-node";
 import { SlotSymbol } from "../data/slot-symbols";
-import { cherryEffect } from "../effects/cherry-effect";
+import { appleCarEffect } from "../effects/apple-car-effect";
+import { diceEffect } from "../effects/dice-effect";
 import { Effect } from "../effects/effect";
-import { lightningEffect } from "../effects/lightning-effect";
 import { tripplebarEffect } from "../effects/tripplebar-effect";
 import { ScheduleService } from "./schedule-service";
 
 const effectMap: Partial<Record<SlotSymbol, Effect>> = {
-    bar: cherryEffect,
-    lightning: lightningEffect,
+    bar: appleCarEffect,
+    lightning: appleCarEffect,
     tripplebar: tripplebarEffect,
+    dice: diceEffect,
+    apple: appleCarEffect,
 };
 
 export class EffectService extends Service {
@@ -22,7 +24,6 @@ export class EffectService extends Service {
     public async runWith(effects: SlotSymbol[]): Promise<void> {
         const uniqueOrder: SlotSymbol[] = [];
 
-        // preserve the first appearance order
         for (const symbol of effects) {
             if (!uniqueOrder.includes(symbol)) {
                 uniqueOrder.push(symbol);
