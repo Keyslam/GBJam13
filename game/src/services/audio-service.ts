@@ -86,6 +86,9 @@ const sfxes: Record<string, Source> = {
 export class AudioService extends Service {
     private playingMusic: Music | undefined;
 
+    private lastSfxPlayed: Record<string, number> = {};
+    private sfxCooldown = 0.09;
+
     public playMusic(name: string): void {
         const music = musics[name];
 
@@ -100,16 +103,22 @@ export class AudioService extends Service {
     }
 
     public playSfx(name: string): Source {
-        const sfx = sfxes[name]
+        const sfx = sfxes[name];
+        if (!sfx) return undefined!;
 
-        if (sfx !== undefined) {
-            const sfxi = sfx.clone();
-            sfxi.play()
+        const now = love.timer.getTime();
+        const lastPlayed = this.lastSfxPlayed[name] ?? 0;
 
-            return sfxi
+        if (now - lastPlayed < this.sfxCooldown) {
+            return undefined!;
         }
 
-        return undefined!;
+        const sfxi = sfx.clone();
+        sfxi.play();
+
+        this.lastSfxPlayed[name] = now;
+
+        return sfxi;
     }
 
     public stopSfx(sfxi: Source): void {

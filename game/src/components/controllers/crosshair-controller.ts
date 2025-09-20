@@ -10,8 +10,10 @@ export class CrosshairController extends Component {
     declare private position: Position;
     declare private playerLocatorService: PlayerLocatorService;
 
+    private static crosshairs: CrosshairController[] = [];
+
     private acceleration = 0.06;
-    private maxSpeed = 1.7;
+    private maxSpeed = 1.2;
 
     private vx = 0;
     private vy = 0;
@@ -25,6 +27,12 @@ export class CrosshairController extends Component {
         this.position = this.entity.getComponent(Position);
 
         this.onSceneEvent(UpdateEvent, "update")
+
+        CrosshairController.crosshairs.push(this);
+    }
+
+    public override onDestroy(): void {
+        CrosshairController.crosshairs = CrosshairController.crosshairs.filter(x => x !== this);
     }
 
     private update(event: UpdateEvent): void {
@@ -45,6 +53,37 @@ export class CrosshairController extends Component {
 
             steeringX += nx * this.acceleration;
             steeringY += ny * this.acceleration;
+        }
+
+        const desiredSeparation = 10;
+        let sepX = 0;
+        let sepY = 0;
+        let count = 0;
+
+        for (const crosshair of CrosshairController.crosshairs) {
+            if (crosshair === this) continue;
+
+            const otherPos = crosshair.entity.getComponent(Position);
+            const dx = this.position.x - otherPos.x;
+            const dy = this.position.y - otherPos.y;
+            const d = Math.sqrt(dx * dx + dy * dy);
+
+            if (d > 0 && d < desiredSeparation) {
+                const nx = dx / d;
+                const ny = dy / d;
+
+                sepX += nx / d;
+                sepY += ny / d;
+                count++;
+            }
+        }
+
+        if (count > 0) {
+            sepX /= count;
+            sepY /= count;
+
+            steeringX += sepX * this.acceleration * 25;
+            steeringY += sepY * this.acceleration * 25;
         }
 
         this.vx += steeringX;
