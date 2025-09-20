@@ -1,5 +1,7 @@
 import { Component } from "@keyslam/simple-node";
+import { DiedEvent } from "../../events/entity/diedEvent";
 import { UpdateEvent } from "../../events/scene/updateEvent";
+import { AudioService } from "../../services/audio-service";
 import { EnemyLocatorService } from "../../services/enemy-locator-service";
 import { PlayerLocatorService } from "../../services/player-locator-service";
 import { Body } from "../collision/body";
@@ -27,8 +29,13 @@ export class EnemyChipstackController extends Component {
         this.sprite = this.entity.getComponent(Sprite);
 
         this.onSceneEvent(UpdateEvent, "update");
+        this.onEntityEvent(DiedEvent, "onDeath");
 
         this.enemyLocatorService.register(this.entity);
+    }
+
+    private onDeath() {
+        this.scene.getService(AudioService).playSfx("chipstack_separate")
     }
 
     protected override onDestroy(): void {

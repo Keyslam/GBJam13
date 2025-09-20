@@ -12,6 +12,7 @@ import { playerPrefab } from "./prefabs/player-prefab";
 import { slotMachineReelPrefab } from "./prefabs/slot-machine-reel-prefab";
 import run from "./run";
 import { ArenaService } from "./services/arena-service";
+import { AudioService } from "./services/audio-service";
 import { CameraService } from "./services/camera-service";
 import { CoinService } from "./services/coin-service";
 import { CollisionService } from "./services/collision-service";
@@ -50,7 +51,8 @@ const scene = new Scene(
     EnemyLocatorService,
     SpinCounterService,
     ArenaService,
-    SpawningService
+    SpawningService,
+    AudioService
 );
 
 const player = scene.spawnEntity(playerPrefab);

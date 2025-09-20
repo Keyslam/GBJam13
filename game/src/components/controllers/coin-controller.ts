@@ -2,16 +2,13 @@ import { Component, Entity } from "@keyslam/simple-node";
 import { Image } from "love.graphics";
 import { DrawEvent } from "../../events/scene/drawEvent";
 import { UpdateEvent } from "../../events/scene/updateEvent";
+import { AudioService } from "../../services/audio-service";
 import { CoinService } from "../../services/coin-service";
 import { PlayerLocatorService } from "../../services/player-locator-service";
 import { RenderService } from "../../services/renderService";
 import { Body } from "../collision/body";
 import { Height } from "../graphics/height";
 import { Position } from "../position";
-
-const sfxSmall = love.audio.newSource("assets/sfx/coin/coin-small.wav", "static");
-const sfxMedium = love.audio.newSource("assets/sfx/coin/coin-medium.wav", "static");
-const sfxBig = love.audio.newSource("assets/sfx/coin/coin-big.wav", "static");
 
 export class CoinController extends Component {
     declare private renderService: RenderService;
@@ -73,11 +70,11 @@ export class CoinController extends Component {
             this.entity.scene.destroyEntity(this.entity);
 
             if (this.amount === 1) {
-                sfxSmall.clone().play();
+                this.scene.getService(AudioService).playSfx("coin_small")
             } else if (this.amount <= 3) {
-                sfxMedium.clone().play();
+                this.scene.getService(AudioService).playSfx("coin_medium")
             } else {
-                sfxBig.clone().play();
+                this.scene.getService(AudioService).playSfx("coin_large")
             }
         }
     }

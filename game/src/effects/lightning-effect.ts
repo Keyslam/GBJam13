@@ -3,6 +3,7 @@ import { Position } from "../components/position";
 import { lightningBoltPrefab } from "../prefabs/lightning-bolt-prefab";
 import { lightningStrikePrefab } from "../prefabs/lightning-strike-prefab";
 import { warningPrefab } from "../prefabs/warning-prefab";
+import { AudioService } from "../services/audio-service";
 import { CameraService } from "../services/camera-service";
 import { PlayerLocatorService } from "../services/player-locator-service";
 import { ScheduleService } from "../services/schedule-service";
@@ -24,9 +25,6 @@ const randNormal = (mean: number, stdDev: number): number => {
     const z = math.sqrt(-2.0 * math.log(u)) * math.cos(2.0 * math.pi * v);
     return mean + z * stdDev;
 };
-
-const sfx = love.audio.newSource("assets/sfx/effects/effect-warning.mp3", "static");
-const sfxLightning = love.audio.newSource("assets/sfx/effects/effect-lightning.wav", "static");
 
 const spawnSomeLightning = async (scene: Scene, scheduler: ScheduleService, spawnCount: number) => {
     const playerLocatorService = scene.getService(PlayerLocatorService);
@@ -62,7 +60,7 @@ const spawnSomeLightning = async (scene: Scene, scheduler: ScheduleService, spaw
         }
     }
 
-    sfx.clone().play();
+    scene.getService(AudioService).playSfx("warning");
 
     await scheduler.seconds(0.9);
 
@@ -83,7 +81,7 @@ const spawnSomeLightning = async (scene: Scene, scheduler: ScheduleService, spaw
         strikes.push(strike);
     }
 
-    sfxLightning.clone().play();
+    scene.getService(AudioService).playSfx("lightning");
     scene.getService(CameraService).shake(0.5);
 
     await scheduler.seconds(0.35);

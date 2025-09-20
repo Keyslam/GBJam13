@@ -1,6 +1,8 @@
 import { Component } from "@keyslam/simple-node";
+import { TakeDamageEvent } from "../../events/entity/takeDamageEvent";
 import { UpdateEvent } from "../../events/scene/updateEvent";
 import bulletPrefab from "../../prefabs/bullet";
+import { AudioService } from "../../services/audio-service";
 import { ControlService } from "../../services/control-service";
 import { Body } from "../collision/body";
 import { Facing } from "../facing";
@@ -45,8 +47,6 @@ const shootOffsets: Record<number, { x: number, y: number }> = {
     6: { x: -8, y: 3 },
 };
 
-const playerShotSfx = love.audio.newSource("assets/sfx/player/shoot.wav", "static");
-
 export class PlayerControls extends Component {
     declare private controlService: ControlService;
 
@@ -76,6 +76,12 @@ export class PlayerControls extends Component {
         this.facing = this.entity.getComponent(Facing);
 
         this.onSceneEvent(UpdateEvent, "update");
+        this.onEntityEvent(TakeDamageEvent, "onTakeDamage");
+    }
+
+    private onTakeDamage(): void {
+        print("heyo");
+        this.scene.getService(AudioService).playSfx("player_hurt")
     }
 
     private update(event: UpdateEvent): void {
@@ -115,7 +121,7 @@ export class PlayerControls extends Component {
         if (this.controlService.primaryButton.isDown && this.shootTimer === 0) {
             this.shootTimer = this.shootCooldown;
 
-            playerShotSfx.clone().play();
+            this.scene.getService(AudioService).playSfx("player_shoot")
 
             const direction = facingMapping[this.facing.direction]!;
             const offset = shootOffsets[this.facing.direction] ?? { x: 0, y: 0 };

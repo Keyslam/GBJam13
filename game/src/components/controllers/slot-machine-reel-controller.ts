@@ -1,11 +1,10 @@
 import { Component, Entity } from "@keyslam/simple-node";
 import { SlotSymbol } from "../../data/slot-symbols";
+import { AudioService } from "../../services/audio-service";
 import { CameraService } from "../../services/camera-service";
 import { ScheduleService } from "../../services/schedule-service";
 import { AnimatedSprite } from "../graphics/animated-sprite";
 import { SlotMachinePanelController } from "./slot-machine-panel-controller";
-
-const rouletteStopSfx = love.audio.newSource("assets/sfx/slot-machine/stop.wav", "static");
 
 export const SlotSymbols: SlotSymbol[] = [
     'apple',
@@ -97,7 +96,7 @@ export class SlotMachineReelController extends Component {
         }
 
         this.cameraService.shake(0.3);
-        rouletteStopSfx.clone().play();
+        this.scene.getService(AudioService).playSfx("roulette_stop")
 
         return this.panelSymbols[1]!;
     }

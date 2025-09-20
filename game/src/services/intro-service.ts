@@ -2,6 +2,7 @@ import { Service } from "@keyslam/simple-node";
 import { Source } from "love.audio";
 import { ColouredText } from "love.graphics";
 import { UpdateEvent } from "../events/scene/updateEvent";
+import { AudioService } from "./audio-service";
 import { RenderService } from "./renderService";
 import { SceneService } from "./scene-service";
 import { ScheduleService } from "./schedule-service";
@@ -14,8 +15,6 @@ const frames = [
     love.graphics.newImage("assets/sprites/intro/scene5.png"),
     love.graphics.newImage("assets/sprites/intro/scene6.png"),
 ]
-
-const music = love.audio.newSource("assets/music/intro-test.wav", "stream")
 
 const font = love.graphics.newImageFont("assets/fonts/match-7.png", " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{};:'\",.<>/?\\|")
 
@@ -43,8 +42,7 @@ export class IntroService extends Service {
     }
 
     public async enter(): Promise<void> {
-        this.musicTrack = music.clone();
-        this.musicTrack.play();
+        this.scene.getService(AudioService).playMusic("intro")
 
         await this.scheduleService.seconds(0.5);
 

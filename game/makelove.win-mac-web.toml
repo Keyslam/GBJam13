@@ -33,4 +33,4 @@ CFBundleShortVersionString = "1.0"
 
 [lovejs]
 title = "GBJam13"
-memory = "20000000"
+memory = "200000000"

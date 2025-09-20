@@ -5,16 +5,15 @@ import { Sprite } from "../components/graphics/sprite";
 import { Position } from "../components/position";
 import { DieAfterTime } from "../components/scripting/die-after-time";
 import { Layers } from "../data/layer";
+import { AudioService } from "../services/audio-service";
 
 const image = love.graphics.newImage("assets/sprites/enemy/explosion.png");
 const animations = {
     default: createAnimation(image, 48, 48, 7, 0, 0.05, "once", false)
 }
 
-const explosionSfx = love.audio.newSource("assets/sfx/enemy/explosion.wav", "static")
-
 export const explosionPrefab = (entity: Entity, x: number, y: number) => {
-    explosionSfx.clone().play();
+    entity.scene.getService(AudioService).playSfx("explosion")
 
     entity
         .addComponent(Position, x, y, Layers.foreground)
@@ -24,7 +23,7 @@ export const explosionPrefab = (entity: Entity, x: number, y: number) => {
 }
 
 export const explosionFromCherryPrefab = (entity: Entity, source: Entity) => {
-    explosionSfx.clone().play();
+    entity.scene.getService(AudioService).playSfx("explosion")
 
     const position = source.getComponent(Position);
 

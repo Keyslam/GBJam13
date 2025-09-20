@@ -1,19 +1,16 @@
 import { Service } from "@keyslam/simple-node";
 import { SlotMachineReelController } from "../components/controllers/slot-machine-reel-controller";
 import { SlotSymbol } from "../data/slot-symbols";
+import { AudioService } from "./audio-service";
 import { EffectService } from "./effect-service";
 import { ScheduleService } from "./schedule-service";
 import { SpinCounterService } from "./spin-counter-service";
-
-const rouletteSpin1Sfx = love.audio.newSource("assets/sfx/slot-machine/spin-1.wav", "static");
-const rouletteSpin2Sfx = love.audio.newSource("assets/sfx/slot-machine/spin-2.wav", "static");
-const rouletteSpin3Sfx = love.audio.newSource("assets/sfx/slot-machine/spin-3.wav", "static");
-const rouletteChimeSfx = love.audio.newSource("assets/sfx/slot-machine/chime.wav", "static");
 
 export class SlotMachineService extends Service {
     declare private scheduleService: ScheduleService;
     declare private spinCounterService: SpinCounterService;
     declare private effectService: EffectService;
+    declare private audioService: AudioService;
 
     declare private reel1: SlotMachineReelController;
     declare private reel2: SlotMachineReelController;
@@ -41,6 +38,7 @@ export class SlotMachineService extends Service {
         this.scheduleService = this.scene.getService(ScheduleService);
         this.spinCounterService = this.scene.getService(SpinCounterService);
         this.effectService = this.scene.getService(EffectService);
+        this.audioService = this.scene.getService(AudioService);
     }
 
     public async goGambling(amount: number): Promise<void> {
@@ -73,8 +71,8 @@ export class SlotMachineService extends Service {
     public async roll(death = false): Promise<SlotSymbol[]> {
         this.isRolling = true;
 
-        const sfx1 = rouletteSpin1Sfx.clone();
-        sfx1.play();
+        const hum = this.audioService.playSfx("slot_machine_hum")
+        const sfx1 = this.audioService.playSfx("slot_machine_spin_1")
 
         const wheel1rolls = 6 + math.floor(love.math.random() * 4)
         const wheel2rolls = wheel1rolls + 3 + math.floor(love.math.random() * 4)
@@ -86,21 +84,20 @@ export class SlotMachineService extends Service {
 
         const symbol1 = await wheel1Promise;
 
-        sfx1.stop();
-        const sfx2 = rouletteSpin2Sfx.clone();
-        sfx2.play();
+        this.audioService.stopSfx(sfx1);
+        const sfx2 = this.audioService.playSfx("slot_machine_spin_2")
 
         const symbol2 = await wheel2Promise;
 
-        sfx2.stop();
-        const sfx3 = rouletteSpin3Sfx.clone();
-        sfx3.play();
+        this.audioService.stopSfx(sfx2);
+        const sfx3 = this.audioService.playSfx("slot_machine_spin_3")
 
         const symbol3 = await wheel3Promise
 
-        sfx3.stop();
+        this.audioService.stopSfx(sfx3);
+        this.audioService.stopSfx(hum);
 
-        rouletteChimeSfx.clone().play();
+        this.audioService.playSfx("slot_machine_chime")
 
         this.isRolling = false;
 

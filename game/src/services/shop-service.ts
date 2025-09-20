@@ -4,6 +4,7 @@ import { ColouredText, Image } from "love.graphics";
 import { SlotSymbol } from "../data/slot-symbols";
 import { KeypressedEvent } from "../events/scene/keypressedEvent";
 import { UpdateEvent } from "../events/scene/updateEvent";
+import { AudioService } from "./audio-service";
 import { CoinService } from "./coin-service";
 import { ControlService } from "./control-service";
 import { RenderService } from "./renderService";
@@ -63,11 +64,6 @@ interface ShopOffer {
     purchased: boolean,
 }
 
-const music = love.audio.newSource("assets/music/shop.mp3", "stream")
-music.setLooping(true)
-music.setVolume(0.9)
-const bpm = 133
-
 const bg = love.graphics.newImage("assets/sprites/shop/background.png")
 const sign = love.graphics.newImage("assets/sprites/shop/sign.png")
 const signFrames = [
@@ -81,14 +77,6 @@ const bigRedFrames = [
     love.graphics.newQuad(0, 0, 114, 72, 228, 72),
     love.graphics.newQuad(114, 0, 114, 72, 228, 72),
 ]
-
-const purchaseSfx = love.audio.newSource("assets/sfx/shop/purchase.wav", "static");
-const confirmSfx = love.audio.newSource("assets/sfx/shop/confirm.wav", "static");
-const cancelSfx = love.audio.newSource("assets/sfx/shop/cancel.wav", "static");
-const changeSlotSfx = love.audio.newSource("assets/sfx/shop/change-slot.wav", "static");
-const transitionToSfx = love.audio.newSource("assets/sfx/shop/transition-to.wav", "static");
-const transitionFromSfx = love.audio.newSource("assets/sfx/shop/transition-from.wav", "static");
-const soldOutSfx = love.audio.newSource("assets/sfx/shop/sold-out.wav", "static")
 
 const outOfStockIcon = love.graphics.newImage("assets/sprites/shop/icon-out-of-stock.png")
 
@@ -219,6 +207,7 @@ export class ShopService extends Service {
     declare private coinService: CoinService;
     declare private sceneService: SceneService;
     declare private controlService: ControlService;
+    declare private audioService: AudioService;
 
     private state: 'shop' | 'equip' | 'transition' = 'shop';
 
@@ -284,6 +273,7 @@ export class ShopService extends Service {
         this.coinService = this.scene.getService(CoinService);
         this.sceneService = this.scene.getService(SceneService);
         this.controlService = this.scene.getService(ControlService);
+        this.audioService = this.scene.getService(AudioService);
 
         this.renderService.drawShop = () => { this.draw() }
 
@@ -294,8 +284,7 @@ export class ShopService extends Service {
     private musicTrack: Source | undefined;
 
     public enter(): void {
-        this.musicTrack = music.clone();
-        this.musicTrack.play();
+        this.audioService.playMusic("shop");
 
         this.displayCoinsAmount = this.coinService.amount;
 
@@ -313,7 +302,7 @@ export class ShopService extends Service {
     }
 
     private async toEquip(): Promise<void> {
-        transitionToSfx.clone().play();
+        this.audioService.playSfx("shop_transition_to");
 
         this.equipReplacing = false;
         this.equipSlotIndex = 4;
@@ -409,7 +398,7 @@ export class ShopService extends Service {
             const newSelectedIndex = row * 3 + col;
 
             if (newSelectedIndex !== this.selectedSlotIndex) {
-                changeSlotSfx.clone().play();
+                this.audioService.playSfx("shop_change_slot");
 
                 this.selectedSlotIndex = newSelectedIndex
 
@@ -436,7 +425,7 @@ export class ShopService extends Service {
                 if (this.selectedSlotIndex === 5) {
                     void this.scene.getService(SceneService).toArena();
                 } else if (selectedOffer.purchased) {
-                    soldOutSfx.clone().play();
+                    this.audioService.playSfx("shop_sold_out");
 
                     const text = soldOutQuips[math.floor(love.math.random() * soldOutQuips.length)]!;
                     this.flavourText.text = text
@@ -445,11 +434,11 @@ export class ShopService extends Service {
                     const canAfford = this.coinService.amount >= selectedOffer.price
 
                     if (canAfford) {
-                        confirmSfx.clone().play();
+                        this.audioService.playSfx("shop_confirm");
 
                         void this.toEquip();
                     } else {
-                        cancelSfx.clone().play();
+                        this.audioService.playSfx("shop_cancel");
 
                         const text = cantAffordQuips[math.floor(love.math.random() * cantAffordQuips.length)]!;
                         this.flavourText.text = text
@@ -483,7 +472,7 @@ export class ShopService extends Service {
                 const newSelectedIndex = row * 3 + col;
 
                 if (newSelectedIndex !== this.equipSlotIndex) {
-                    changeSlotSfx.clone().play();
+                    this.audioService.playSfx("shop_change_slot");
 
                     this.equipSlotIndex = newSelectedIndex
 
@@ -497,13 +486,14 @@ export class ShopService extends Service {
                 }
 
                 if (this.controlService.secondaryButton.wasPressed) {
-                    transitionFromSfx.clone().play();
-                    cancelSfx.clone().play();
+                    this.audioService.playSfx("shop_transition_from");
+                    this.audioService.playSfx("shop_cancel");
+
                     void this.toShop(false);
                 }
 
                 if (this.controlService.primaryButton.wasPressed) {
-                    confirmSfx.clone().play();
+                    this.audioService.playSfx("shop_confirm");
                     this.equipReplacing = true;
 
                     this.equipTitle.text = "REPLACE?"
@@ -523,7 +513,7 @@ export class ShopService extends Service {
                 }
 
                 if (this.controlService.primaryButton.wasPressed) {
-                    purchaseSfx.clone().play();
+                    this.audioService.playSfx("shop_purchase");
                     const selectedOffer = this.offers[this.selectedSlotIndex]!;
                     selectedOffer.purchased = true;
                     this.slotMachineService.setSymbol(this.equipSlotIndex, selectedOffer.effect.symbol)
@@ -546,9 +536,7 @@ export class ShopService extends Service {
         {
             love.graphics.draw(bg)
 
-            const songTime = this.musicTrack!.tell();
-            const secondsPerBeat = 60 / bpm;
-            const beatIndex = math.floor(songTime / secondsPerBeat);
+            const beatIndex = this.audioService.getBeatIndex();
 
             const signFrame = signFrames[(beatIndex % signFrames.length - 1) + 1]!;
             love.graphics.draw(sign, signFrame)

@@ -6,6 +6,7 @@ import { Sprite } from "../components/graphics/sprite";
 import { Position } from "../components/position";
 import { DestroyOnDealDamage } from "../components/scripting/destroyOnDealDamage";
 import { Layers } from "../data/layer";
+import { AudioService } from "../services/audio-service";
 
 const image = love.graphics.newImage("assets/sprites/enemy/enemy-diamond-laserbeam.png");
 const animations = {
@@ -13,10 +14,8 @@ const animations = {
     default_flipped: createAnimation(image, 24, 8, 2, 0, 0.1, "loop", false)
 }
 
-const soundSfx = love.audio.newSource("assets/sfx/enemy/shoot.wav", "static")
-
 export const enemyDiamondLaserPrefab = (entity: Entity, source: Entity) => {
-    soundSfx.clone().play();
+    entity.scene.getService(AudioService).playSfx("laser")
 
     const position = source.getComponent(Position);
     const sprite = source.getComponent(Sprite);
