@@ -70,7 +70,10 @@ const sfxes: Record<string, Source> = {
 
     enemy_defeat: newSfx("enemy/defeat.wav"),
 
-    chipstack_separate: newSfx("enemy/chipstack-separate.wav")
+    chipstack_separate: newSfx("enemy/chipstack-separate.wav"),
+
+    car_horn: newSfx("effects/effect-car-horn.wav"),
+    car_engine: newSfx("effects/effect-car-engine.wav"),
 
 }
 

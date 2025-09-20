@@ -17,10 +17,11 @@ export class Body extends Component {
     public h: number;
 
     private dieOnCollision = false
+    private ignoreBounds = false;
 
     public friction = 20;
 
-    constructor(entity: Entity, vx: number, vy: number, w: number, h: number, friction: number, dieOnCollision = false) {
+    constructor(entity: Entity, vx: number, vy: number, w: number, h: number, friction: number, dieOnCollision = false, ignoreBounds = false) {
         super(entity);
 
         this.vx = vx;
@@ -32,6 +33,7 @@ export class Body extends Component {
         this.friction = friction;
 
         this.dieOnCollision = dieOnCollision;
+        this.ignoreBounds = ignoreBounds
     }
 
     protected override initialize(): void {
@@ -57,29 +59,30 @@ export class Body extends Component {
         let targetY = this.position.y + this.vy * event.dt
 
         let collided = false;
+        if (!this.ignoreBounds) {
+            if (targetX < -224) {
+                targetX = -224;
+                this.vx = 0;
+                collided = true;
+            }
 
-        if (targetX < -224) {
-            targetX = -224;
-            this.vx = 0;
-            collided = true;
-        }
+            if (targetX > 224) {
+                targetX = 224;
+                this.vx = 0;
+                collided = true;
+            }
 
-        if (targetX > 224) {
-            targetX = 224;
-            this.vx = 0;
-            collided = true;
-        }
+            if (targetY < -140) {
+                targetY = -140;
+                this.vy = 0;
+                collided = true;
+            }
 
-        if (targetY < -140) {
-            targetY = -140;
-            this.vy = 0;
-            collided = true;
-        }
-
-        if (targetY > 132) {
-            targetY = 132;
-            this.vy = 0;
-            collided = true;
+            if (targetY > 132) {
+                targetY = 132;
+                this.vy = 0;
+                collided = true;
+            }
         }
 
         this.position.x = targetX;
