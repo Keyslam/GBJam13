@@ -8,8 +8,8 @@ import { tripplebarEffect } from "../effects/tripplebar-effect";
 import { ScheduleService } from "./schedule-service";
 
 const effectMap: Partial<Record<SlotSymbol, Effect>> = {
-    bar: appleCarEffect,
-    lightning: appleCarEffect,
+    bar: bombEffect,
+    lightning: bombEffect,
     tripplebar: tripplebarEffect,
     dice: diceEffect,
     apple: appleCarEffect,
