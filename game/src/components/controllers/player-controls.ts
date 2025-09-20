@@ -67,6 +67,8 @@ export class PlayerControls extends Component {
 
     private lockFacing = false;
 
+    public isDead = false;
+
     protected override initialize(): void {
         this.controlService = this.scene.getService(ControlService);
 
@@ -81,6 +83,10 @@ export class PlayerControls extends Component {
 
     private onTakeDamage(): void {
         this.scene.getService(AudioService).playSfx("player_hurt")
+    }
+
+    public onDestroy(): void {
+        this.isDead = true;
     }
 
     private update(event: UpdateEvent): void {

@@ -7,7 +7,9 @@ import { AnimatedSprite, createAnimation } from "../components/graphics/animated
 import { Sprite } from "../components/graphics/sprite"
 import { Health } from "../components/health"
 import { Position } from "../components/position"
+import { SpawnEntityOnDeath } from "../components/scripting/spawn-entity-on-death"
 import { Layers } from "../data/layer"
+import { playerDeathPrefab } from "./player-death-prefab"
 
 const image = love.graphics.newImage("assets/sprites/player/guy.png")
 const animations = {
@@ -28,6 +30,8 @@ const animations = {
     run_southWest: createAnimation(image, 24, 24, 4, 12, 0.2, "loop", true),
     run_west: createAnimation(image, 24, 24, 4, 8, 0.2, "loop", true),
     run_northWest: createAnimation(image, 24, 24, 4, 4, 0.2, "loop", true),
+
+    die: createAnimation(image, 24, 24, 37, 20, 0.2, "once", false),
 }
 
 
@@ -39,6 +43,7 @@ export const playerPrefab = (entity: Entity) => {
         .addComponent(Body, 0, 0, 10, 10, 20)
         .addComponent(Sprite, image)
         .addComponent(AnimatedSprite, animations, "idle_south")
-        .addComponent(Health, 4, 8, true)
+        .addComponent(Health, 1, 8, true)
         .addComponent(Hurtbox, 4, 4, 'player', 1)
+        .addComponent(SpawnEntityOnDeath, [playerDeathPrefab])
 }

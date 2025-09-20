@@ -5,6 +5,7 @@ import { SpawnEntityOnDeath } from "../components/scripting/spawn-entity-on-deat
 import { UpdateEvent } from "../events/scene/updateEvent";
 import { coinFromEnemyPrefab } from "../prefabs/coin-prefab";
 import { enemyChipFromChipstackPrefab } from "../prefabs/enemy-chip-prefab";
+import { enemyDiamondPrefab } from "../prefabs/enemy-diamond-prefab";
 import { EnemyLocatorService } from "./enemy-locator-service";
 import { PlayerLocatorService } from "./player-locator-service";
 import { SceneService } from "./scene-service";
@@ -62,6 +63,8 @@ export class ArenaService extends Service {
 
     public async doRound(): Promise<void> {
         this.round++;
+
+        this.scene.spawnEntity(enemyDiamondPrefab, 50, 0)
 
         await this.scheduler.until(() => love.keyboard.isDown("p"))
 
