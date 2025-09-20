@@ -7,12 +7,12 @@ import { DieAfterTime } from "../components/scripting/die-after-time";
 import { Layers } from "../data/layer";
 import { AudioService } from "../services/audio-service";
 
-const image = love.graphics.newImage("assets/sprites/enemy/explosion.png");
+const image = love.graphics.newImage("assets/sprites/effects/effect-bomb-explosion.png");
 const animations = {
-    default: createAnimation(image, 48, 48, 6, 0, 0.05, "once", false)
+    default: createAnimation(image, 80, 80, 2, 0, 0.1, "loop", false)
 }
 
-export const explosionPrefab = (entity: Entity, x: number, y: number) => {
+export const bombExplosionPrefab = (entity: Entity, x: number, y: number) => {
     entity.scene.getService(AudioService).playSfx("explosion")
 
     entity
@@ -20,18 +20,5 @@ export const explosionPrefab = (entity: Entity, x: number, y: number) => {
         .addComponent(Sprite, image)
         .addComponent(AnimatedSprite, animations, "default")
         .addComponent(Hitbox, 48, 48, 'arena', 3)
-        .addComponent(DieAfterTime, 0.3)
-}
-
-export const explosionFromCherryPrefab = (entity: Entity, source: Entity) => {
-    entity.scene.getService(AudioService).playSfx("explosion")
-
-    const position = source.getComponent(Position);
-
-    entity
-        .addComponent(Position, position.x, position.y, Layers.foreground_sfx)
-        .addComponent(Sprite, image)
-        .addComponent(AnimatedSprite, animations, "default")
-        .addComponent(Hitbox, 32, 32, 'arena', 3)
-        .addComponent(DieAfterTime, 0.3)
+        .addComponent(DieAfterTime, 0.4)
 }

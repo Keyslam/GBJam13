@@ -14,7 +14,7 @@ export class Height extends Component {
 
     public value = 0;
     public velocity = 0;
-    private sprite: Image | undefined;
+    public sprite: Image | undefined;
 
     constructor(entity: Entity, value: number, velocity: number, sprite: Image | undefined) {
         super(entity);
