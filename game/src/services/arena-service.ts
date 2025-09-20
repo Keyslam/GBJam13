@@ -10,6 +10,7 @@ import { PlayerLocatorService } from "./player-locator-service";
 import { SceneService } from "./scene-service";
 import { ScheduleService } from "./schedule-service";
 import { SlotMachineService } from "./slot-machine-service";
+import { SpawningService } from "./spawning-service";
 
 export class ArenaService extends Service {
     declare private scheduler: ScheduleService;
@@ -17,6 +18,7 @@ export class ArenaService extends Service {
     declare private slotMachineService: SlotMachineService;
     declare private enemyLocatorService: EnemyLocatorService;
     declare private sceneService: SceneService;
+    declare private spawningService: SpawningService;
 
     private inScene = false;
 
@@ -28,6 +30,7 @@ export class ArenaService extends Service {
         this.slotMachineService = this.scene.getService(SlotMachineService);
         this.enemyLocatorService = this.scene.getService(EnemyLocatorService);
         this.sceneService = this.scene.getService(SceneService);
+        this.spawningService = this.scene.getService(SpawningService);
 
         this.onSceneEvent(UpdateEvent, "update")
     }
@@ -60,9 +63,16 @@ export class ArenaService extends Service {
     public async doRound(): Promise<void> {
         this.round++;
 
-        await this.scheduler.seconds(60);
+        const gamblingPromise = this.slotMachineService.goGambling(3);
 
-        await this.slotMachineService.goGambling(3);
+        await this.spawningService.doWave({
+            diamond: 5,
+            stackchip: 3,
+
+            delay: 20,
+        })
+
+        await gamblingPromise;
 
         await this.scheduler.seconds(2);
 

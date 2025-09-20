@@ -58,7 +58,7 @@ export class PlayerControls extends Component {
     public locked = false;
 
     private acceleration = 2000;
-    private maxSpeed = 80;
+    private maxSpeed = 100;
 
     private shootCooldown = 0.5
     private shootTimer = 0;

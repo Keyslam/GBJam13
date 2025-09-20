@@ -8,8 +8,6 @@ import { UpdateEvent } from "./events/scene/updateEvent";
 import { arenaFencePrefab } from "./prefabs/arena/arena-fence-prefab";
 import { arenaFloorPrefab } from "./prefabs/arena/arena-floor-prefab";
 import { SpinCounterPrefab } from "./prefabs/arena/spin-counter-prefab";
-import crosshairPrefab from "./prefabs/crosshair-prefab";
-import { enemyChipstackPrefab } from "./prefabs/enemy-chipstack-prefab";
 import { playerPrefab } from "./prefabs/player-prefab";
 import { slotMachineReelPrefab } from "./prefabs/slot-machine-reel-prefab";
 import run from "./run";
@@ -28,6 +26,7 @@ import { SceneService } from "./services/scene-service";
 import { ScheduleService } from "./services/schedule-service";
 import { ShopService } from "./services/shop-service";
 import { SlotMachineService } from "./services/slot-machine-service";
+import { SpawningService } from "./services/spawning-service";
 import { SpinCounterService } from "./services/spin-counter-service";
 
 love.graphics.setDefaultFilter("nearest", "nearest");
@@ -50,7 +49,8 @@ const scene = new Scene(
     EffectService,
     EnemyLocatorService,
     SpinCounterService,
-    ArenaService
+    ArenaService,
+    SpawningService
 );
 
 const player = scene.spawnEntity(playerPrefab);
@@ -80,13 +80,6 @@ scene.getService(SlotMachineService).setup(
     reel2.getComponent(SlotMachineReelController),
     reel3.getComponent(SlotMachineReelController),
 );
-
-for (let i = 0; i < 10; i++) {
-    scene.spawnEntity(enemyChipstackPrefab, i * -10 + -30, 0)
-}
-
-
-scene.spawnEntity(crosshairPrefab, 100, 0)
 
 scene.getService(CameraService).target = player;
 
