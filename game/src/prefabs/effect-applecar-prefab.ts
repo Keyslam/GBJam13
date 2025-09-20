@@ -8,7 +8,7 @@ import { Position } from "../components/position";
 import { Layers } from "../data/layer";
 
 const image = love.graphics.newImage("assets/sprites/effects/effect-applecar.png");
-const animation = createAnimation(image, 48, 64, 4, 0, 0.1);
+const animation = createAnimation(image, 48, 64, 2, 0, 0.2);
 
 export const EFfectApplecar = (entity: Entity, x: number) => {
     entity
