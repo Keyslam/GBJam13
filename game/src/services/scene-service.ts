@@ -5,7 +5,7 @@ import { ScheduleService } from "./schedule-service";
 export class SceneService extends Service {
     declare private schedulerService: ScheduleService;
 
-    public activeScene: 'intro' | 'title' | 'arena' | 'shop' | 'death' | 'gameover' = 'arena';
+    public activeScene: 'intro' | 'title' | 'arena' | 'shop' | 'death' | 'gameover' = 'intro';
 
     public fadeAmount = 0;
     public deathAmount = 0;
@@ -23,6 +23,13 @@ export class SceneService extends Service {
         await this.schedulerService.seconds(0.5);
         this.activeScene = 'arena'
         await this.schedulerService.wrap(this.ditherOut());
+    }
+
+    // eslint-disable-next-line @typescript-eslint/require-await
+    public async toTitle(): Promise<void> {
+        this.scene.getService(AudioService).stopMusic();
+
+        this.activeScene = 'title'
     }
 
     public async toShop(fn?: () => void): Promise<void> {
