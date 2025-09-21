@@ -42,7 +42,7 @@ export class LemonController extends Component {
             this.scene.spawnEntity(lemonHitboxPrefab, this.position.x, this.position.y)
 
             this.height.value = 1
-            this.height.velocity = -180
+            this.height.velocity = -190
         }
     }
 }

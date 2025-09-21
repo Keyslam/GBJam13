@@ -18,7 +18,7 @@ if (IS_DEBUG) {
 
 love.conf = (t) => {
     t.window = {
-        title: "GBJam 13",
+        title: "THE LOTTODOME",
         width: 960,
         height: 864,
     } as Config['window'];
@@ -26,7 +26,7 @@ love.conf = (t) => {
     t.console = false;
     t.version = "11.5";
 
-    t.identity = "GBJam13";
+    t.identity = "THE LOTTODOME";
 
     t.modules.audio = true;
     t.modules.data = true;

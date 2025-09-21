@@ -58,8 +58,6 @@ love.update = (dt) => {
 
 love.draw = () => {
     scene.emit(new DrawEvent())
-
-    love.window.setTitle(`GBJam13 - FPS: ${math.floor(love.timer.getFPS()).toString()}`);
 }
 
 love.keypressed = (_, key) => {

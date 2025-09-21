@@ -2,6 +2,8 @@ import { Service } from "@keyslam/simple-node";
 import { Image } from "love.graphics";
 import { Health } from "../components/health";
 import { SlotSymbol } from "../data/slot-symbols";
+import { ArenaService } from "./arena-service";
+import { AudioService } from "./audio-service";
 import { CoinService } from "./coin-service";
 import { PlayerLocatorService } from "./player-locator-service";
 import { RenderService } from "./renderService";
@@ -15,9 +17,9 @@ const hpIdle = love.graphics.newQuad(0, 0, 16, 16, 48, 16);
 const hpHighlight = love.graphics.newQuad(16, 0, 16, 16, 48, 16);
 
 const healthPoint = love.graphics.newImage("assets/sprites/hud/health-point.png");
-const healthPointEmpty = love.graphics.newQuad(0, 0, 4, 16, 12, 16);
-const healthPointRise = love.graphics.newQuad(4, 0, 4, 16, 12, 16);
-const healthPointFull = love.graphics.newQuad(8, 0, 4, 16, 12, 16);
+const healthPointEmpty = love.graphics.newQuad(0, 0, 8, 16, 24, 16);
+const healthPointRise = love.graphics.newQuad(8, 0, 8, 16, 24, 16);
+const healthPointFull = love.graphics.newQuad(16, 0, 8, 16, 24, 16);
 
 const slot = love.graphics.newImage("assets/sprites/hud/slot.png");
 const effectIcons = {
@@ -39,7 +41,7 @@ const effectIcons = {
 } satisfies Record<SlotSymbol, Image>;
 
 
-const font = love.graphics.newFont("assets/fonts/match-7.ttf", 16)
+const font = love.graphics.newImageFont("assets/fonts/match-7.png", " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{};:'\",.<>/?\\|")
 
 const progressBar = love.graphics.newImage("assets/sprites/hud/progress-bar.png");
 const progressBarIdle = love.graphics.newQuad(0, 0, 160, 2, 800, 2);
@@ -51,6 +53,7 @@ const progressBarFlash = [
 ]
 const progressBarLead = love.graphics.newImage("assets/sprites/hud/progress-bar-lead.png");
 
+const roundbanner = love.graphics.newImage("assets/sprites/hud/round-banner.png")
 
 export class HudService extends Service {
     declare private playerLocatorService: PlayerLocatorService;
@@ -69,10 +72,40 @@ export class HudService extends Service {
         this.renderService.drawHud = () => { this.draw(); };
     }
 
-    public draw(): void {
+    private time = 0;
 
+    public draw(): void {
         if (this.scene.getService(SceneService).activeScene !== 'arena') {
+            this.time = 0;
             return;
+        }
+
+        love.graphics.setFont(font)
+
+        this.time++;
+
+        const round = this.scene.getService(ArenaService).round
+        const text = `ROUND ${round.toString()}`
+
+        if (this.time === 1) {
+            this.scene.getService(AudioService).playSfx("ready")
+        }
+
+        if (this.time < 40) {
+            const bannerx = 160 - this.time * 8
+            love.graphics.draw(roundbanner, bannerx, 20)
+            love.graphics.printf(text, bannerx + 160, 23, 160, "center")
+        }
+
+        if (this.time >= 40 && this.time < 80) {
+            love.graphics.draw(roundbanner, -160, 20)
+            love.graphics.printf(text, 0, 23, 160, "center")
+        }
+
+        if (this.time >= 80 && this.time < 120) {
+            const bannerx = -160 - (this.time - 80) * 8
+            love.graphics.draw(roundbanner, bannerx, 20)
+            love.graphics.printf(text, bannerx + 160, 23, 160, "center")
         }
 
         love.graphics.push("all")
@@ -101,7 +134,7 @@ export class HudService extends Service {
                 ? healthPointFull
                 : healthPointEmpty)
 
-            love.graphics.draw(healthPoint, healthPointQuad, 17 + (i * 4), 2)
+            love.graphics.draw(healthPoint, healthPointQuad, 17 + (i * 8), 2)
         }
 
         const slotSymbols = this.slotMachineService.getCurrentSymbols();
@@ -113,8 +146,8 @@ export class HudService extends Service {
         }
 
         love.graphics.setFont(font);
-        love.graphics.print("$", 114, 2)
-        love.graphics.print(this.coinService.amount.toString().padStart(6, "0"), 121, 2)
+        love.graphics.print("$", 114, 6)
+        love.graphics.print(this.coinService.amount.toString().padStart(6, "0"), 121, 6)
 
         const progress = this.slotMachineService.currentFrames / this.slotMachineService.framesUntilNextRoll
         love.graphics.setScissor(0, 126, 160 * progress, 2)

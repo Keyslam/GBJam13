@@ -1,4 +1,4 @@
-name = "GBJam13"
+name = "THE LOTTODOME"
 love_version = "11.5"
 default_targets = ["win32", "win64", "macos", "lovejs"]
 build_directory = "../dist"
@@ -9,13 +9,13 @@ love_files = [
 icon_file = "assets/icon.png"
 
 [windows.exe_metadata]
-FileDescription = "GBJam13"
+FileDescription = "THE LOTTODOME"
 FileVersion = "1.0"
 CompanyName = "Keyslam & LeviR.star & SnugBoat"
 LegalCopyright = "Copyright © 2024 Keyslam & LeviR.star & SnugBoat"
-ProductName = "GBJam13"
+ProductName = "THE LOTTODOME"
 ProductVersion = "1.0"
-OriginalFilename = "GBJam13.exe"
+OriginalFilename = "THE_LOTTODOME.exe"
 
 [win32]
 shared_libraries = []
@@ -26,11 +26,11 @@ shared_libraries = []
 artifacts = "archive"
 
 [macos.app_metadata]
-CFBundleName = "GBJam13"
-CFBundleIdentifier = "com.keyslam.gbjam13"
+CFBundleName = "THE LOTTODOME"
+CFBundleIdentifier = "com.keyslam.THE_LOTTODOME"
 NSHumanReadableCopyright = "Copyright © 2024 Keyslam & LeviR.star & SnugBoat"
 CFBundleShortVersionString = "1.0"
 
 [lovejs]
-title = "GBJam13"
+title = "THE LOTTODOME"
 memory = "200000000"

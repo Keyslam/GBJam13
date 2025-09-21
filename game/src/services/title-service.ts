@@ -65,6 +65,8 @@ export class TitleService extends Service {
     private timeIn = 0
     private selection = 0;
 
+    private locked = false;
+
     protected override initialize(): void {
         this.scene.getService(RenderService).drawTitle = () => { this.draw() }
         this.sceneService = this.scene.getService(SceneService);
@@ -103,6 +105,10 @@ export class TitleService extends Service {
             }
         }
 
+        if (this.locked) {
+            return;
+        }
+
         if (this.state === 'menu') {
             this.timeIn++;
 
@@ -128,6 +134,7 @@ export class TitleService extends Service {
                 if (this.selection === 0) {
                     this.scene.getService(AudioService).playSfx("shop_confirm")
 
+                    this.locked = true
                     void this.sceneService.toArena();
                 }
 

@@ -88,6 +88,9 @@ const sfxes: Record<string, Source> = {
     effect_heal: newSfx("effects/effect-heal.wav"),
 
     die: newSfx("player/die.wav"),
+
+    ready: newSfx("ready.wav"),
+    bell: newSfx("bell.wav"),
 }
 
 export class AudioService extends Service {

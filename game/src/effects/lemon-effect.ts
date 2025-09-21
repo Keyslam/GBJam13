@@ -39,7 +39,7 @@ export const lemonEffect: Effect = async (scene: Scene, scheduler: ScheduleServi
             vy /= mag;
         }
 
-        const lemon = scene.spawnEntity(lemonPrefab, x, y, vx * 100, vy * 100);
+        const lemon = scene.spawnEntity(lemonPrefab, x, y, vx * 95, vy * 95);
         lemons.push(lemon);
 
         await scheduler.seconds(2);
