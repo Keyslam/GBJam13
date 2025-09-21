@@ -32,7 +32,7 @@ export const enemyChipstackPrefab = (entity: Entity, x: number, y: number) => {
         .addComponent(EnemyChipstackController)
         .addComponent(Body, 0, 0, 10, 10, 20)
         .addComponent(Hurtbox, 10, 10, 'casino', 0.1)
-        .addComponent(Hitbox, 6, 6, 'casino', 1)
+        .addComponent(Hitbox, 12, 20, 'casino', 1)
         .addComponent(Health, 1, 1)
         .addComponent(SpawnEntityOnDeath, [deathSmoke, coinFromEnemyPrefab, enemyChipFromChipstackPrefab, enemyChipFromChipstackPrefab, enemyChipFromChipstackPrefab])
         .addComponent(ApplyKnockbackOnTakeDamage)

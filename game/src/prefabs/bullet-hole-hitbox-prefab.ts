@@ -7,6 +7,6 @@ import { Layers } from "../data/layer";
 export const bulletHoleHitboxPrefab = (entity: Entity, x: number, y: number) => {
     entity
         .addComponent(Position, x, y, Layers.warning)
-        .addComponent(Hitbox, 8, 8, 'arena', 1)
+        .addComponent(Hitbox, 8, 8, 'arena', 99)
         .addComponent(DieAfterTime, 0.1)
 }
