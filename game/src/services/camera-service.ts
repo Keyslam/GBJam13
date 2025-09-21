@@ -20,7 +20,7 @@ export class CameraService extends Service {
     private lerpSpeed = 50;
 
     private trauma = 0;
-    private maxShake = 10;
+    private maxShake = 20;
     private frequency = 10;
 
     protected override initialize(): void {

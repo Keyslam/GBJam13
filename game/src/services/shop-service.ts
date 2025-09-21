@@ -148,7 +148,7 @@ const items: Item[] = [
         symbol: 'fire'
     },
     {
-        title: "Gun",
+        title: "Gunner",
         image: love.graphics.newImage("assets/sprites/shop/icon-gun.png"),
         flavorText: "Don't stand still for too long!",
         symbol: 'gun'

@@ -16,7 +16,7 @@ const bulletPrefab = (entity: Entity, x: number, y: number, vx: number, vy: numb
         .addComponent(Sprite, image)
         .addComponent(AnimatedSprite, { default: animation }, "default")
         .addComponent(Body, vx, vy, 1, 1, 0, true)
-        .addComponent(Hitbox, 6, 6, 'player', 1)
+        .addComponent(Hitbox, 10, 10, 'player', 1)
         .addComponent(DestroyOnDealDamage)
 }
 

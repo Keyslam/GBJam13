@@ -10,7 +10,7 @@ import { arenaFencePrefab } from "../prefabs/arena/arena-fence-prefab";
 import { arenaFloorPrefab } from "../prefabs/arena/arena-floor-prefab";
 import { SpinCounterPrefab } from "../prefabs/arena/spin-counter-prefab";
 import { coinFromEnemyPrefab } from "../prefabs/coin-prefab";
-import { enemyChipFromChipstackPrefab, enemyChipPrefab } from "../prefabs/enemy-chip-prefab";
+import { enemyChipFromChipstackPrefab } from "../prefabs/enemy-chip-prefab";
 import { playerPrefab } from "../prefabs/player-prefab";
 import { slotMachineReelPrefab } from "../prefabs/slot-machine-reel-prefab";
 import { AudioService } from "./audio-service";
@@ -90,6 +90,8 @@ export class ArenaService extends Service {
         }
 
         this.scene.getService(PlayerLocatorService).player.getComponent(PlayerControls).locked = false;
+        this.scene.getService(PlayerLocatorService).player.getComponent(Health).value = math.max(this.scene.getService(PlayerLocatorService).player.getComponent(Health).value, 4)
+
         void this.doRound();
     }
 
@@ -122,26 +124,166 @@ export class ArenaService extends Service {
         this.slotMachineService.backup();
         this.scene.getService(CoinService).backup();
 
-        await this.scheduler.seconds(1);
-        this.scene.spawnEntity(enemyChipPrefab, 50, 0)
-        this.scene.spawnEntity(enemyChipPrefab, 70, 0)
-        this.scene.spawnEntity(enemyChipPrefab, 90, 0)
-        // await this.scheduler.seconds(100);
+        if (this.round === 1) {
+            await this.scheduler.wrap(this.spawningService.doWave({
+                chip: 3,
+                bell: 0,
+                cherry: 0,
+                diamond: 0,
+                stackchip: 0,
 
-        const gamblingPromise = this.scheduler.wrap(this.slotMachineService.goGambling(1));
+                delay: 20,
+            }))
 
-        // await this.scheduler.wrap(this.spawningService.doWave({
-        //     diamond: 5,
-        //     chip: 5,
-        //     stackchip: 3,
+            await this.scheduler.seconds(5);
 
-        //     delay: 20,
-        // }))
+            const gamblingPromise = this.scheduler.wrap(this.slotMachineService.goGambling(1));
+            await this.scheduler.wrap(this.spawningService.doWave({
+                chip: 5,
+                bell: 0,
+                cherry: 0,
+                diamond: 0,
+                stackchip: 0,
 
-        await gamblingPromise;
+                delay: 20,
+            }))
 
-        // await this.scheduler.seconds(2);
+            await gamblingPromise;
+        }
 
+        if (this.round === 2) {
+            await this.scheduler.wrap(this.spawningService.doWave({
+                chip: 8,
+                bell: 2,
+                cherry: 0,
+                diamond: 0,
+                stackchip: 0,
+
+                delay: 15,
+            }))
+
+            await this.scheduler.seconds(2);
+
+            const gamblingPromise = this.scheduler.wrap(this.slotMachineService.goGambling(2));
+
+            await this.scheduler.wrap(this.spawningService.doWave({
+                chip: 10,
+                bell: 3,
+                cherry: 0,
+                diamond: 0,
+                stackchip: 0,
+
+                delay: 15,
+            }))
+
+            await gamblingPromise;
+        }
+
+        if (this.round === 3) {
+            await this.scheduler.wrap(this.spawningService.doWave({
+                chip: 5,
+                bell: 0,
+                cherry: 0,
+                diamond: 0,
+                stackchip: 3,
+
+                delay: 15,
+            }))
+
+            await this.scheduler.seconds(2);
+
+            const gamblingPromise = this.scheduler.wrap(this.slotMachineService.goGambling(3));
+
+            await this.scheduler.wrap(this.spawningService.doWave({
+                chip: 0,
+                bell: 5,
+                cherry: 0,
+                diamond: 0,
+                stackchip: 0,
+
+                delay: 15,
+            }))
+
+            await this.scheduler.seconds(6);
+
+            await this.scheduler.wrap(this.spawningService.doWave({
+                chip: 0,
+                bell: 10,
+                cherry: 0,
+                diamond: 0,
+                stackchip: 0,
+
+                delay: 15,
+            }))
+
+            await this.scheduler.seconds(2);
+
+            await this.scheduler.wrap(this.spawningService.doWave({
+                chip: 5,
+                bell: 0,
+                cherry: 0,
+                diamond: 0,
+                stackchip: 0,
+
+                delay: 15,
+            }))
+
+            await gamblingPromise;
+        }
+
+        if (this.round === 4) {
+            await this.scheduler.wrap(this.spawningService.doWave({
+                chip: 0,
+                bell: 0,
+                cherry: 0,
+                diamond: 3,
+                stackchip: 3,
+
+                delay: 15,
+            }))
+
+            await this.scheduler.seconds(2);
+
+            const gamblingPromise = this.scheduler.wrap(this.slotMachineService.goGambling(3));
+
+            await this.scheduler.wrap(this.spawningService.doWave({
+                chip: 0,
+                bell: 0,
+                cherry: 0,
+                diamond: 0,
+                stackchip: 5,
+
+                delay: 15,
+            }))
+
+            await this.scheduler.seconds(6);
+
+            await this.scheduler.wrap(this.spawningService.doWave({
+                chip: 20,
+                bell: 0,
+                cherry: 0,
+                diamond: 0,
+                stackchip: 5,
+
+                delay: 15,
+            }))
+
+            await this.scheduler.seconds(2);
+
+            await this.scheduler.wrap(this.spawningService.doWave({
+                chip: 0,
+                bell: 3,
+                cherry: 0,
+                diamond: 0,
+                stackchip: 0,
+
+                delay: 15,
+            }))
+
+            await gamblingPromise;
+        }
+
+        await this.scheduler.seconds(2);
         await this.scheduler.wrap(this.slotMachineService.roll(true));
 
         for (const enemy of [...this.enemyLocatorService.enemies]) {
@@ -159,7 +301,7 @@ export class ArenaService extends Service {
 
         this.scene.getService(PlayerLocatorService).player.getComponent(PlayerControls).locked = true;
 
-        await this.scheduler.seconds(2);
+        await this.scheduler.seconds(1);
 
         void this.sceneService.toShop(() => { this.slotMachineService.reset(); });
     }

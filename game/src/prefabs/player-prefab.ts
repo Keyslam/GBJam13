@@ -7,6 +7,7 @@ import { AnimatedSprite, createAnimation } from "../components/graphics/animated
 import { Sprite } from "../components/graphics/sprite"
 import { Health } from "../components/health"
 import { Position } from "../components/position"
+import { ShakeOnDamage } from "../components/scripting/shake-on-damage"
 import { SpawnEntityOnDeath } from "../components/scripting/spawn-entity-on-death"
 import { Layers } from "../data/layer"
 import { playerDeathPrefab } from "./player-death-prefab"
@@ -43,7 +44,8 @@ export const playerPrefab = (entity: Entity) => {
         .addComponent(Body, 0, 0, 10, 10, 20)
         .addComponent(Sprite, image)
         .addComponent(AnimatedSprite, animations, "idle_south")
-        .addComponent(Health, 1, 8, true)
+        .addComponent(Health, 4, 8, true)
         .addComponent(Hurtbox, 4, 4, 'player', 1)
         .addComponent(SpawnEntityOnDeath, [playerDeathPrefab])
+        .addComponent(ShakeOnDamage)
 }
