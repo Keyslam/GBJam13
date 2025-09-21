@@ -37,6 +37,8 @@ const effectMap: Partial<Record<SlotSymbol, Effect>> = {
 export class EffectService extends Service {
     declare private scheduleService: ScheduleService;
 
+    public won = false;
+
     protected override initialize(): void {
         this.scheduleService = this.scene.getService(ScheduleService);
     }
@@ -53,6 +55,11 @@ export class EffectService extends Service {
         for (const symbol of uniqueOrder) {
             const count = effects.filter(x => x === symbol).length;
             if (count > 0) {
+                if (count === 3 && symbol === 'seven') {
+                    print("We did it obis")
+                    this.won = true;
+                }
+
                 const effectPromise = effectMap[symbol]?.(this.scene, this.scheduleService, count - 1)
 
                 if (effectPromise !== undefined) {

@@ -5,6 +5,7 @@ import { enemyCherryPrefab } from "../prefabs/enemy-cherry-prefab";
 import { enemyChipPrefab } from "../prefabs/enemy-chip-prefab";
 import { enemyChipstackPrefab } from "../prefabs/enemy-chipstack-prefab";
 import { enemyDiamondPrefab } from "../prefabs/enemy-diamond-prefab";
+import { EffectService } from "./effect-service";
 import { PlayerLocatorService } from "./player-locator-service";
 import { ScheduleService } from "./schedule-service";
 
@@ -28,6 +29,10 @@ export class SpawningService extends Service {
     }
 
     public async doWave(wave: Wave) {
+        if (this.scene.getService(EffectService).won) {
+            return;
+        }
+
         const toSpawn: string[] = [];
         for (const [name, count] of Object.entries(wave)) {
             for (let i = 0; i < count; i++) {
@@ -72,6 +77,10 @@ export class SpawningService extends Service {
             }
 
             await this.scheduler.frames(wave.delay);
+
+            if (this.scene.getService(EffectService).won) {
+                break
+            }
         }
     }
 

@@ -31,6 +31,10 @@ export class SlotMachineService extends Service {
     private reel2backup: SlotSymbol[] = ['heal', 'bar', 'heal']
     private reel3backup: SlotSymbol[] = ['speedup', 'bar', 'doubleshot']
 
+    // private reel1backup: SlotSymbol[] = ['seven', 'seven', 'seven']
+    // private reel2backup: SlotSymbol[] = ['seven', 'seven', 'seven']
+    // private reel3backup: SlotSymbol[] = ['seven', 'seven', 'seven']
+
     public setup(reel1: SlotMachineReelController, reel2: SlotMachineReelController, reel3: SlotMachineReelController): void {
         this.reel1 = reel1;
         this.reel2 = reel2;

@@ -45,6 +45,7 @@ export class RenderService extends Service {
     declare public drawTitle: () => void;
     declare public drawGameover: () => void;
     declare public drawSettings: () => void;
+    declare public drawWin: () => void;
 
     public drawImage(image: Image, quad: Quad | undefined, x: number, y: number, z: number, flipped: boolean, flash: boolean) {
         this.commands.push({ image, quad, x, y, z, flipped, flash, type: "image" });
@@ -132,6 +133,7 @@ export class RenderService extends Service {
         this.drawGameover();
         this.drawTitle();
         this.drawSettings();
+        this.drawWin();
 
         if (this.sceneService.ditherFlipped) {
             love.graphics.draw(dither, 480 - this.sceneService.ditherAmount * 320, 0, 0, -1, 1)

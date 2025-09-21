@@ -5,7 +5,7 @@ import { ScheduleService } from "./schedule-service";
 export class SceneService extends Service {
     declare private schedulerService: ScheduleService;
 
-    public activeScene: 'intro' | 'title' | 'settings' | 'arena' | 'shop' | 'death' | 'gameover' = 'intro';
+    public activeScene: 'intro' | 'title' | 'settings' | 'arena' | 'shop' | 'death' | 'gameover' | 'win' = 'intro';
 
     public fadeAmount = 0;
     public deathAmount = 0;
@@ -62,6 +62,26 @@ export class SceneService extends Service {
         await this.schedulerService.wrap(this.ditherOut());
     }
 
+    public async toWin(entity: Entity): Promise<void> {
+        this.scene.getService(AudioService).stopMusic();
+        this.scene.getService(AudioService).stopAllSfx();
+
+        await this.schedulerService.wrap(this.fadeOut());
+
+        this.scene.destroyAll((e) => {
+            return e !== entity;
+        });
+
+        this.scene.getService(ScheduleService).cancelAll();
+        this.scene.getService(AudioService).stopMusic();
+        this.scene.getService(AudioService).stopAllSfx();
+
+        await this.schedulerService.seconds(0.2);
+
+        this.activeScene = 'win'
+        await this.schedulerService.wrap(this.fadeIn());
+    }
+
     public async toDeath(entity: Entity): Promise<void> {
         this.scene.getService(AudioService).stopMusic();
         this.scene.getService(AudioService).stopAllSfx();
@@ -99,6 +119,13 @@ export class SceneService extends Service {
     public async fadeOut(): Promise<void> {
         while (this.fadeAmount < 1) {
             this.fadeAmount = math.min(1, this.fadeAmount + 0.05);
+            await this.schedulerService.frames(1);
+        }
+    }
+
+    public async fadeOutSlow(): Promise<void> {
+        while (this.fadeAmount < 1) {
+            this.fadeAmount = math.min(1, this.fadeAmount + 0.01);
             await this.schedulerService.frames(1);
         }
     }

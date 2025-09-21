@@ -11,6 +11,7 @@ import { CoinService } from "./services/coin-service";
 import { CollisionService } from "./services/collision-service";
 import { ControlService } from "./services/control-service";
 import { EffectService } from "./services/effect-service";
+import { EndingService } from "./services/ending-service";
 import { EnemyLocatorService } from "./services/enemy-locator-service";
 import { GameoverService } from "./services/gameover-service";
 import { HudService } from "./services/hud-service";
@@ -51,7 +52,8 @@ const scene = new Scene(
     AudioService,
     GameoverService,
     TitleService,
-    SettingsService
+    SettingsService,
+    EndingService
 );
 
 love.update = (dt) => {
