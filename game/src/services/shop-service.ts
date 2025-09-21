@@ -85,9 +85,9 @@ const equipBackground = love.graphics.newImage("assets/sprites/shop/equip-backgr
 const font = love.graphics.newImageFont("assets/fonts/match-7.png", " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{};:'\",.<>/?\\|")
 
 const itemSeven: Item = {
-    title: "7",
+    title: "Seven",
     image: love.graphics.newImage("assets/sprites/shop/icon-7.png"),
-    flavorText: "Get 3 in a row and win BIG!",
+    flavorText: "Match 3 for the jackpot; your way out of here.",
     symbol: 'tripplebar'
 }
 
@@ -144,7 +144,7 @@ const items: Item[] = [
     {
         title: "Fire",
         image: love.graphics.newImage("assets/sprites/shop/icon-fire.png"),
-        flavorText: "Watch out! Things are getting hot!",
+        flavorText: "Things are getting hot! Heeheehee-",
         symbol: 'fire'
     },
     {
@@ -236,7 +236,7 @@ export class ShopService extends Service {
         },
         {
             effect: itemSeven,
-            price: 99,
+            price: 77,
             purchased: false
         }, {
             effect: itemNextround,
@@ -284,6 +284,8 @@ export class ShopService extends Service {
     private musicTrack: Source | undefined;
 
     public enter(): void {
+        this.fillOffers();
+
         this.audioService.playMusic("shop");
 
         this.displayCoinsAmount = this.coinService.amount;
@@ -299,6 +301,36 @@ export class ShopService extends Service {
 
     public exit(): void {
         this.musicTrack?.stop();
+    }
+
+    private fillOffers(): void {
+        const offers: ShopOffer[] = [];
+        const availableItems = [...items];
+        const minPrice = 3;
+        const maxPrice = 30;
+
+        for (let i = 0; i < 4; i++) {
+            if (availableItems.length === 0) break;
+
+            const idx = math.random(1, availableItems.length) - 1;
+            const item = availableItems.splice(idx, 1)[0]!;
+
+            const price = math.random(minPrice, maxPrice);
+
+            offers.push({
+                effect: item,
+                price,
+                purchased: false
+            });
+        }
+
+        this.offers[0] = offers[0]!
+        this.offers[1] = offers[1]!
+        this.offers[2] = offers[2]!
+        this.offers[3] = offers[3]!
+
+        this.offers[4]!.purchased = false
+        this.offers[5]!.purchased = false
     }
 
     private async toEquip(): Promise<void> {
