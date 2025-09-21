@@ -27,9 +27,9 @@ export class SlotMachineService extends Service {
     public isRolling = false;
     public done = false;
 
-    private reel1backup: SlotSymbol[] = ['seven', 'seven', 'doubleshot']
-    private reel2backup: SlotSymbol[] = ['seven', 'seven', 'heal']
-    private reel3backup: SlotSymbol[] = ['seven', 'seven', 'speedup']
+    private reel1backup: SlotSymbol[] = ['speedup', 'bar', 'doubleshot']
+    private reel2backup: SlotSymbol[] = ['heal', 'bar', 'heal']
+    private reel3backup: SlotSymbol[] = ['speedup', 'bar', 'doubleshot']
 
     public setup(reel1: SlotMachineReelController, reel2: SlotMachineReelController, reel3: SlotMachineReelController): void {
         this.reel1 = reel1;

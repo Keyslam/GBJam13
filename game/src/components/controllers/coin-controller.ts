@@ -2,6 +2,7 @@ import { Component, Entity } from "@keyslam/simple-node";
 import { Image } from "love.graphics";
 import { DrawEvent } from "../../events/scene/drawEvent";
 import { UpdateEvent } from "../../events/scene/updateEvent";
+import coinImpactPrefab from "../../prefabs/coin-pickup-prefab";
 import { AudioService } from "../../services/audio-service";
 import { CoinService } from "../../services/coin-service";
 import { PlayerLocatorService } from "../../services/player-locator-service";
@@ -76,6 +77,8 @@ export class CoinController extends Component {
             } else {
                 this.scene.getService(AudioService).playSfx("coin_large")
             }
+
+            this.scene.spawnEntity(coinImpactPrefab, this.entity);
         }
     }
 }

@@ -5,7 +5,9 @@ import { AnimatedSprite, createAnimation } from "../components/graphics/animated
 import { Sprite } from "../components/graphics/sprite";
 import { Position } from "../components/position";
 import { DestroyOnDealDamage } from "../components/scripting/destroyOnDealDamage";
+import { SpawnEntityOnDeath } from "../components/scripting/spawn-entity-on-death";
 import { Layers } from "../data/layer";
+import bulletImpactPrefab from "./bullet-impact-prefab";
 
 const image = love.graphics.newImage("assets/sprites/player/bullet.png");
 const animation = createAnimation(image, 10, 10, 1, 0, 0.1);
@@ -18,6 +20,7 @@ const bulletPrefab = (entity: Entity, x: number, y: number, vx: number, vy: numb
         .addComponent(Body, vx, vy, 1, 1, 0, true)
         .addComponent(Hitbox, 10, 10, 'player', 1)
         .addComponent(DestroyOnDealDamage)
+        .addComponent(SpawnEntityOnDeath, [bulletImpactPrefab])
 }
 
 export default bulletPrefab;
