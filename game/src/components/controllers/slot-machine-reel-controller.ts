@@ -132,7 +132,7 @@ export class SlotMachineReelController extends Component {
         await this.schedulerService.seconds(t);
     }
 
-    private setSymbols(): void {
+    public setSymbols(): void {
         for (let i = 0; i < this.panels.length; i++) {
             this.panels[i]!.setSymbol(this.panelSymbols[i]!);
         }

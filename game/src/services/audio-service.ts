@@ -109,6 +109,8 @@ export class AudioService extends Service {
             }
 
             music.source.play();
+            music.source.setVolume(0.5)
+
             this.playingMusic = music;
         }
     }
@@ -133,7 +135,7 @@ export class AudioService extends Service {
         }
 
         let sfxi = sfx.clone();
-        sfxi.setVolume(0.5)
+        sfxi.setVolume(0.3)
 
         if (name === 'die') {
             sfxi = sfx;

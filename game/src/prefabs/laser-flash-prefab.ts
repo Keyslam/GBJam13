@@ -7,6 +7,7 @@ import { SpawnEntityOnDeath } from "../components/scripting/spawn-entity-on-deat
 import { Layers } from "../data/layer";
 import { AudioService } from "../services/audio-service";
 import { enemyDiamondLaserPrefab } from "./enemy-diamond-laser";
+import { DestroyOnRoundEnd } from "../components/destroy-on-round-end";
 
 const image = love.graphics.newImage("assets/sprites/enemy/enemy-diamond-laserflash.png");
 const animations = {
@@ -23,4 +24,5 @@ export const laserFlashPrefab = (entity: Entity, x: number, y: number, flipped: 
         .addComponent(AnimatedSprite, animations, flipped ? "default_flipped" : "default")
         .addComponent(DieAfterTime, 0.5)
         .addComponent(SpawnEntityOnDeath, [enemyDiamondLaserPrefab])
+        .addComponent(DestroyOnRoundEnd)
 }

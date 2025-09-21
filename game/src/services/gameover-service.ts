@@ -83,6 +83,7 @@ export class GameoverService extends Service {
         if (this.controlService.primaryButton.wasPressed) {
             if (this.selected === 0) {
                 this.scene.getService(AudioService).playSfx("shop_confirm")
+
                 void this.sceneService.toArena();
             }
 

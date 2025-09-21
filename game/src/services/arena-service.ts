@@ -2,6 +2,7 @@ import { Service } from "@keyslam/simple-node";
 import { PlayerControls } from "../components/controllers/player-controls";
 import { SlotMachineReelController } from "../components/controllers/slot-machine-reel-controller";
 import { SpinCounterController } from "../components/controllers/spin-counter-controller";
+import { DestroyOnRoundEnd } from "../components/destroy-on-round-end";
 import { Health } from "../components/health";
 import { SpawnEntityOnDeath } from "../components/scripting/spawn-entity-on-death";
 import { UpdateEvent } from "../events/scene/updateEvent";
@@ -14,6 +15,7 @@ import { playerPrefab } from "../prefabs/player-prefab";
 import { slotMachineReelPrefab } from "../prefabs/slot-machine-reel-prefab";
 import { AudioService } from "./audio-service";
 import { CameraService } from "./camera-service";
+import { CoinService } from "./coin-service";
 import { EnemyLocatorService } from "./enemy-locator-service";
 import { PlayerLocatorService } from "./player-locator-service";
 import { SceneService } from "./scene-service";
@@ -31,6 +33,7 @@ export class ArenaService extends Service {
     declare private spawningService: SpawningService;
 
     private inScene = false;
+    private previousScene = ''
 
     public round = 0;
 
@@ -45,41 +48,46 @@ export class ArenaService extends Service {
         this.onSceneEvent(UpdateEvent, "update")
     }
 
-    private enter(): void {
+    private enter(fresh = false): void {
         const scene = this.scene;
 
         scene.getService(AudioService).playMusic("arena")
 
-        const player = scene.spawnEntity(playerPrefab);
-        scene.getService(PlayerLocatorService).player = player;
+        if (fresh) {
+            const player = scene.spawnEntity(playerPrefab);
+            scene.getService(PlayerLocatorService).player = player;
 
-        scene.spawnEntity(arenaFloorPrefab);
-        scene.spawnEntity(arenaFencePrefab);
+            scene.spawnEntity(arenaFloorPrefab);
+            scene.spawnEntity(arenaFencePrefab);
 
-        const spinCounter1 = scene.spawnEntity(SpinCounterPrefab, -200, -16);
-        const spinCounter2 = scene.spawnEntity(SpinCounterPrefab, -200 + 32, -16);
+            const spinCounter1 = scene.spawnEntity(SpinCounterPrefab, -200, -16);
+            const spinCounter2 = scene.spawnEntity(SpinCounterPrefab, -200 + 32, -16);
 
-        const spinCounter3 = scene.spawnEntity(SpinCounterPrefab, 200 - 32, -16);
-        const spinCounter4 = scene.spawnEntity(SpinCounterPrefab, 200, -16);
+            const spinCounter3 = scene.spawnEntity(SpinCounterPrefab, 200 - 32, -16);
+            const spinCounter4 = scene.spawnEntity(SpinCounterPrefab, 200, -16);
 
-        const spinCounterService = scene.getService(SpinCounterService);
-        spinCounterService.spinCounter1 = spinCounter1.getComponent(SpinCounterController);
-        spinCounterService.spinCounter2 = spinCounter2.getComponent(SpinCounterController);
-        spinCounterService.spinCounter3 = spinCounter3.getComponent(SpinCounterController);
-        spinCounterService.spinCounter4 = spinCounter4.getComponent(SpinCounterController);
+            const spinCounterService = scene.getService(SpinCounterService);
 
-        const reel1 = scene.spawnEntity(slotMachineReelPrefab, -80, 0);
-        const reel2 = scene.spawnEntity(slotMachineReelPrefab, 0, 0);
-        const reel3 = scene.spawnEntity(slotMachineReelPrefab, 80, 0);
+            spinCounterService.spinCounter1 = spinCounter1.getComponent(SpinCounterController);
+            spinCounterService.spinCounter2 = spinCounter2.getComponent(SpinCounterController);
+            spinCounterService.spinCounter3 = spinCounter3.getComponent(SpinCounterController);
+            spinCounterService.spinCounter4 = spinCounter4.getComponent(SpinCounterController);
 
-        scene.getService(SlotMachineService).setup(
-            reel1.getComponent(SlotMachineReelController),
-            reel2.getComponent(SlotMachineReelController),
-            reel3.getComponent(SlotMachineReelController),
-        );
+            const reel1 = scene.spawnEntity(slotMachineReelPrefab, -80, 0);
+            const reel2 = scene.spawnEntity(slotMachineReelPrefab, 0, 0);
+            const reel3 = scene.spawnEntity(slotMachineReelPrefab, 80, 0);
 
-        scene.getService(CameraService).target = player;
+            scene.getService(SlotMachineService).setup(
+                reel1.getComponent(SlotMachineReelController),
+                reel2.getComponent(SlotMachineReelController),
+                reel3.getComponent(SlotMachineReelController),
+            );
 
+            scene.getService(CameraService).target = player;
+
+            this.scene.getService(SlotMachineService).restoreBackup();
+            this.scene.getService(CoinService).restoreBackup();
+        }
 
         this.scene.getService(PlayerLocatorService).player.getComponent(PlayerControls).locked = false;
         void this.doRound();
@@ -91,50 +99,64 @@ export class ArenaService extends Service {
 
     private update(): void {
         if (this.sceneService.activeScene !== 'arena') {
+
             if (this.inScene) {
                 this.inScene = false;
                 this.exit();
             }
 
+            this.previousScene = this.sceneService.activeScene
+
             return;
         } else {
             if (!this.inScene) {
                 this.inScene = true;
-                this.enter();
+                this.enter(this.previousScene !== 'shop');
             }
         }
     }
 
+
     public async doRound(): Promise<void> {
         this.round++;
 
+        this.slotMachineService.backup();
+        this.scene.getService(CoinService).backup();
+
         await this.scheduler.seconds(1);
         this.scene.spawnEntity(enemyChipPrefab, 50, 0)
+        this.scene.spawnEntity(enemyChipPrefab, 70, 0)
+        this.scene.spawnEntity(enemyChipPrefab, 90, 0)
         // await this.scheduler.seconds(100);
 
         const gamblingPromise = this.scheduler.wrap(this.slotMachineService.goGambling(1));
 
-        await this.scheduler.wrap(this.spawningService.doWave({
-            diamond: 5,
-            chip: 5,
-            stackchip: 3,
+        // await this.scheduler.wrap(this.spawningService.doWave({
+        //     diamond: 5,
+        //     chip: 5,
+        //     stackchip: 3,
 
-            delay: 20,
-        }))
+        //     delay: 20,
+        // }))
 
         await gamblingPromise;
 
-        await this.scheduler.seconds(2);
+        // await this.scheduler.seconds(2);
 
         await this.scheduler.wrap(this.slotMachineService.roll(true));
 
         for (const enemy of [...this.enemyLocatorService.enemies]) {
             const spawnEntityOnDeath = enemy.getComponent(SpawnEntityOnDeath)
+
             spawnEntityOnDeath.prefabs = spawnEntityOnDeath.prefabs.filter(x => x !== coinFromEnemyPrefab);
             spawnEntityOnDeath.prefabs = spawnEntityOnDeath.prefabs.filter(x => x !== enemyChipFromChipstackPrefab);
 
             enemy.getComponent(Health).kill();
         }
+
+        this.scene.destroyAll((e) => {
+            return e.hasComponent(DestroyOnRoundEnd)
+        })
 
         this.scene.getService(PlayerLocatorService).player.getComponent(PlayerControls).locked = true;
 

@@ -7,6 +7,7 @@ import { Position } from "../components/position";
 import { DestroyOnDealDamage } from "../components/scripting/destroyOnDealDamage";
 import { Layers } from "../data/layer";
 import { AudioService } from "../services/audio-service";
+import { DestroyOnRoundEnd } from "../components/destroy-on-round-end";
 
 const image = love.graphics.newImage("assets/sprites/enemy/enemy-diamond-laserbeam.png");
 const animations = {
@@ -29,4 +30,5 @@ export const enemyDiamondLaserPrefab = (entity: Entity, source: Entity) => {
         .addComponent(Body, flipped ? 70 : -70, 0, 1, 1, 0, true)
         .addComponent(Hitbox, 4, 2, 'casino', 1)
         .addComponent(DestroyOnDealDamage)
+        .addComponent(DestroyOnRoundEnd)
 }

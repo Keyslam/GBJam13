@@ -1,6 +1,7 @@
 import { Entity } from "@keyslam/simple-node";
 import { Body } from "../components/collision/body";
 import { CoinController } from "../components/controllers/coin-controller";
+import { DestroyOnRoundEnd } from "../components/destroy-on-round-end";
 import { AnimatedSprite, createAnimation } from "../components/graphics/animated-sprite";
 import { Height } from "../components/graphics/height";
 import { Sprite } from "../components/graphics/sprite";
@@ -31,6 +32,7 @@ export const coinPrefab = (entity: Entity, x: number, y: number, vx: number, vy:
     entity
         .addComponent(Position, x, y, Layers.foreground)
         .addComponent(Body, vx, vy, 8, 8, 4)
+        .addComponent(DestroyOnRoundEnd)
 
     switch (size) {
         case "small":

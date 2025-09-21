@@ -27,12 +27,32 @@ export class SlotMachineService extends Service {
     public isRolling = false;
     public done = false;
 
+    private reel1backup: SlotSymbol[] = ['bar', 'lightning', 'bar']
+    private reel2backup: SlotSymbol[] = ['bar', 'lightning', 'bar']
+    private reel3backup: SlotSymbol[] = ['bar', 'lightning', 'bar']
+
     public setup(reel1: SlotMachineReelController, reel2: SlotMachineReelController, reel3: SlotMachineReelController): void {
         this.reel1 = reel1;
         this.reel2 = reel2;
         this.reel3 = reel3;
 
         this.reels = [reel1, reel2, reel3]
+    }
+
+    public backup(): void {
+        this.reel1backup = [...this.reel1.panelSymbols];
+        this.reel2backup = [...this.reel2.panelSymbols];
+        this.reel3backup = [...this.reel3.panelSymbols];
+    }
+
+    public restoreBackup(): void {
+        this.reel1.panelSymbols = this.reel1backup;
+        this.reel2.panelSymbols = this.reel2backup;
+        this.reel3.panelSymbols = this.reel3backup;
+
+        this.reel1.setSymbols()
+        this.reel2.setSymbols()
+        this.reel3.setSymbols()
     }
 
     protected override initialize(): void {
