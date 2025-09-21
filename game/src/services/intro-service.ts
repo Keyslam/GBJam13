@@ -3,6 +3,7 @@ import { Source } from "love.audio";
 import { ColouredText } from "love.graphics";
 import { UpdateEvent } from "../events/scene/updateEvent";
 import { AudioService } from "./audio-service";
+import { ControlService } from "./control-service";
 import { RenderService } from "./renderService";
 import { SceneService } from "./scene-service";
 import { ScheduleService } from "./schedule-service";
@@ -28,6 +29,8 @@ export class IntroService extends Service {
     private musicTrack: Source | undefined;
 
     private activeFrameIndex = 0;
+
+    private heldZ = 0;
 
     private message = {
         text: "",
@@ -128,6 +131,17 @@ export class IntroService extends Service {
         }
 
         this.message.shownFor++;
+
+        if (this.scene.getService(ControlService).primaryButton.isDown) {
+            this.heldZ = math.min(20, this.heldZ + 1)
+        } else {
+            this.heldZ = math.max(0, this.heldZ - 1)
+        }
+
+        if (this.heldZ === 20) {
+            this.scene.getService(ScheduleService).cancelAll()
+            void this.sceneService.toTitle();
+        }
     }
 
     private draw(): void {
@@ -149,5 +163,7 @@ export class IntroService extends Service {
         } else if (this.message.kind === "center") {
             love.graphics.printf(textToDisplay, 12, 90, 136, "center")
         }
+
+        love.graphics.rectangle("fill", 0, 140, this.heldZ * 8, 4)
     }
 }
