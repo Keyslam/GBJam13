@@ -7,7 +7,7 @@ vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords) {
         discard;
     }
 
-    float step = 1.0 / 8.0;
+    float step = 1.0 / 9.0;
 
     vec4 pixel = Texel(tex, texture_coords);
 
