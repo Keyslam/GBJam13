@@ -1,5 +1,6 @@
 import { Service } from "@keyslam/simple-node";
 import { UpdateEvent } from "../events/scene/updateEvent";
+import { AudioService } from "./audio-service";
 import { ControlService } from "./control-service";
 import { RenderService } from "./renderService";
 import { SceneService } from "./scene-service";
@@ -36,9 +37,11 @@ export class GameoverService extends Service {
     }
 
 
+    // eslint-disable-next-line @typescript-eslint/require-await
     public async enter(): Promise<void> {
-        // this.scene.getService(AudioService).playMusic("gameover")
+        this.scene.getService(AudioService).playMusic("gameover")
 
+        this.selected = 0;
     }
 
     public exit(): void {
@@ -63,6 +66,7 @@ export class GameoverService extends Service {
 
         if (this.controlService.leftButton.wasPressed) {
             this.selected--
+            this.scene.getService(AudioService).playSfx("shop_change_slot")
             if (this.selected === -1) {
                 this.selected = 1
             }
@@ -70,6 +74,7 @@ export class GameoverService extends Service {
 
         if (this.controlService.rightButton.wasPressed) {
             this.selected++
+            this.scene.getService(AudioService).playSfx("shop_change_slot")
             if (this.selected === 2) {
                 this.selected = 0
             }
@@ -77,7 +82,8 @@ export class GameoverService extends Service {
 
         if (this.controlService.primaryButton.wasPressed) {
             if (this.selected === 0) {
-                // todo
+                this.scene.getService(AudioService).playSfx("shop_confirm")
+                void this.sceneService.toArena();
             }
 
             if (this.selected === 1) {
@@ -92,7 +98,7 @@ export class GameoverService extends Service {
         }
 
         love.graphics.draw(bg)
-        love.graphics.draw(text)
+        love.graphics.draw(text, 0, 16)
 
         love.graphics.setFont(font)
         love.graphics.print("RETRY", 25, 130)

@@ -102,7 +102,7 @@ export const lightningEffect: Effect = async (
     intensity: number
 ): Promise<void> => {
     for (let i = 0; i < 5; i++) {
-        await spawnSomeLightning(scene, scheduler, 5);
+        await scheduler.wrap(spawnSomeLightning(scene, scheduler, 5));
 
     }
 };

@@ -1,5 +1,6 @@
 import { Service } from "@keyslam/simple-node";
 import { Source } from "love.audio";
+import { UpdateEvent } from "../events/scene/updateEvent";
 
 interface Music {
     source: Source,
@@ -32,6 +33,7 @@ const musics: Record<string, Music> = {
     intro: newMusic("intro-demo.wav", 133, false),
     shop: newMusic("shop.mp3", 133, true),
     gameover: newMusic("game-over.wav", 133, false),
+    arena: newMusic("arena.mp3", 133, true),
 }
 
 const sfxes: Record<string, Source> = {
@@ -92,6 +94,12 @@ export class AudioService extends Service {
     private lastSfxPlayed: Record<string, number> = {};
     private sfxCooldown = 0.09;
 
+    private activeSfx = new Set<Source>();
+
+    protected override initialize(): void {
+        this.onSceneEvent(UpdateEvent, "update")
+    }
+
     public playMusic(name: string): void {
         const music = musics[name];
 
@@ -105,6 +113,14 @@ export class AudioService extends Service {
         }
     }
 
+    public stopMusic(): void {
+        if (this.playingMusic !== undefined) {
+            this.playingMusic.source.stop();
+        }
+
+        this.playingMusic = undefined;
+    }
+
     public playSfx(name: string): Source {
         const sfx = sfxes[name];
         if (!sfx) return undefined!;
@@ -116,16 +132,43 @@ export class AudioService extends Service {
             return undefined!;
         }
 
-        const sfxi = sfx.clone();
+        let sfxi = sfx.clone();
+        sfxi.setVolume(0.5)
+
+        if (name === 'die') {
+            sfxi = sfx;
+        }
+
         sfxi.play();
 
         this.lastSfxPlayed[name] = now;
+        this.activeSfx.add(sfxi);
 
         return sfxi;
     }
 
     public stopSfx(sfxi: Source): void {
         sfxi.stop();
+        this.activeSfx.delete(sfxi);
+    }
+
+    public stopAllSfx(): void {
+        for (const sfx of this.activeSfx) {
+            if (sfx === sfxes.die) {
+                continue
+            }
+
+            sfx.stop();
+        }
+        this.activeSfx.clear();
+    }
+
+    private update(): void {
+        for (const sfx of [...this.activeSfx]) {
+            if (!sfx.isPlaying()) {
+                this.activeSfx.delete(sfx);
+            }
+        }
     }
 
     public getBeatIndex() {

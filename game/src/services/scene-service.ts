@@ -1,4 +1,5 @@
 import { Entity, Service } from "@keyslam/simple-node";
+import { AudioService } from "./audio-service";
 import { ScheduleService } from "./schedule-service";
 
 export class SceneService extends Service {
@@ -16,27 +17,39 @@ export class SceneService extends Service {
     }
 
     public async toArena(): Promise<void> {
-        await this.ditherIn();
+        this.scene.getService(AudioService).stopMusic();
+
+        await this.schedulerService.wrap(this.ditherIn());
         await this.schedulerService.seconds(0.5);
         this.activeScene = 'arena'
-        await this.ditherOut();
+        await this.schedulerService.wrap(this.ditherOut());
     }
 
     public async toShop(fn?: () => void): Promise<void> {
-        await this.ditherIn();
+        this.scene.getService(AudioService).stopMusic();
+
+        await this.schedulerService.wrap(this.ditherIn());
         fn?.();
         await this.schedulerService.seconds(0.5);
         this.activeScene = 'shop'
-        await this.ditherOut();
+        await this.schedulerService.wrap(this.ditherOut());
     }
 
     public async toDeath(entity: Entity): Promise<void> {
-        await this.deathIn();
-        await this.schedulerService.seconds(0.2);
+        this.scene.getService(AudioService).stopMusic();
+        this.scene.getService(AudioService).stopAllSfx();
+
+        await this.schedulerService.wrap(this.deathIn());
 
         this.scene.destroyAll((e) => {
             return e !== entity;
         });
+
+        this.scene.getService(ScheduleService).cancelAll();
+        this.scene.getService(AudioService).stopMusic();
+        this.scene.getService(AudioService).stopAllSfx();
+
+        await this.schedulerService.seconds(0.2);
 
         this.activeScene = 'death'
         await this.schedulerService.seconds(3);
@@ -44,14 +57,16 @@ export class SceneService extends Service {
     }
 
     public async toGameover(): Promise<void> {
-        await this.fadeOut();
+        this.scene.getService(AudioService).stopMusic();
+
+        await this.schedulerService.wrap(this.fadeOut());
         await this.schedulerService.seconds(0.5);
         this.deathAmount = 0
         this.scene.destroyAll(() => {
             return true;
         });
         this.activeScene = 'gameover'
-        await this.fadeIn()
+        await this.schedulerService.wrap(this.fadeIn());
     }
 
     public async fadeOut(): Promise<void> {

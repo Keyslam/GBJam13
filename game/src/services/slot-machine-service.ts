@@ -3,6 +3,7 @@ import { SlotMachineReelController } from "../components/controllers/slot-machin
 import { SlotSymbol } from "../data/slot-symbols";
 import { AudioService } from "./audio-service";
 import { EffectService } from "./effect-service";
+import { SceneService } from "./scene-service";
 import { ScheduleService } from "./schedule-service";
 import { SpinCounterService } from "./spin-counter-service";
 
@@ -45,6 +46,7 @@ export class SlotMachineService extends Service {
         this.spinCounterService.setValue(amount);
 
         for (let i = 0; i < amount; i++) {
+
             while (this.currentFrames !== this.framesUntilNextRoll) {
                 this.currentFrames++;
                 await this.scheduleService.nextFrame();
@@ -52,6 +54,10 @@ export class SlotMachineService extends Service {
 
             this.currentFrames = 0;
             this.spinCounterService.setValue(amount - i - 1);
+
+            if (this.scene.getService(SceneService).activeScene !== 'arena') {
+                return;
+            }
 
             await this.roll();
         }
@@ -78,9 +84,9 @@ export class SlotMachineService extends Service {
         const wheel2rolls = wheel1rolls + 3 + math.floor(love.math.random() * 4)
         const wheel3rolls = wheel2rolls + 3 + math.floor(love.math.random() * 4)
 
-        const wheel1Promise = this.reel1.roll(wheel1rolls, death);
-        const wheel2Promise = this.reel2.roll(wheel2rolls, death);
-        const wheel3Promise = this.reel3.roll(wheel3rolls, death);
+        const wheel1Promise = this.scheduleService.wrap(this.reel1.roll(wheel1rolls, death));
+        const wheel2Promise = this.scheduleService.wrap(this.reel2.roll(wheel2rolls, death));
+        const wheel3Promise = this.scheduleService.wrap(this.reel3.roll(wheel3rolls, death));
 
         const symbol1 = await wheel1Promise;
 

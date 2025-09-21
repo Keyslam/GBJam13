@@ -92,7 +92,7 @@ export class SlotMachineReelController extends Component {
         }
 
         for (let i = 0; i < amount; i++) {
-            await this.doOneRoll(death);
+            await this.schedulerService.wrap(this.doOneRoll(death));
         }
 
         this.cameraService.shake(0.3);

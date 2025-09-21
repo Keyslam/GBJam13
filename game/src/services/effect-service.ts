@@ -45,7 +45,12 @@ export class EffectService extends Service {
         for (const symbol of uniqueOrder) {
             const count = effects.filter(x => x === symbol).length;
             if (count > 0) {
-                await effectMap[symbol]?.(this.scene, this.scheduleService, count - 1);
+                const effectPromise = effectMap[symbol]?.(this.scene, this.scheduleService, count - 1)
+
+                if (effectPromise !== undefined) {
+                    await this.scheduleService.wrap(effectPromise);
+                }
+
                 await this.scheduleService.seconds(1.5);
             }
         }

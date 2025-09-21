@@ -13,6 +13,10 @@ export class ScheduleService extends Service {
         this.scheduler.update(event.dt, 1);
     }
 
+    public wrap(promise: Promise<any>): Promise<any> {
+        return this.scheduler.wrap(promise)
+    }
+
     public seconds(duration: number): Promise<void> {
         return this.scheduler.seconds(duration)
     }
@@ -27,5 +31,9 @@ export class ScheduleService extends Service {
 
     public until(condition: () => boolean): Promise<void> {
         return this.scheduler.until(condition)
+    }
+
+    public cancelAll(): void {
+        this.scheduler.cancelAll();
     }
 }
