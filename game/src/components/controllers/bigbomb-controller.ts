@@ -97,6 +97,11 @@ export class BigbombController extends Component {
 
         const speed = 100;
 
+        this.scene.spawnEntity(bombShockwavePrefab, this.position.x, this.position.y, speed, speed);
+        this.scene.spawnEntity(bombShockwavePrefab, this.position.x, this.position.y, -speed, speed);
+        this.scene.spawnEntity(bombShockwavePrefab, this.position.x, this.position.y, speed, -speed);
+        this.scene.spawnEntity(bombShockwavePrefab, this.position.x, this.position.y, -speed, -speed);
+
         this.scene.spawnEntity(bombShockwavePrefab, this.position.x, this.position.y, speed * 0.7071, speed * 0.7071);
         this.scene.spawnEntity(bombShockwavePrefab, this.position.x, this.position.y, -speed * 0.7071, speed * 0.7071);
         this.scene.spawnEntity(bombShockwavePrefab, this.position.x, this.position.y, speed * 0.7071, -speed * 0.7071);

@@ -102,7 +102,7 @@ export class GameoverService extends Service {
         love.graphics.draw(text, 0, 16)
 
         love.graphics.setFont(font)
-        love.graphics.print("RETRY", 25, 130)
+        love.graphics.print("CONTINUE", 25, 130)
         love.graphics.print("QUIT", 105, 130)
 
         const pointer = pointers[math.floor(love.timer.getTime() * 2) % 2]!

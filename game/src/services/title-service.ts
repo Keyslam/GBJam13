@@ -66,6 +66,7 @@ export class TitleService extends Service {
     private selection = 0;
 
     private locked = false;
+    private didPlay = false;
 
     protected override initialize(): void {
         this.scene.getService(RenderService).drawTitle = () => { this.draw() }
@@ -76,7 +77,12 @@ export class TitleService extends Service {
     }
 
     public async enter(): Promise<void> {
-        this.scene.getService(AudioService).playMusic("title")
+        this.locked = false
+
+        if (!this.didPlay) {
+            this.scene.getService(AudioService).playMusic("title")
+            this.didPlay = true
+        }
 
         for (let i = 0; i < 20; i++) {
             this.activeFrameIndex = i;
@@ -141,7 +147,8 @@ export class TitleService extends Service {
                 if (this.selection === 1) {
                     this.scene.getService(AudioService).playSfx("shop_confirm")
 
-                    print("To settings")
+                    this.locked = true
+                    void this.sceneService.toSettings();
                 }
 
                 if (this.selection === 2) {

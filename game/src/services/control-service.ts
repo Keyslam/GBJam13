@@ -39,9 +39,9 @@ interface ControllerScheme {
     dpadRight: GamepadButton;
 }
 
-const keyboardControlSchemes: KeyboardScheme[] = [
+export const keyboardControlSchemes: KeyboardScheme[] = [
     {
-        name: "Classic (Arrow Keys + ZX)",
+        name: "ZX",
         primaryKeyConstant: "z",
         secondaryKeyConstant: "x",
         startKeyConstant: "return",
@@ -52,18 +52,7 @@ const keyboardControlSchemes: KeyboardScheme[] = [
         rightKeyConstant: "right",
     },
     {
-        name: "WASD + JK",
-        primaryKeyConstant: "j",
-        secondaryKeyConstant: "k",
-        startKeyConstant: "return",
-        selectKeyConstant: "rshift",
-        upKeyConstant: "w",
-        downKeyConstant: "s",
-        leftKeyConstant: "a",
-        rightKeyConstant: "d",
-    },
-    {
-        name: "Arrow Keys + KL",
+        name: "KL",
         primaryKeyConstant: "k",
         secondaryKeyConstant: "l",
         startKeyConstant: "space",
@@ -74,7 +63,7 @@ const keyboardControlSchemes: KeyboardScheme[] = [
         rightKeyConstant: "right",
     },
     {
-        name: "Arrow Keys + Space/Ctrl",
+        name: "Space+Ctrl",
         primaryKeyConstant: "space",
         secondaryKeyConstant: "lctrl",
         startKeyConstant: "return",
@@ -84,11 +73,22 @@ const keyboardControlSchemes: KeyboardScheme[] = [
         leftKeyConstant: "left",
         rightKeyConstant: "right",
     },
+    {
+        name: "WASD+JK",
+        primaryKeyConstant: "j",
+        secondaryKeyConstant: "k",
+        startKeyConstant: "return",
+        selectKeyConstant: "rshift",
+        upKeyConstant: "w",
+        downKeyConstant: "s",
+        leftKeyConstant: "a",
+        rightKeyConstant: "d",
+    },
 ];
 
-const controllerSchemes: ControllerScheme[] = [
+export const controllerSchemes: ControllerScheme[] = [
     {
-        name: "Classic A/B",
+        name: "Classic",
         primaryButton: 'a',
         secondaryButton: 'b',
         startButton: 'back',
@@ -99,7 +99,7 @@ const controllerSchemes: ControllerScheme[] = [
         dpadRight: 'dpright',
     },
     {
-        name: "Swapped A/B",
+        name: "Swapped",
         primaryButton: 'b',
         secondaryButton: 'a',
         startButton: 'back',
@@ -123,8 +123,8 @@ export class ControlService extends Service {
     public leftButton = { isDown: false, wasPressed: false, wasReleased: false }
     public rightButton = { isDown: false, wasPressed: false, wasReleased: false }
 
-    private keyboardSchemeIndex = 0;
-    private controllerSchemeIndex = 0;
+    public keyboardSchemeIndex = 0;
+    public controllerSchemeIndex = 0;
 
     private joystick?: Joystick;
 

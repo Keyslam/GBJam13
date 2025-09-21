@@ -19,8 +19,8 @@ if (IS_DEBUG) {
 love.conf = (t) => {
     t.window = {
         title: "THE LOTTODOME",
-        width: 960,
-        height: 864,
+        width: 160 * 4,
+        height: 144 * 4,
     } as Config['window'];
 
     t.console = false;

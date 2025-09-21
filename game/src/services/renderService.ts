@@ -37,11 +37,14 @@ export class RenderService extends Service {
 
     private shader = love.graphics.newShader("assets/misc/shader.glsl");
 
+    public palleteIndex = 0;
+
     declare public drawHud: () => void;
     declare public drawShop: () => void;
     declare public drawIntro: () => void;
     declare public drawTitle: () => void;
     declare public drawGameover: () => void;
+    declare public drawSettings: () => void;
 
     public drawImage(image: Image, quad: Quad | undefined, x: number, y: number, z: number, flipped: boolean, flash: boolean) {
         this.commands.push({ image, quad, x, y, z, flipped, flash, type: "image" });
@@ -80,7 +83,7 @@ export class RenderService extends Service {
         love.graphics.setShader(this.shader);
         const palette = paletteImages[math.floor(this.sceneService.fadeAmount * 3)]!;
         this.shader.send("palettes", palette);
-        this.shader.send("pal", 0);
+        this.shader.send("pal", this.palleteIndex);
 
         love.graphics.push("all");
         love.graphics.translate(
@@ -128,6 +131,7 @@ export class RenderService extends Service {
         this.drawIntro();
         this.drawGameover();
         this.drawTitle();
+        this.drawSettings();
 
         if (this.sceneService.ditherFlipped) {
             love.graphics.draw(dither, 480 - this.sceneService.ditherAmount * 320, 0, 0, -1, 1)

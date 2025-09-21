@@ -5,7 +5,7 @@ import { ScheduleService } from "./schedule-service";
 export class SceneService extends Service {
     declare private schedulerService: ScheduleService;
 
-    public activeScene: 'intro' | 'title' | 'arena' | 'shop' | 'death' | 'gameover' = 'intro';
+    public activeScene: 'intro' | 'title' | 'settings' | 'arena' | 'shop' | 'death' | 'gameover' = 'intro';
 
     public fadeAmount = 0;
     public deathAmount = 0;
@@ -35,6 +35,22 @@ export class SceneService extends Service {
 
         this.activeScene = 'title'
     }
+
+    public async backToTitle(): Promise<void> {
+        await this.schedulerService.wrap(this.ditherIn());
+        await this.schedulerService.seconds(0.5);
+        this.activeScene = 'title'
+        await this.schedulerService.wrap(this.ditherOut());
+    }
+
+    public async toSettings(fn?: () => void): Promise<void> {
+        await this.schedulerService.wrap(this.ditherIn());
+        fn?.();
+        await this.schedulerService.seconds(0.5);
+        this.activeScene = 'settings'
+        await this.schedulerService.wrap(this.ditherOut());
+    }
+
 
     public async toShop(fn?: () => void): Promise<void> {
         this.scene.getService(AudioService).stopMusic();

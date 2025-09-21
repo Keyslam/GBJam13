@@ -19,6 +19,7 @@ import { PlayerLocatorService } from "./services/player-locator-service";
 import { RenderService } from "./services/renderService";
 import { SceneService } from "./services/scene-service";
 import { ScheduleService } from "./services/schedule-service";
+import { SettingsService } from "./services/settings-service";
 import { ShopService } from "./services/shop-service";
 import { SlotMachineService } from "./services/slot-machine-service";
 import { SpawningService } from "./services/spawning-service";
@@ -49,7 +50,8 @@ const scene = new Scene(
     SpawningService,
     AudioService,
     GameoverService,
-    TitleService
+    TitleService,
+    SettingsService
 );
 
 love.update = (dt) => {

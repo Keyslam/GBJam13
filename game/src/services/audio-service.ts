@@ -101,6 +101,10 @@ export class AudioService extends Service {
 
     private activeSfx = new Set<Source>();
 
+    public masterVolume = 1
+    public musicVolume = 0.8
+    public sfxVolume = 0.5
+
     protected override initialize(): void {
         this.onSceneEvent(UpdateEvent, "update")
     }
@@ -116,7 +120,7 @@ export class AudioService extends Service {
             }
 
             music.source.play();
-            music.source.setVolume(0.5)
+            music.source.setVolume(this.musicVolume * this.masterVolume)
 
             this.playingMusic = music;
         }
@@ -142,7 +146,7 @@ export class AudioService extends Service {
         }
 
         let sfxi = sfx.clone();
-        sfxi.setVolume(0.3)
+        sfxi.setVolume(this.sfxVolume * this.masterVolume)
 
         if (name === 'die') {
             sfxi = sfx;
@@ -173,7 +177,11 @@ export class AudioService extends Service {
     }
 
     private update(): void {
+        this.playingMusic?.source.setVolume(this.musicVolume * this.masterVolume)
+
         for (const sfx of [...this.activeSfx]) {
+            sfx.setVolume(this.sfxVolume * this.masterVolume)
+
             if (!sfx.isPlaying()) {
                 this.activeSfx.delete(sfx);
             }

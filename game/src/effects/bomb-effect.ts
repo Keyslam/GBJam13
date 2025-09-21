@@ -6,7 +6,7 @@ import { PlayerLocatorService } from "../services/player-locator-service";
 import { ScheduleService } from "../services/schedule-service";
 import { Effect } from "./effect";
 
-const amounts = [1, 2, 3]
+const amounts = [1, 3, 6]
 
 export const bombEffect: Effect = async (scene: Scene, scheduler: ScheduleService, intensity: number): Promise<void> => {
     const amount = amounts[intensity]!
