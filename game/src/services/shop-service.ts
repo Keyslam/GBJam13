@@ -12,6 +12,20 @@ import { SceneService } from "./scene-service";
 import { ScheduleService } from "./schedule-service";
 import { SlotMachineService } from "./slot-machine-service";
 
+const enterQuips = [
+    'You won\'t get far with that peashooter!',
+    'Name\'s Big Red. What can I do you for?',
+    'Well if it ain\'t the house\'s favorite loser!',
+    'Step right up, the house is waiting!',
+    'You\'re still alive? How \'bout that!'
+]
+
+const exitQuips = [
+    'May fortune smile on ya... just not too bright',
+    'Good luck out there, you\'ll need it.',
+    'Try to come back in one piece!'
+]
+
 const purchaseQuips = [
     'Watch yourself with that one!',
     'You like odds? \'Cause ya just tipped \'em sideways!',
@@ -274,6 +288,8 @@ export class ShopService extends Service {
 
     private displayCoinsAmount = 0;
 
+    private locked = false;
+
     protected override initialize(): void {
         this.renderService = this.scene.getService(RenderService);
         this.schedulerService = this.scene.getService(ScheduleService);
@@ -292,6 +308,8 @@ export class ShopService extends Service {
     private musicTrack: Source | undefined;
 
     public enter(): void {
+        this.locked = false
+
         this.fillOffers();
         this.resetSpecials();
 
@@ -304,7 +322,8 @@ export class ShopService extends Service {
         this.shopTitle.text = selectedOffer.effect.title;
         this.shopTitle.shownFor = 0;
 
-        this.flavourText.text = selectedOffer.effect.flavorText;
+        const text = enterQuips[math.floor(love.math.random() * enterQuips.length)]!;
+        this.flavourText.text = text;
         this.flavourText.shownFor = 0;
     }
 
@@ -421,6 +440,8 @@ export class ShopService extends Service {
 
         this.displayCoinsAmount = this.coinService.amount
 
+        if (this.locked) { return; }
+
         if (this.state === 'shop') {
             let row = Math.floor(this.selectedSlotIndex / 3);
             let col = this.selectedSlotIndex % 3;
@@ -469,7 +490,12 @@ export class ShopService extends Service {
                 const selectedOffer = this.offers[this.selectedSlotIndex]!;
 
                 if (this.selectedSlotIndex === 5) {
-                    void this.scene.getService(SceneService).toArena();
+                    const text = exitQuips[math.floor(love.math.random() * exitQuips.length)]!;
+                    this.flavourText.text = text;
+                    this.flavourText.shownFor = 0
+                    this.locked = true;
+
+                    void this.scene.getService(SceneService).toArena(true);
                 } else if (this.selectedSlotIndex === 3) {
                     const canAfford = this.coinService.amount >= selectedOffer.price
 

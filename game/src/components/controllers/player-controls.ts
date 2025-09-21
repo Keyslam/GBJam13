@@ -62,7 +62,7 @@ export class PlayerControls extends Component {
 
     private shootCooldown = 0.5
     private shootTimer = 0;
-    private shootSpeed = 100;
+    private shootSpeed = 130;
     private shootVelocityAdditionMultiplier = 0.3
 
     private lockFacing = false;

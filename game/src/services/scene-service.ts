@@ -16,7 +16,11 @@ export class SceneService extends Service {
         this.schedulerService = this.scene.getService(ScheduleService);
     }
 
-    public async toArena(): Promise<void> {
+    public async toArena(wait = false): Promise<void> {
+        if (wait) {
+            await this.schedulerService.seconds(2)
+        }
+
         this.scene.getService(AudioService).stopMusic();
 
         await this.schedulerService.wrap(this.ditherIn());
