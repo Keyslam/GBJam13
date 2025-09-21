@@ -1,5 +1,6 @@
 import { Service } from "@keyslam/simple-node";
 import { Image, Quad } from "love.graphics";
+import { Layers } from "../data/layer";
 import { DrawEvent } from "../events/scene/drawEvent";
 import { CameraService } from "./camera-service";
 import { SceneService } from "./scene-service";
@@ -14,6 +15,13 @@ const paletteImages = [
     love.graphics.newImage("assets/misc/gbpals-1.png"),
     love.graphics.newImage("assets/misc/gbpals-2.png"),
     love.graphics.newImage("assets/misc/gbpals-3.png"),
+]
+
+const deathFades = [
+    love.graphics.newImage("assets/sprites/death-fade-1.png"),
+    love.graphics.newImage("assets/sprites/death-fade-2.png"),
+    love.graphics.newImage("assets/sprites/death-fade-3.png"),
+    love.graphics.newImage("assets/sprites/death-fade-4.png"),
 ]
 
 const dither = love.graphics.newImage("assets/sprites/transition-dither.png")
@@ -32,6 +40,7 @@ export class RenderService extends Service {
     declare public drawHud: () => void;
     declare public drawShop: () => void;
     declare public drawIntro: () => void;
+    declare public drawGameover: () => void;
 
     public drawImage(image: Image, quad: Quad | undefined, x: number, y: number, z: number, flipped: boolean, flash: boolean) {
         this.commands.push({ image, quad, x, y, z, flipped, flash, type: "image" });
@@ -78,8 +87,14 @@ export class RenderService extends Service {
             -math.floor(this.cameraService.y) + 72 - 8
         );
 
+        const deathCommands = [];
 
         for (const command of this.commands) {
+            if (command.z === Layers.death) {
+                deathCommands.push(command);
+                continue;
+            }
+
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             if (command.type === "image") {
                 const x = math.floor(command.x);
@@ -110,11 +125,36 @@ export class RenderService extends Service {
         this.drawHud();
         this.drawShop();
         this.drawIntro();
+        this.drawGameover();
 
         if (this.sceneService.ditherFlipped) {
             love.graphics.draw(dither, 480 - this.sceneService.ditherAmount * 320, 0, 0, -1, 1)
         } else {
             love.graphics.draw(dither, (1 - this.sceneService.ditherAmount) * -320, 0)
+        }
+
+        if (this.sceneService.deathAmount > 0) {
+            const frame = deathFades[math.floor(this.sceneService.deathAmount * 3)]!
+            love.graphics.draw(frame)
+        }
+
+        for (const command of deathCommands) {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+            if (command.type === "image") {
+                const x = math.floor(command.x);
+                const y = math.floor(command.y);
+
+                if (command.quad !== undefined) {
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    const [_x, _y, w, h] = command.quad.getViewport();
+                    this.shader.send("flash", command.flash);
+                    love.graphics.draw(command.image, command.quad, x + (w % 2 === 0 ? 0 : 0.5), y + (h % 2 === 0 ? 0 : 0.5), 0, command.flipped ? -1 : 1, 1, w / 2, h / 2);
+                } else {
+                    this.shader.send("flash", false);
+                    const [w, h] = command.image.getDimensions();
+                    love.graphics.draw(command.image, x + (w % 2 === 0 ? 0 : 0.5), y + (h % 2 === 0 ? 0 : 0.5), 0, command.flipped ? -1 : 1, 1, w / 2, h / 2);
+                }
+            }
         }
 
         this.commands = [];

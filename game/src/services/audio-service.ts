@@ -31,6 +31,7 @@ const musics: Record<string, Music> = {
     title: newMusic("title.wav", 133, false),
     intro: newMusic("intro-demo.wav", 133, false),
     shop: newMusic("shop.mp3", 133, true),
+    gameover: newMusic("game-over.wav", 133, false),
 }
 
 const sfxes: Record<string, Source> = {

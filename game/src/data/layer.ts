@@ -8,5 +8,7 @@ export const Layers = {
     shadows: 2,
     foreground: 3,
     foreground_sfx: 4,
-    fence: 5
+    fence: 5,
+
+    death: 10,
 } satisfies Record<string, Layer>

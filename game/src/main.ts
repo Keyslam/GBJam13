@@ -19,6 +19,7 @@ import { CollisionService } from "./services/collision-service";
 import { ControlService } from "./services/control-service";
 import { EffectService } from "./services/effect-service";
 import { EnemyLocatorService } from "./services/enemy-locator-service";
+import { GameoverService } from "./services/gameover-service";
 import { HudService } from "./services/hud-service";
 import { IntroService } from "./services/intro-service";
 import { PlayerLocatorService } from "./services/player-locator-service";
@@ -52,7 +53,8 @@ const scene = new Scene(
     SpinCounterService,
     ArenaService,
     SpawningService,
-    AudioService
+    AudioService,
+    GameoverService,
 );
 
 const player = scene.spawnEntity(playerPrefab);

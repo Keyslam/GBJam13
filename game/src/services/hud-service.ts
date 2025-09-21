@@ -5,6 +5,7 @@ import { SlotSymbol } from "../data/slot-symbols";
 import { CoinService } from "./coin-service";
 import { PlayerLocatorService } from "./player-locator-service";
 import { RenderService } from "./renderService";
+import { SceneService } from "./scene-service";
 import { SlotMachineService } from "./slot-machine-service";
 
 const bg = love.graphics.newImage("assets/sprites/hud/background.png")
@@ -68,6 +69,11 @@ export class HudService extends Service {
     }
 
     public draw(): void {
+
+        if (this.scene.getService(SceneService).activeScene !== 'arena') {
+            return;
+        }
+
         love.graphics.push("all")
         love.graphics.translate(0, 126)
 
