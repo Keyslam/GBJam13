@@ -69,6 +69,9 @@ export class PlayerControls extends Component {
 
     public isDead = false;
 
+    public shootCooldownMultiplier = 1;
+    public speedMultiplier = 1;
+
     protected override initialize(): void {
         this.controlService = this.scene.getService(ControlService);
 
@@ -105,12 +108,12 @@ export class PlayerControls extends Component {
         const mx = (this.controlService.rightButton.isDown ? 1 : 0) + (this.controlService.leftButton.isDown ? -1 : 0);
         const my = (this.controlService.downButton.isDown ? 1 : 0) + (this.controlService.upButton.isDown ? -1 : 0);
 
-        this.body.vx += mx * this.acceleration * event.dt;
-        this.body.vy += my * this.acceleration * event.dt;
+        this.body.vx += mx * this.acceleration * this.speedMultiplier * event.dt;
+        this.body.vy += my * this.acceleration * this.speedMultiplier * event.dt;
 
         const speed = Math.sqrt(this.body.vx * this.body.vx + this.body.vy * this.body.vy);
-        if (speed > this.maxSpeed) {
-            const scale = this.maxSpeed / speed;
+        if (speed > this.maxSpeed * this.speedMultiplier) {
+            const scale = this.maxSpeed * this.speedMultiplier / speed;
             this.body.vx *= scale;
             this.body.vy *= scale;
         }
@@ -124,7 +127,7 @@ export class PlayerControls extends Component {
         this.animatedSprite.play(animationName);
 
         if (this.controlService.primaryButton.isDown && this.shootTimer === 0) {
-            this.shootTimer = this.shootCooldown;
+            this.shootTimer = this.shootCooldown / this.shootCooldownMultiplier;
 
             this.scene.getService(AudioService).playSfx("player_shoot")
 

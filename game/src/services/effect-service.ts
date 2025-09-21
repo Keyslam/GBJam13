@@ -8,10 +8,12 @@ import { diceEffect } from "../effects/dice-effect";
 import { Effect } from "../effects/effect";
 import { fireEffect } from "../effects/fire-effect";
 import { gunEffect } from "../effects/gun-effect";
+import { healEffect } from "../effects/heal-effect";
 import { lemonEffect } from "../effects/lemon-effect";
-import { lightningEffect } from "../effects/lightning-effect";
+import { speedupEffect } from "../effects/speedup-effect";
 import { tripplebarEffect } from "../effects/tripplebar-effect";
 import { ScheduleService } from "./schedule-service";
+import { lightningEffect } from "../effects/lightning-effect";
 
 const effectMap: Partial<Record<SlotSymbol, Effect>> = {
     bar: barEffect,
@@ -24,6 +26,9 @@ const effectMap: Partial<Record<SlotSymbol, Effect>> = {
     cherry: cherryEffect,
     lemon: lemonEffect,
     gun: gunEffect,
+    heal: healEffect,
+    doubleshot: fireEffect,
+    speedup: speedupEffect
 };
 
 export class EffectService extends Service {

@@ -116,7 +116,6 @@ export class ArenaService extends Service {
         }
     }
 
-
     public async doRound(): Promise<void> {
         this.round++;
 
