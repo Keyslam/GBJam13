@@ -14,6 +14,8 @@ const frames = [
     love.graphics.newImage("assets/sprites/intro/scene4.png"),
     love.graphics.newImage("assets/sprites/intro/scene5.png"),
     love.graphics.newImage("assets/sprites/intro/scene6.png"),
+    love.graphics.newImage("assets/sprites/intro/scene7.png"),
+    love.graphics.newImage("assets/sprites/intro/scene8.png"),
 ]
 
 const font = love.graphics.newImageFont("assets/fonts/match-7.png", " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{};:'\",.<>/?\\|")
@@ -44,48 +46,70 @@ export class IntroService extends Service {
     public async enter(): Promise<void> {
         this.scene.getService(AudioService).playMusic("intro")
 
-        await this.scheduleService.seconds(0.5);
-
         this.message.text = 'C\'mon just one last spin...'
         this.message.shownFor = 0;
         this.message.kind = 'left'
-        await this.scheduleService.seconds(3.5);
+        await this.scheduleService.seconds(3);
 
         this.activeFrameIndex = 1;
         this.message.text = 'Jackpot... Jackpot...'
         this.message.shownFor = 0;
         this.message.kind = 'center'
-        await this.scheduleService.seconds(4);
+        await this.scheduleService.seconds(2.5);
 
         this.activeFrameIndex = 2;
+        this.message.text = ''
+        this.message.shownFor = 0;
+        this.message.kind = 'center'
+        await this.scheduleService.seconds(2);
+
+        this.scene.getService(AudioService).playSfx("roulette_stop")
+
+        this.activeFrameIndex = 3;
+
+        await this.scheduleService.seconds(1);
         this.message.text = 'APPLE?!?'
         this.message.shownFor = 0;
         this.message.kind = 'center'
-        await this.scheduleService.seconds(3.5);
+        await this.scheduleService.seconds(2.5);
 
-        this.activeFrameIndex = 3;
+        this.activeFrameIndex = 4;
         this.message.text = 'NOOO!! What was I thinking?! How am I gonna tell my wife?'
+        this.message.shownFor = 0;
+        this.message.kind = 'left'
+        await this.scheduleService.seconds(6);
+
+        this.activeFrameIndex = 5;
+        await this.scheduleService.seconds(0.5);
+
+        // 17.5
+
+        this.activeFrameIndex = 6;
+        this.message.text = 'Easy there pal!'
+        this.message.shownFor = 0;
+        this.message.kind = 'left'
+        await this.scheduleService.seconds(3);
+
+        // 21.5
+
+        this.message.text = 'There\'s a place where even losers like you can win it big!'
+        this.message.shownFor = 0;
+        this.message.kind = 'left'
+        await this.scheduleService.seconds(4);
+
+        // 24
+
+        this.activeFrameIndex = 7;
+        this.message.text = 'So up the stakes and step into...'
         this.message.shownFor = 0;
         this.message.kind = 'left'
         await this.scheduleService.seconds(5);
 
-        this.activeFrameIndex = 4;
-        this.message.text = 'Easy there pal! Even losers like you can win it big!'
-        this.message.shownFor = 0;
-        this.message.kind = 'left'
-        await this.scheduleService.seconds(3);
-
-        this.activeFrameIndex = 5;
-        this.message.text = 'So up the stakes and step into...'
-        this.message.shownFor = 0;
-        this.message.kind = 'left'
-        await this.scheduleService.seconds(3);
-
-        void this.sceneService.toArena();
+        void this.sceneService.toTitle();
     }
 
     public exit(): void {
-        this.musicTrack?.stop();
+        //
     }
 
     private update(): void {

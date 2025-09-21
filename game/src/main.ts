@@ -23,6 +23,7 @@ import { ShopService } from "./services/shop-service";
 import { SlotMachineService } from "./services/slot-machine-service";
 import { SpawningService } from "./services/spawning-service";
 import { SpinCounterService } from "./services/spin-counter-service";
+import { TitleService } from "./services/title-service";
 
 love.graphics.setDefaultFilter("nearest", "nearest");
 love.graphics.setLineStyle("rough");
@@ -48,6 +49,7 @@ const scene = new Scene(
     SpawningService,
     AudioService,
     GameoverService,
+    TitleService
 );
 
 love.update = (dt) => {
