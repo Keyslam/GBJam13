@@ -136,7 +136,7 @@ const items: Item[] = [
         symbol: 'dice'
     },
     {
-        title: "DblShot",
+        title: "Firerate+",
         image: love.graphics.newImage("assets/sprites/shop/icon-doubleshot.png"),
         flavorText: "Pewpew!",
         symbol: 'doubleshot'
@@ -144,7 +144,7 @@ const items: Item[] = [
     {
         title: "Fire",
         image: love.graphics.newImage("assets/sprites/shop/icon-fire.png"),
-        flavorText: "Sets the arena ablaze!",
+        flavorText: "Watch out! Things are getting hot!",
         symbol: 'fire'
     },
     {
@@ -162,7 +162,7 @@ const items: Item[] = [
     {
         title: "Lemon",
         image: love.graphics.newImage("assets/sprites/shop/icon-lemon.png"),
-        flavorText: "Watch out for the giant lemon!",
+        flavorText: "Watch out for the giant lemons!",
         symbol: 'lemon'
     },
     {

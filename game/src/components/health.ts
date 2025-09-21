@@ -50,6 +50,10 @@ export class Health extends Component {
         }
     }
 
+    public heal(amount: number): void {
+        this.value = math.min(this.max, this.value + amount)
+    }
+
     private onTakeDamage(event: TakeDamageEvent): void {
         if (this.dead) { return; }
 

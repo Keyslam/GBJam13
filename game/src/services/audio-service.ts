@@ -85,6 +85,8 @@ const sfxes: Record<string, Source> = {
 
     effect_bounce: newSfx("effects/effect-bounce.wav"),
 
+    effect_heal: newSfx("effects/effect-heal.wav"),
+
     die: newSfx("player/die.wav"),
 }
 
