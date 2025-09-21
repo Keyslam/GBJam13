@@ -18,6 +18,7 @@ const symbolImages = {
     speedup: love.graphics.newImage("assets/sprites/slot-machine/reel-speedup.png"),
     tripplebar: love.graphics.newImage("assets/sprites/slot-machine/reel-tripplebar.png"),
     death: love.graphics.newImage("assets/sprites/slot-machine/reel-death.png"),
+    seven: love.graphics.newImage("assets/sprites/slot-machine/reel-seven.png"),
 } satisfies Record<SlotSymbol, Image>;
 
 export class SlotMachinePanelController extends Component {

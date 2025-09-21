@@ -12,6 +12,7 @@ import { gunEffect } from "../effects/gun-effect";
 import { healEffect } from "../effects/heal-effect";
 import { lemonEffect } from "../effects/lemon-effect";
 import { lightningEffect } from "../effects/lightning-effect";
+import { sevenEffect } from "../effects/seven-effect";
 import { speedupEffect } from "../effects/speedup-effect";
 import { tripplebarEffect } from "../effects/tripplebar-effect";
 import { ScheduleService } from "./schedule-service";
@@ -29,7 +30,8 @@ const effectMap: Partial<Record<SlotSymbol, Effect>> = {
     gun: gunEffect,
     heal: healEffect,
     doubleshot: firerateEffect,
-    speedup: speedupEffect
+    speedup: speedupEffect,
+    seven: sevenEffect,
 };
 
 export class EffectService extends Service {

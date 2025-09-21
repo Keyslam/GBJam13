@@ -6,7 +6,7 @@ import { PlayerLocatorService } from "../services/player-locator-service";
 import { ScheduleService } from "../services/schedule-service";
 import { Effect } from "./effect";
 
-const amounts = [1.4, 1.8, 2.2];
+const amounts = [1.2, 1.4, 1.6];
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export const speedupEffect: Effect = async (scene: Scene, scheduler: ScheduleService, intensity: number): Promise<void> => {

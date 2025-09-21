@@ -84,12 +84,20 @@ const equipBackground = love.graphics.newImage("assets/sprites/shop/equip-backgr
 
 const font = love.graphics.newImageFont("assets/fonts/match-7.png", " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{};:'\",.<>/?\\|")
 
+const itemReroll: Item = {
+    title: "Reroll",
+    image: love.graphics.newImage("assets/sprites/shop/icon-reroll.png"),
+    flavorText: "Not your style? Reroll your items.",
+    symbol: 'tripplebar'
+}
+
 const itemSeven: Item = {
     title: "Seven",
     image: love.graphics.newImage("assets/sprites/shop/icon-7.png"),
     flavorText: "Match 3 for the jackpot; your way out of here.",
-    symbol: 'tripplebar'
+    symbol: 'seven'
 }
+
 
 const itemNextround: Item = {
     title: "Next round",
@@ -193,8 +201,8 @@ const slotSymbolMap = {
     lightning: { image: love.graphics.newImage("assets/sprites/shop/icon-lightning.png"), title: "LIGHTNING" },
     speedup: { image: love.graphics.newImage("assets/sprites/shop/icon-speedup.png"), title: "SPEED UP" },
     tripplebar: { image: love.graphics.newImage("assets/sprites/shop/icon-tripplebar.png"), title: "TRPLBAR" },
-
     death: { image: love.graphics.newImage("assets/sprites/shop/icon-tripplebar.png"), title: "DEATH" },
+    seven: { image: love.graphics.newImage("assets/sprites/shop/icon-7.png"), title: "SEVEN" },
 } satisfies Record<SlotSymbol, { image: Image, title: string }>
 
 const hover = love.graphics.newImage("assets/sprites/shop/hover.png")
@@ -230,8 +238,8 @@ export class ShopService extends Service {
             purchased: false
         },
         {
-            effect: items[3]!,
-            price: 40,
+            effect: itemReroll,
+            price: 10,
             purchased: false
         },
         {
@@ -285,6 +293,7 @@ export class ShopService extends Service {
 
     public enter(): void {
         this.fillOffers();
+        this.resetSpecials();
 
         this.audioService.playMusic("shop");
 
@@ -300,7 +309,7 @@ export class ShopService extends Service {
     }
 
     public exit(): void {
-        this.musicTrack?.stop();
+        // this.musicTrack?.stop();
     }
 
     private fillOffers(): void {
@@ -309,7 +318,7 @@ export class ShopService extends Service {
         const minPrice = 3;
         const maxPrice = 30;
 
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 3; i++) {
             if (availableItems.length === 0) break;
 
             const idx = math.random(1, availableItems.length) - 1;
@@ -327,8 +336,11 @@ export class ShopService extends Service {
         this.offers[0] = offers[0]!
         this.offers[1] = offers[1]!
         this.offers[2] = offers[2]!
-        this.offers[3] = offers[3]!
+    }
 
+    private resetSpecials() {
+        this.offers[3]!.price = 10
+        this.offers[3]!.purchased = false
         this.offers[4]!.purchased = false
         this.offers[5]!.purchased = false
     }
@@ -392,20 +404,22 @@ export class ShopService extends Service {
             return;
         } else {
             if (!this.wasInShop) {
+                this.wasInShop = true;
                 this.enter();
             }
-            this.wasInShop = true;
         }
 
         this.shopTitle.shownFor++;
         this.flavourText.shownFor++;
         this.equipTitle.shownFor++;
 
-        if (this.displayCoinsAmount < this.coinService.amount) {
-            this.displayCoinsAmount = math.min(this.coinService.amount, this.displayCoinsAmount + 0.4)
-        } else if (this.displayCoinsAmount > this.coinService.amount) {
-            this.displayCoinsAmount = math.max(this.coinService.amount, this.displayCoinsAmount - 0.4);
-        }
+        // if (this.displayCoinsAmount < this.coinService.amount) {
+        //     this.displayCoinsAmount = math.min(this.coinService.amount, this.displayCoinsAmount + 0.4)
+        // } else if (this.displayCoinsAmount > this.coinService.amount) {
+        //     this.displayCoinsAmount = math.max(this.coinService.amount, this.displayCoinsAmount - 0.4);
+        // }
+
+        this.displayCoinsAmount = this.coinService.amount
 
         if (this.state === 'shop') {
             let row = Math.floor(this.selectedSlotIndex / 3);
@@ -456,6 +470,22 @@ export class ShopService extends Service {
 
                 if (this.selectedSlotIndex === 5) {
                     void this.scene.getService(SceneService).toArena();
+                } else if (this.selectedSlotIndex === 3) {
+                    const canAfford = this.coinService.amount >= selectedOffer.price
+
+                    if (canAfford) {
+                        this.audioService.playSfx("shop_confirm");
+                        this.fillOffers();
+                        this.coinService.amount -= selectedOffer.price
+                        this.offers[3]!.price += 10;
+                        this.offers[3]!.purchased = false;
+                    } else {
+                        this.audioService.playSfx("shop_cancel");
+
+                        const text = cantAffordQuips[math.floor(love.math.random() * cantAffordQuips.length)]!;
+                        this.flavourText.text = text
+                        this.flavourText.shownFor = 0;
+                    }
                 } else if (selectedOffer.purchased) {
                     this.audioService.playSfx("shop_sold_out");
 

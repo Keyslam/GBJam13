@@ -8,7 +8,7 @@ import { DestroyOnDealDamage } from "../components/scripting/destroyOnDealDamage
 import { Layers } from "../data/layer";
 
 const image = love.graphics.newImage("assets/sprites/player/bullet.png");
-const animation = createAnimation(image, 6, 6, 1, 0, 0.1);
+const animation = createAnimation(image, 10, 10, 1, 0, 0.1);
 
 const bulletPrefab = (entity: Entity, x: number, y: number, vx: number, vy: number) => {
     entity

@@ -125,17 +125,17 @@ export class ArenaService extends Service {
         this.scene.getService(CoinService).backup();
 
         if (this.round === 1) {
-            await this.scheduler.wrap(this.spawningService.doWave({
-                chip: 3,
-                bell: 0,
-                cherry: 0,
-                diamond: 0,
-                stackchip: 0,
+            // await this.scheduler.wrap(this.spawningService.doWave({
+            //     chip: 3,
+            //     bell: 0,
+            //     cherry: 0,
+            //     diamond: 0,
+            //     stackchip: 0,
 
-                delay: 20,
-            }))
+            //     delay: 20,
+            // }))
 
-            await this.scheduler.seconds(5);
+            // await this.scheduler.seconds(5);
 
             const gamblingPromise = this.scheduler.wrap(this.slotMachineService.goGambling(1));
             await this.scheduler.wrap(this.spawningService.doWave({

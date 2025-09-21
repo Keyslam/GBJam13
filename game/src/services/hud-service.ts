@@ -35,6 +35,7 @@ const effectIcons = {
     speedup: love.graphics.newImage("assets/sprites/hud/effect-speedup.png"),
     tripplebar: love.graphics.newImage("assets/sprites/hud/effect-tripplebar.png"),
     death: love.graphics.newImage("assets/sprites/hud/effect-roundend.png"),
+    seven: love.graphics.newImage("assets/sprites/hud/effect-seven.png"),
 } satisfies Record<SlotSymbol, Image>;
 
 

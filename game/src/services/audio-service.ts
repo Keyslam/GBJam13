@@ -105,6 +105,8 @@ export class AudioService extends Service {
     public playMusic(name: string): void {
         const music = musics[name];
 
+        print(name, music)
+
         if (music !== undefined) {
             if (this.playingMusic !== undefined) {
                 this.playingMusic.source.stop();

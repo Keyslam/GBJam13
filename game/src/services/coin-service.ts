@@ -1,8 +1,8 @@
 import { Service } from "@keyslam/simple-node";
 
 export class CoinService extends Service {
-    public amount = 100;
-    public backupAmount = 0;
+    public amount = 500;
+    public backupAmount = 500;
 
     public backup() {
         this.backupAmount = this.amount
