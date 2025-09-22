@@ -9,6 +9,9 @@ const bg = love.graphics.newImage("assets/sprites/settings/settings-bg.png")
 const arrow_left = love.graphics.newImage("assets/sprites/settings/arrow-left.png")
 const arrow_right = love.graphics.newImage("assets/sprites/settings/arrow-right.png")
 
+// eslint-disable-next-line @typescript-eslint/no-inferrable-types
+const isWeb: boolean = true;
+
 const font = love.graphics.newImageFont("assets/fonts/match-7.png", " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{};:'\",.<>/?\\|")
 
 const paletteNames = [
@@ -74,6 +77,12 @@ export class SettingsService extends Service {
             if (this.selection === -1) {
                 this.selection = 8
             }
+
+            if (isWeb) {
+                if (this.selection === 7) {
+                    this.selection = 5
+                }
+            }
         }
 
         if (controlService.downButton.wasPressed) {
@@ -81,6 +90,12 @@ export class SettingsService extends Service {
             this.scene.getService(AudioService).playSfx("shop_change_slot")
             if (this.selection === 9) {
                 this.selection = 0
+            }
+
+            if (isWeb) {
+                if (this.selection === 6) {
+                    this.selection = 8
+                }
             }
         }
 
@@ -233,20 +248,23 @@ export class SettingsService extends Service {
             love.graphics.draw(arrow_left, 142, 86)
         }
 
-        love.graphics.print("Fllscrn.", 15, 102)
-        love.graphics.print("Scale", 15, 110)
+        if (!isWeb) {
 
-        love.graphics.print(this.fullscreen ? "ON" : "OFF", 80, 102)
-        love.graphics.print(`${(this.scale + 1).toString()}x`, 80, 110)
+            love.graphics.print("Fllscrn.", 15, 102)
+            love.graphics.print("Scale", 15, 110)
 
-        if (this.selection === 6) {
-            love.graphics.draw(arrow_right, 70, 102)
-            love.graphics.draw(arrow_left, 142, 102)
-        }
+            love.graphics.print(this.fullscreen ? "ON" : "OFF", 80, 102)
+            love.graphics.print(`${(this.scale + 1).toString()}x`, 80, 110)
 
-        if (this.selection === 7) {
-            love.graphics.draw(arrow_right, 70, 110)
-            love.graphics.draw(arrow_left, 142, 110)
+            if (this.selection === 6) {
+                love.graphics.draw(arrow_right, 70, 102)
+                love.graphics.draw(arrow_left, 142, 102)
+            }
+
+            if (this.selection === 7) {
+                love.graphics.draw(arrow_right, 70, 110)
+                love.graphics.draw(arrow_left, 142, 110)
+            }
         }
 
         love.graphics.print("Back", 65, 126)

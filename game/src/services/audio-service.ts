@@ -109,10 +109,8 @@ export class AudioService extends Service {
         this.onSceneEvent(UpdateEvent, "update")
     }
 
-    public playMusic(name: string): void {
+    public playMusic(name: string): Source {
         const music = musics[name];
-
-        print(name, music)
 
         if (music !== undefined) {
             if (this.playingMusic !== undefined) {
@@ -124,6 +122,8 @@ export class AudioService extends Service {
 
             this.playingMusic = music;
         }
+
+        return music!.source
     }
 
     public stopMusic(): void {

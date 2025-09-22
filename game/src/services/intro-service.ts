@@ -47,7 +47,9 @@ export class IntroService extends Service {
     }
 
     public async enter(): Promise<void> {
-        this.scene.getService(AudioService).playMusic("intro")
+        const track = this.scene.getService(AudioService).playMusic("intro")
+
+        await this.scheduleService.until(() => track.tell() !== 0)
 
         this.message.text = 'C\'mon just one last spin...'
         this.message.shownFor = 0;
