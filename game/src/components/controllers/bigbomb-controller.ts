@@ -63,6 +63,9 @@ export class BigbombController extends Component {
             this.downCount--;
 
             if (this.downCount > 120) {
+                if (this.downCount === 121) {
+                    this.scene.getService(AudioService).playSfx("effect_bomb_fuse");
+                }
                 this.animatedSprite.play("countdown_3")
             } else if (this.downCount > 60) {
                 this.animatedSprite.play("countdown_2")
@@ -97,10 +100,10 @@ export class BigbombController extends Component {
 
         const speed = 100;
 
-        this.scene.spawnEntity(bombShockwavePrefab, this.position.x, this.position.y, speed, speed);
-        this.scene.spawnEntity(bombShockwavePrefab, this.position.x, this.position.y, -speed, speed);
-        this.scene.spawnEntity(bombShockwavePrefab, this.position.x, this.position.y, speed, -speed);
-        this.scene.spawnEntity(bombShockwavePrefab, this.position.x, this.position.y, -speed, -speed);
+        // this.scene.spawnEntity(bombShockwavePrefab, this.position.x, this.position.y, speed, speed);
+        // this.scene.spawnEntity(bombShockwavePrefab, this.position.x, this.position.y, -speed, speed);
+        // this.scene.spawnEntity(bombShockwavePrefab, this.position.x, this.position.y, speed, -speed);
+        // this.scene.spawnEntity(bombShockwavePrefab, this.position.x, this.position.y, -speed, -speed);
 
         this.scene.spawnEntity(bombShockwavePrefab, this.position.x, this.position.y, speed * 0.7071, speed * 0.7071);
         this.scene.spawnEntity(bombShockwavePrefab, this.position.x, this.position.y, -speed * 0.7071, speed * 0.7071);
