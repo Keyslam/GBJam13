@@ -31,7 +31,7 @@ export class EndingService extends Service {
     }
 
     public async enter(): Promise<void> {
-        this.scene.getService(AudioService).playMusic("intro")
+        this.scene.getService(AudioService).playMusic("ending")
 
         this.message.text = 'I can\'t believe it...\nI actually won for once?!'
         this.message.shownFor = 0;

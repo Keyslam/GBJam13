@@ -4,6 +4,7 @@ import { AnimatedSprite, createAnimation } from "../components/graphics/animated
 import { Sprite } from "../components/graphics/sprite";
 import { Position } from "../components/position";
 import { Layers } from "../data/layer";
+import { AudioService } from "../services/audio-service";
 
 const image = love.graphics.newImage("assets/sprites/effects/effect-fire.png");
 const animations = {
@@ -14,6 +15,8 @@ const animations = {
 }
 
 export const firePrefab = (entity: Entity, x: number, y: number) => {
+    entity.scene.getService(AudioService).playSfx("effect_flame_forming")
+
     entity
         .addComponent(Position, x, y, Layers.foreground)
         .addComponent(Sprite, image)

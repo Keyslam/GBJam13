@@ -138,7 +138,7 @@ export class TitleService extends Service {
 
             if (controlService.primaryButton.wasPressed) {
                 if (this.selection === 0) {
-                    this.scene.getService(AudioService).playSfx("shop_confirm")
+                    this.scene.getService(AudioService).playSfx("start_game")
 
                     this.locked = true
                     void this.sceneService.toArena();

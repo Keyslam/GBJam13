@@ -5,7 +5,6 @@ import { Height } from "../components/graphics/height";
 import { Sprite } from "../components/graphics/sprite";
 import { Position } from "../components/position";
 import { Layers } from "../data/layer";
-import { AudioService } from "../services/audio-service";
 
 const image = love.graphics.newImage("assets/sprites/effects/effect-bigbomb.png");
 const animations = {
@@ -19,8 +18,6 @@ const shadowImage = love.graphics.newImage("assets/sprites/effects/effect-bigbom
 
 
 const bombPrefab = (entity: Entity, x: number, y: number) => {
-    entity.scene.getService(AudioService).playSfx("effect_bomb_toss")
-
     entity
         .addComponent(Position, x, y, Layers.foreground)
         .addComponent(Sprite, image)

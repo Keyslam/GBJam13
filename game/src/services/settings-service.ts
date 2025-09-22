@@ -10,7 +10,7 @@ const arrow_left = love.graphics.newImage("assets/sprites/settings/arrow-left.pn
 const arrow_right = love.graphics.newImage("assets/sprites/settings/arrow-right.png")
 
 // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-const isWeb: boolean = true;
+const isWeb: boolean = false;
 
 const font = love.graphics.newImageFont("assets/fonts/match-7.png", " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{};:'\",.<>/?\\|")
 
@@ -101,6 +101,7 @@ export class SettingsService extends Service {
 
         if (controlService.primaryButton.wasPressed) {
             if (this.selection === 8) {
+                this.scene.getService(AudioService).playSfx("shop_cancel")
                 void this.scene.getService(SceneService).backToTitle();
             }
         }
@@ -108,68 +109,82 @@ export class SettingsService extends Service {
         if (controlService.leftButton.wasPressed) {
             if (this.selection === 0) {
                 this.audioService.masterVolume = math.max(0, this.audioService.masterVolume - 0.1)
+                this.scene.getService(AudioService).playSfx("shop_change_slot")
             }
 
             if (this.selection === 1) {
                 this.audioService.musicVolume = math.max(0, this.audioService.musicVolume - 0.1)
+                this.scene.getService(AudioService).playSfx("shop_change_slot")
             }
 
             if (this.selection === 2) {
                 this.audioService.sfxVolume = math.max(0, this.audioService.sfxVolume - 0.1)
+                this.scene.getService(AudioService).playSfx("shop_change_slot")
             }
 
             if (this.selection === 3) {
                 this.renderService.palleteIndex = math.max(0, this.renderService.palleteIndex - 1)
+                this.scene.getService(AudioService).playSfx("shop_change_slot")
             }
 
             if (this.selection === 4) {
                 this.controlsService.keyboardSchemeIndex = math.max(0, this.controlsService.keyboardSchemeIndex - 1)
+                this.scene.getService(AudioService).playSfx("shop_change_slot")
             }
 
             if (this.selection === 5) {
                 this.controlsService.controllerSchemeIndex = math.max(0, this.controlsService.controllerSchemeIndex - 1)
+                this.scene.getService(AudioService).playSfx("shop_change_slot")
             }
 
             if (this.selection === 6) {
                 this.fullscreen = !this.fullscreen
                 this.updateScreen();
+                this.scene.getService(AudioService).playSfx("shop_change_slot")
             }
 
             if (this.selection === 7) {
                 this.scale = math.max(0, this.scale - 1)
                 this.updateScreen();
+                this.scene.getService(AudioService).playSfx("shop_change_slot")
             }
         }
 
         if (controlService.rightButton.wasPressed) {
             if (this.selection === 0) {
                 this.audioService.masterVolume = math.min(1, this.audioService.masterVolume + 0.1)
+                this.scene.getService(AudioService).playSfx("shop_change_slot")
             }
 
             if (this.selection === 1) {
                 this.audioService.musicVolume = math.min(1, this.audioService.musicVolume + 0.1)
+                this.scene.getService(AudioService).playSfx("shop_change_slot")
             }
 
             if (this.selection === 2) {
                 this.audioService.sfxVolume = math.min(1, this.audioService.sfxVolume + 0.1)
+                this.scene.getService(AudioService).playSfx("shop_change_slot")
             }
 
             if (this.selection === 3) {
                 this.renderService.palleteIndex = math.min(8, this.renderService.palleteIndex + 1)
+                this.scene.getService(AudioService).playSfx("shop_change_slot")
             }
 
             if (this.selection === 4) {
                 this.controlsService.keyboardSchemeIndex = math.min(keyboardControlSchemes.length - 1, this.controlsService.keyboardSchemeIndex + 1)
-                print(this.controlsService.keyboardSchemeIndex)
+                this.scene.getService(AudioService).playSfx("shop_change_slot")
             }
 
             if (this.selection === 5) {
                 this.controlsService.controllerSchemeIndex = math.min(controllerSchemes.length - 1, this.controlsService.controllerSchemeIndex + 1)
+                this.scene.getService(AudioService).playSfx("shop_change_slot")
             }
 
             if (this.selection === 6) {
                 this.fullscreen = !this.fullscreen
                 this.updateScreen();
+                this.scene.getService(AudioService).playSfx("shop_change_slot")
             }
 
             if (this.selection === 7) {
@@ -178,6 +193,7 @@ export class SettingsService extends Service {
 
                 this.scale = math.min(maxScale, this.scale + 1)
                 this.updateScreen();
+                this.scene.getService(AudioService).playSfx("shop_change_slot")
             }
         }
     }

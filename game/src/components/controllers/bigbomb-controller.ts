@@ -1,4 +1,5 @@
 import { Component } from "@keyslam/simple-node";
+import { Source } from "love.audio";
 import { UpdateEvent } from "../../events/scene/updateEvent";
 import { bombExplosionPrefab } from "../../prefabs/effect-bomb-explosion-prefab";
 import { bombShockwavePrefab } from "../../prefabs/effect-bomb-shockwave-prefab";
@@ -25,6 +26,8 @@ export class BigbombController extends Component {
     private onFloor = false;
     public booming = false;
 
+    declare private sfx: Source | undefined;
+
     protected override initialize(): void {
         this.position = this.entity.getComponent(Position);
         this.height = this.entity.getComponent(Height);
@@ -33,6 +36,8 @@ export class BigbombController extends Component {
         this.scheduler = this.scene.getService(ScheduleService);
 
         this.onSceneEvent(UpdateEvent, "update")
+
+        this.sfx = this.scene.getService(AudioService).playSfx("effect_bomb_toss")
     }
 
     private update(): void {
@@ -48,6 +53,9 @@ export class BigbombController extends Component {
 
         const onFloor = this.height.value === 0;
         if (onFloor && !this.onFloor) {
+            this.scene.getService(AudioService).stopSfx(this.sfx!);
+            this.sfx = undefined;
+
             this.onFloor = true;
 
             this.scene.getService(AudioService).playSfx("effect_die")

@@ -30,10 +30,11 @@ function newSfx(name: string): Source {
 
 const musics: Record<string, Music> = {
     title: newMusic("title.wav", 133, false),
-    intro: newMusic("intro-demo.wav", 133, false),
-    shop: newMusic("shop.mp3", 133, true),
+    intro: newMusic("intro.wav", 133, false),
+    shop: newMusic("shop.wav", 133, true),
     gameover: newMusic("game-over.wav", 133, false),
-    arena: newMusic("arena.mp3", 133, true),
+    arena: newMusic("arena.wav", 133, true),
+    ending: newMusic("ending.wav", 133, false),
 }
 
 const sfxes: Record<string, Source> = {
@@ -87,11 +88,16 @@ const sfxes: Record<string, Source> = {
     effect_bounce: newSfx("effects/effect-bounce.wav"),
 
     effect_heal: newSfx("effects/effect-heal.wav"),
+    effect_firerate: newSfx("effects/effect-double-shot.wav"),
+
+    effect_flame_forming: newSfx("effects/effect-flame-forming.wav"),
 
     die: newSfx("player/die.wav"),
 
     ready: newSfx("ready.wav"),
     bell: newSfx("bell.wav"),
+
+    start_game: newSfx("start-game.wav"),
 }
 
 export class AudioService extends Service {

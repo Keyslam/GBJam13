@@ -18,7 +18,7 @@ export const firerateEffect: Effect = async (scene: Scene, scheduler: ScheduleSe
     scene.spawnEntity(popupIconPrefab, player, 'firerate');
     player.getComponent(PlayerControls).shootCooldownMultiplier = amount
 
-    scene.getService(AudioService).playSfx("effect_heal")
+    scene.getService(AudioService).playSfx("effect_firerate")
 
     void (async () => {
         await scheduler.seconds(8)

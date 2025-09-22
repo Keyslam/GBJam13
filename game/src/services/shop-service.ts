@@ -490,6 +490,7 @@ export class ShopService extends Service {
                 const selectedOffer = this.offers[this.selectedSlotIndex]!;
 
                 if (this.selectedSlotIndex === 5) {
+                    this.audioService.playSfx("shop_confirm");
                     const text = exitQuips[math.floor(love.math.random() * exitQuips.length)]!;
                     this.flavourText.text = text;
                     this.flavourText.shownFor = 0
@@ -589,6 +590,8 @@ export class ShopService extends Service {
                 }
             } else {
                 if (this.controlService.secondaryButton.wasPressed) {
+                    this.audioService.playSfx("shop_cancel");
+
                     const symbols = this.slotMachineService.getAllSymbols();
 
                     const symbol = symbols[this.equipSlotIndex]!
